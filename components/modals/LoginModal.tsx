@@ -4,6 +4,8 @@ import useLoginModal from '@/hooks/useLoginModal'
 import Input from '../../components/Input'
 import Modal from '../../components/Modal'
 import useRegisterModal from '@/hooks/useRegisterModal'
+import { signIn } from 'next-auth/react'
+import { toast } from 'react-hot-toast'
 
 const LoginModal = () => {
   const loginModal = useLoginModal()
@@ -25,16 +27,16 @@ const LoginModal = () => {
     try {
       setIsLoading(true)
 
-      // await signIn('credentials', {
-      //   email,
-      //   password,
-      // })
+      await signIn('credentials', {
+        email,
+        password,
+      })
 
-      // toast.success('Logged in')
+      toast.success('Úspešné prihlásenie')
 
       loginModal.onClose()
     } catch (error) {
-      console.log(error, 'Something went wrong')
+      console.log(error, 'Nastala chyba')
     } finally {
       setIsLoading(false)
     }

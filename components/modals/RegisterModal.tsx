@@ -42,7 +42,7 @@ const RegisterModal = () => {
 
       setIsLoading(false)
 
-      toast.success('Account created.')
+      toast.success('Účet vytvorený.')
 
       signIn('credentials', {
         email,
@@ -51,7 +51,7 @@ const RegisterModal = () => {
 
       registerModal.onClose()
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error('Nastala chyba')
     } finally {
       setIsLoading(false)
     }
