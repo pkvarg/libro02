@@ -87,7 +87,7 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
               <Button
                 disabled={isLoading || !body}
                 onClick={onSubmit}
-                label='Zieľať'
+                label='Zdieľať'
               />
             </div>
           </div>
@@ -98,8 +98,12 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
             Vitaj na Librosophii
           </h1>
           <div className='flex flex-row items-center justify-center gap-4'>
-            <Button label='Login' onClick={loginModal.onOpen} />
-            <Button label='Register' onClick={registerModal.onOpen} secondary />
+            <Button label='Prihlásenie' onClick={loginModal.onOpen} />
+            <Button
+              label='Registrácia'
+              onClick={registerModal.onOpen}
+              secondary
+            />
           </div>
         </div>
       )}

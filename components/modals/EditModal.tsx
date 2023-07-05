@@ -50,11 +50,11 @@ const EditModal = () => {
       })
       mutateFetchedUser()
 
-      toast.success('Updated')
+      toast.success('Aktualizované')
 
       editModal.onClose()
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error('Nastala chyba')
     } finally {
       setIsLoading(false)
     }

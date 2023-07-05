@@ -36,9 +36,9 @@ const useFollow = (userId: string) => {
       mutateCurrentUser()
       mutateFetchedUser()
 
-      toast.success('Success')
+      toast.success('OK')
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error('Nastala chyba')
     }
   }, [
     currentUser,
