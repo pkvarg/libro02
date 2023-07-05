@@ -51,7 +51,7 @@ const Sidebar = () => {
             <SidebarItem
               onClick={() => signOut()}
               icon={BiLogOut}
-              label='Logout'
+              label='Odhlásiť'
             />
           )}
           <SidebarTweetButton />
