@@ -27,6 +27,12 @@ const Header: React.FC<HeaderProps> = ({ label, showBackArrow }) => {
           />
         )}
         <h1 className='text-white text-xl font-semibold'>{label}</h1>
+        <a
+          className='text-white text-xl font-semibold ml-auto cursor-pointer'
+          href='/rules'
+        >
+          Pravidlá siete
+        </a>
       </div>
     </div>
   )

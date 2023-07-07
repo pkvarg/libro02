@@ -19,7 +19,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
 
   const time = new Date()
 
-  const mailData = {
+  const adminMailData = {
     from: 'nodejs@pictusweb.sk',
     to: process.env.NODEJS_BCC,
     subject: `Nová registrácia ${req.body.name}`,
@@ -33,9 +33,24 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
     </div>`,
   }
 
+  const userMailData = {
+    from: 'nodejs@pictusweb.sk',
+    to: `${req.body.email}`,
+    subject: `Vitaj na Librospohia ${req.body.name}`,
+    // text: req.body.email,
+    html: `<div>
+    <p>Vitaj na Librosophia</p>
+    <p>užívateľské meno: ${req.body.username}</p>
+    <p>meno: ${req.body.name}</p>
+    <p>email: ${req.body.email}</p>
+    <p>čas: ${time}</p>
+    </div>`,
+  }
+
   try {
-    transporter.sendMail(mailData)
-    return res.status(200).json(mailData)
+    transporter.sendMail(adminMailData)
+    transporter.sendMail(userMailData)
+    return res.status(200).json(adminMailData)
   } catch (error) {
     console.log(error)
     return res.status(400).end()
