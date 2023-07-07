@@ -25,6 +25,8 @@ model User {
   updatedAt       DateTime @updatedAt
   followingIds    String[] @db.ObjectId
   hasNotification Boolean?
+  active          Boolean? @default(true)
+  isAdmin         Boolean? @default(false)
 
   posts         Post[]
   comments      Comment[]

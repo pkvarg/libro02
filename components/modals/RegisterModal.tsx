@@ -40,6 +40,13 @@ const RegisterModal = () => {
         name,
       })
 
+      /* test email API*/
+      await axios.post('/api/email', {
+        email,
+        username,
+        name,
+      })
+
       setIsLoading(false)
 
       toast.success('Účet vytvorený.')
@@ -67,19 +74,19 @@ const RegisterModal = () => {
       />
       <Input
         disabled={isLoading}
-        placeholder='Name'
+        placeholder='Meno'
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder='Username'
+        placeholder='Užívateľské meno'
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder='Password'
+        placeholder='Heslo'
         type='password'
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -90,7 +97,7 @@ const RegisterModal = () => {
   const footerContent = (
     <div className='text-neutral-400 text-center mt-4'>
       <p>
-        Already have an account?
+        Už máte svoj účet?
         <span
           onClick={onToggle}
           className='
@@ -100,7 +107,7 @@ const RegisterModal = () => {
           '
         >
           {' '}
-          Sign in
+          Prihlásiť sa
         </span>
       </p>
     </div>
@@ -110,8 +117,8 @@ const RegisterModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={registerModal.isOpen}
-      title='Create an account'
-      actionLabel='Register'
+      title='Vytvoriť účet'
+      actionLabel='Registrovať'
       onClose={registerModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}
