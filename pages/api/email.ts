@@ -34,10 +34,7 @@ export default function (req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    transporter.sendMail(mailData, function (err, info) {
-      if (err) console.log(err)
-      else console.log(info)
-    })
+    transporter.sendMail(mailData)
     return res.status(200).json(mailData)
   } catch (error) {
     console.log(error)
