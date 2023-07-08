@@ -106,7 +106,7 @@ const RegisterModal = () => {
           onChange={() => setCheckedBox((prev) => !prev)}
         />
         <label
-          className='form-check-label lg:text-[30px] text-[40px] ml-[15px]'
+          className='form-check-label text-[#9ca3af] lg:text-[30px] text-[20px] ml-[15px]'
           htmlFor='flexCheckDefault'
         >
           Súhlasím s{' '}
