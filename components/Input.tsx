@@ -1,6 +1,7 @@
 interface InputProps {
   placeholder?: string
   value?: string
+  checked?: boolean
   type?: string
   disabled?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -14,6 +15,7 @@ const Input: React.FC<InputProps> = ({
   onChange,
   disabled,
   label,
+  checked,
 }) => {
   return (
     <div className='w-full'>

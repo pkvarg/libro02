@@ -17,8 +17,10 @@ const RegisterModal = () => {
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
-
+  const [checkedBox, setCheckedBox] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  console.log(checkedBox)
 
   const onToggle = useCallback(() => {
     if (isLoading) {
@@ -30,39 +32,44 @@ const RegisterModal = () => {
   }, [loginModal, registerModal, isLoading])
 
   const onSubmit = useCallback(async () => {
-    try {
-      setIsLoading(true)
+    if (checkedBox === true) {
+      try {
+        setIsLoading(true)
 
-      await axios.post('/api/register', {
-        email,
-        password,
-        username,
-        name,
-      })
+        await axios.post('/api/register', {
+          email,
+          password,
+          username,
+          name,
+        })
 
-      /* test email API*/
-      await axios.post('/api/email', {
-        email,
-        username,
-        name,
-      })
+        /* test email API*/
+        await axios.post('/api/email', {
+          email,
+          username,
+          name,
+        })
 
-      setIsLoading(false)
+        setIsLoading(false)
 
-      toast.success('Účet vytvorený.')
+        toast.success('Účet vytvorený.')
 
-      signIn('credentials', {
-        email,
-        password,
-      })
+        signIn('credentials', {
+          email,
+          password,
+        })
 
-      registerModal.onClose()
-    } catch (error) {
-      toast.error('Nastala chyba')
-    } finally {
-      setIsLoading(false)
+        registerModal.onClose()
+      } catch (error) {
+        toast.error('Skontrolujte údaje')
+        console.log(error)
+      } finally {
+        setIsLoading(false)
+      }
+    } else {
+      toast.error('Musíte potvrdiť súhlas s pravidlami siete')
     }
-  }, [email, password, registerModal, username, name])
+  }, [email, password, registerModal, username, name, checkedBox])
 
   const bodyContent = (
     <div className='flex flex-col gap-4'>
@@ -91,6 +98,23 @@ const RegisterModal = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <div className='flex ml-2 mt-2 items-center'>
+        <input
+          className='w-[20px] h-[20px]'
+          checked={checkedBox}
+          type='checkbox'
+          onChange={() => setCheckedBox((prev) => !prev)}
+        />
+        <label
+          className='form-check-label lg:text-[30px] text-[40px] ml-[15px]'
+          htmlFor='flexCheckDefault'
+        >
+          Súhlasím s{' '}
+          <a href='/rules' target='_blank' className='underline !text-sky-500'>
+            pravidlami siete
+          </a>
+        </label>
+      </div>
     </div>
   )
 
