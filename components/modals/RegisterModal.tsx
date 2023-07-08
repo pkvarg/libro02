@@ -20,8 +20,6 @@ const RegisterModal = () => {
   const [checkedBox, setCheckedBox] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  console.log(checkedBox)
-
   const onToggle = useCallback(() => {
     if (isLoading) {
       return
@@ -32,7 +30,15 @@ const RegisterModal = () => {
   }, [loginModal, registerModal, isLoading])
 
   const onSubmit = useCallback(async () => {
-    if (checkedBox === true) {
+    if (checkedBox !== true) {
+      return toast.error('Musíte potvrdiť súhlas s pravidlami siete')
+    } else if (
+      checkedBox === true &&
+      email !== '' &&
+      password !== '' &&
+      username !== '' &&
+      name !== ''
+    ) {
       try {
         setIsLoading(true)
 
@@ -61,13 +67,13 @@ const RegisterModal = () => {
 
         registerModal.onClose()
       } catch (error) {
-        toast.error('Skontrolujte údaje')
+        toast.error('Nastala chyba')
         console.log(error)
       } finally {
         setIsLoading(false)
       }
     } else {
-      toast.error('Musíte potvrdiť súhlas s pravidlami siete')
+      toast.error('Skontrolujte údaje')
     }
   }, [email, password, registerModal, username, name, checkedBox])
 

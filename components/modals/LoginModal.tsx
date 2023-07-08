@@ -24,21 +24,25 @@ const LoginModal = () => {
   }, [loginModal, registerModal])
 
   const onSubmit = useCallback(async () => {
-    try {
-      setIsLoading(true)
+    if (email !== '' && password !== '') {
+      try {
+        setIsLoading(true)
 
-      await signIn('credentials', {
-        email,
-        password,
-      })
+        await signIn('credentials', {
+          email,
+          password,
+        })
 
-      toast.success('Úspešné prihlásenie')
+        toast.success('Úspešné prihlásenie')
 
-      loginModal.onClose()
-    } catch (error) {
-      console.log(error, 'Nastala chyba')
-    } finally {
-      setIsLoading(false)
+        loginModal.onClose()
+      } catch (error) {
+        console.log(error, 'Nastala chyba')
+      } finally {
+        setIsLoading(false)
+      }
+    } else {
+      toast.error('Skontrolujte údaje')
     }
   }, [email, password, loginModal])
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { BsBellFill, BsHouseFill } from 'react-icons/bs'
-import { FaUser } from 'react-icons/fa'
+import { FaUser, FaUserPlus } from 'react-icons/fa'
+import { ImUserPlus } from 'react-icons/im'
 import { BiLogOut } from 'react-icons/bi'
 import SidebarLogo from './SidebarLogo'
 import SidebarItem from './SidebarItem'
@@ -54,6 +55,14 @@ const Sidebar = () => {
               label='Odhlásiť'
             />
           )}
+          <div className='block lg:hidden text-[30px]'>
+            <SidebarItem
+              key='users'
+              href='/users'
+              label='Sledovať'
+              icon={ImUserPlus}
+            />
+          </div>
           <SidebarTweetButton />
         </div>
       </div>
