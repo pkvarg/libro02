@@ -134,7 +134,7 @@ const RegisterModal = () => {
             text-white 
             cursor-pointer 
             hover:underline
-          '
+            '
         >
           {' '}
           Prihlásiť sa

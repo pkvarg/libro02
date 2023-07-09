@@ -15,7 +15,7 @@ const page = () => {
       </p>
       <p className='mt-2 text-justify'>
         3. Sieť slúži na požičiavanie a propagáciu kníh, ktoré smerujú k
-        ucitevaniu Trojjediného Boha t.j. Otca, Syna - Ježiša Krista a Ducha
+        uctievaniu Trojjediného Boha t.j. Otca, Syna - Ježiša Krista a Ducha
         Svätého.
       </p>
       <p className='mt-2 text-justify'>

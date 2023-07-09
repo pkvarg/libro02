@@ -4,12 +4,14 @@ import useLoginModal from '@/hooks/useLoginModal'
 import Input from '../../components/Input'
 import Modal from '../../components/Modal'
 import useRegisterModal from '@/hooks/useRegisterModal'
+import usePasswordModal from '@/hooks/usePasswordModal'
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
 
 const LoginModal = () => {
   const loginModal = useLoginModal()
   const registerModal = useRegisterModal()
+  const passwordModal = usePasswordModal()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,6 +24,11 @@ const LoginModal = () => {
     loginModal.onClose()
     registerModal.onOpen()
   }, [loginModal, registerModal])
+
+  const forgotPassword = useCallback(() => {
+    loginModal.onClose()
+    passwordModal.onOpen()
+  }, [loginModal, passwordModal])
 
   const onSubmit = useCallback(async () => {
     if (email !== '' && password !== '') {
@@ -78,6 +85,20 @@ const LoginModal = () => {
         >
           {' '}
           Vytvoriť účet
+        </span>
+      </p>
+      <p>
+        Zabudli ste heslo?
+        <span
+          onClick={forgotPassword}
+          className='
+            text-white 
+            cursor-pointer 
+            hover:underline
+          '
+        >
+          {' '}
+          Poslať link
         </span>
       </p>
     </div>
