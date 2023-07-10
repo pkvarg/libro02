@@ -7,19 +7,28 @@ const page = () => {
   const [tokenFromLocalStorage, setTokenFromLocalStorage] = useState<
     string | null
   >()
-  let sentToken
+  const [showModal, setShowModal] = useState<boolean>(false)
+  const tokenValue = token[':token']
 
-  console.log(token)
   useEffect(() => {
-    sentToken = localStorage.getItem('token')
-    setTokenFromLocalStorage(sentToken)
-    console.log(tokenFromLocalStorage)
+    setTokenFromLocalStorage(localStorage.getItem('token'))
   }, [tokenFromLocalStorage])
 
-  // Access the URL parameters
+  let parsed: String
+
+  useEffect(() => {
+    if (tokenFromLocalStorage) {
+      parsed = JSON.parse(tokenFromLocalStorage)
+    }
+    if (tokenValue === parsed) {
+      setShowModal(true)
+    }
+  }, [tokenFromLocalStorage, showModal])
+
   return (
-    <div>
-      <h1>Reset Password</h1>
+    <div className='m-2 text-[#9ca3af]'>
+      <h1 className='text-[35px] text-center'>Obnova hesla</h1>
+      {showModal && <h1>Ideme na to</h1>}
     </div>
   )
 }

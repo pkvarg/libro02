@@ -29,12 +29,13 @@ export default async function forgotPasswordHandler(
 
     const secret = process.env.JWT_SECRET || ''
     const token = sign({ existingUser }, secret, { expiresIn: 20 })
-    const hashedToken = await bcrypt.hash(token, 12)
-    const resetURL = `${origURL}/resetPassword/${hashedToken}`
+    //const hashedToken = await bcrypt.hash(token, 12)
+    const slicedToken = token.slice(0, 39)
+    const resetURL = `${origURL}/resetPassword/${slicedToken}`
     console.log('eUser:', email, 'resetURL:', resetURL)
     await new Email(email, resetURL).send()
 
-    return res.status(200).json(token)
+    return res.status(200).json(slicedToken)
   } catch (error) {
     console.log(error)
     return res.status(400).end()
