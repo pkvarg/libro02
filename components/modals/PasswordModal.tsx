@@ -24,10 +24,20 @@ const PasswordModal = () => {
     setIsLoading(true)
     if (email !== '') {
       try {
-        const { data } = await axios.post('/api/auth/forgotPassword', {
-          email,
-          url,
-        })
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+
+        const { data } = await axios.post(
+          '/api/auth/forgotPassword',
+          {
+            email,
+            url,
+          },
+          config
+        )
 
         localStorage.setItem('token', JSON.stringify(data))
         setIsLoading(false)
