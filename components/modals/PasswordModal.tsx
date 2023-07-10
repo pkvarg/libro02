@@ -24,10 +24,12 @@ const PasswordModal = () => {
     setIsLoading(true)
     if (email !== '') {
       try {
-        await axios.post('/api/auth/forgotPassword', {
+        const { data } = await axios.post('/api/auth/forgotPassword', {
           email,
           url,
         })
+
+        localStorage.setItem('token', JSON.stringify(data))
         setIsLoading(false)
 
         toast.success('Link odoslaný na zadaný email.')
