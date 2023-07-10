@@ -28,7 +28,7 @@ const page = () => {
   return (
     <div className='m-2 text-[#9ca3af]'>
       <h1 className='text-[35px] text-center'>Obnova hesla</h1>
-      {showModal && <h1>Ideme na to</h1>}
+      {showModal && <h1>Ideme na to!</h1>}
     </div>
   )
 }
