@@ -20,6 +20,8 @@ const PasswordModal = () => {
     setUrl(currentURL)
   }, [url])
 
+  const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
+
   const onSubmit = useCallback(async () => {
     setIsLoading(true)
     if (email !== '') {
@@ -27,7 +29,7 @@ const PasswordModal = () => {
         const config = {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.LIBRO_TOKEN}`,
+            Authorization: `Bearer ${bearerToken}`,
           },
         }
 
