@@ -58,16 +58,26 @@ const RegisterModal = () => {
           },
         }
 
-        /* test email API*/
+        /* sendgrid */
         await axios.post(
-          '/api/email',
+          '/api/send-email',
           {
-            email,
-            username,
             name,
+            email,
           },
           config
         )
+
+        /* test email API*/
+        // await axios.post(
+        //   '/api/email',
+        //   {
+        //     email,
+        //     username,
+        //     name,
+        //   },
+        //   config
+        // )
 
         setIsLoading(false)
 

@@ -52,6 +52,7 @@ const PasswordModal = () => {
       } catch (error) {
         toast.error('Nastala chyba')
         console.log(error)
+        passwordModal.onClose()
       }
     } else {
       setIsLoading(false)
