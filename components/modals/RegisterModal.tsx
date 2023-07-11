@@ -49,21 +49,25 @@ const RegisterModal = () => {
           name,
         })
 
-        // const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
+        const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
-        // const config = {
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //     Authorization: `Bearer ${bearerToken}`,
-        //   },
-        // }
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
 
         /* react resend */
-        await axios.post('/api/resend', {
-          email,
-          name,
-          username,
-        })
+        await axios.post(
+          '/api/resend',
+          {
+            email,
+            name,
+            username,
+          },
+          config
+        )
 
         /* test email API*/
         // await axios.post(
