@@ -27,8 +27,11 @@ const PasswordModal = () => {
         const config = {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.LIBRO_TOKEN}`,
           },
         }
+
+        console.log(email, url, config)
 
         const { data } = await axios.post(
           '/api/auth/forgotPassword',
