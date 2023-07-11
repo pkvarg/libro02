@@ -49,24 +49,21 @@ const RegisterModal = () => {
           name,
         })
 
-        const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
+        // const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
+        // const config = {
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     Authorization: `Bearer ${bearerToken}`,
+        //   },
+        // }
 
-        /* sendgrid */
-        await axios.post(
-          '/api/send-email',
-          {
-            name,
-            email,
-          },
-          config
-        )
+        /* react resend */
+        await axios.post('/api/resend', {
+          email,
+          name,
+          username,
+        })
 
         /* test email API*/
         // await axios.post(
@@ -75,9 +72,9 @@ const RegisterModal = () => {
         //     email,
         //     username,
         //     name,
-        //   },
-        //   config
-        // )
+        //   }
+        // config
+        //)
 
         setIsLoading(false)
 
