@@ -49,12 +49,25 @@ const RegisterModal = () => {
           name,
         })
 
+        const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
+
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+
         /* test email API*/
-        await axios.post('/api/email', {
-          email,
-          username,
-          name,
-        })
+        await axios.post(
+          '/api/email',
+          {
+            email,
+            username,
+            name,
+          },
+          config
+        )
 
         setIsLoading(false)
 
