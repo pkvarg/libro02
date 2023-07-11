@@ -1,5 +1,5 @@
 import { Resend } from 'resend'
-import WelcomeEmail from '@/pages/emails/welcome'
+import WelcomeEmail from '@/libs/emails/welcome'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const resend = new Resend(process.env.RESEND_API_KEY)

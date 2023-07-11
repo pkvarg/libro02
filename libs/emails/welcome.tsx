@@ -9,30 +9,6 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 
-interface WelcomeEmailProps {
-  name?: string
-}
-
-export const WelcomeEmail = (name: String) => (
-  <Html>
-    <Head />
-    <Preview>Log in with this magic link</Preview>
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>Vitaj na Librosophii {name}</Heading>
-
-        <Text style={{ ...text, marginBottom: '14px' }}>
-          Registrácia bola úspešná
-        </Text>
-
-        <Text style={footer}>Vaša Librosophia</Text>
-      </Container>
-    </Body>
-  </Html>
-)
-
-export default WelcomeEmail
-
 const main = {
   backgroundColor: '#ffffff',
 }
@@ -88,3 +64,23 @@ const code = {
   border: '1px solid #eee',
   color: '#333',
 }
+
+export const WelcomeEmail = (name: String) => (
+  <Html>
+    <Head />
+    <Preview>Log in with this magic link</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Heading style={h1}>Vitaj na Librosophii `${name}`</Heading>
+
+        <Text style={{ ...text, marginBottom: '14px' }}>
+          Registrácia bola úspešná
+        </Text>
+
+        <Text style={footer}>Vaša Librosophia</Text>
+      </Container>
+    </Body>
+  </Html>
+)
+
+export default WelcomeEmail
