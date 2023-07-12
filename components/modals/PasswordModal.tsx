@@ -34,25 +34,25 @@ const PasswordModal = () => {
         }
 
         console.log(email, url, config)
-        /* resend */
-        await axios.post(
-          '/api/resend',
-          {
-            email,
-            url,
-          },
-          config
-        )
-
-        /* uses Nodemailer out of auth folder! */
+        /* using resend */
         // await axios.post(
-        //   '/api/forgotPassword',
+        //   '/api/resend',
         //   {
         //     email,
         //     url,
         //   },
         //   config
         // )
+
+        /* using Nodemailer API folder! */
+        await axios.post(
+          '/api/forgotPassword',
+          {
+            email,
+            url,
+          },
+          config
+        )
 
         setIsLoading(false)
 

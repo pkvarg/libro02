@@ -1,3 +1,4 @@
+/* Nodemailer class for sending Welcome email*/
 class Email {
   email: String
   url: String
@@ -27,14 +28,13 @@ class Email {
       subject: 'Obnova hesla',
       html: `<div>
       <p>Obnovte si heslo cez link nižšie</p>
-      <p>Link: ${this.url}</p>
+      <a href=${this.url}>Link</a>
       <p>Librosophia</p>
       </div>`,
     }
+
     await this.newTransport().sendMail(mailOptions)
   }
-
-  //time = new Date()
 }
 
 export default Email

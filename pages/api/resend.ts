@@ -36,18 +36,7 @@ export default async function handler(
       },
     })
     if (existingUser) {
-      const { resetURL, resetToken, passwordResetExpires, passwordResetToken } =
-        createResetToken(existingUser, url)
-
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: existingUser.id,
-        },
-        data: {
-          passwordResetExpires,
-          passwordResetToken,
-        },
-      })
+      const { resetURL, resetToken } = await createResetToken(existingUser, url)
 
       try {
         await resend.sendEmail({
