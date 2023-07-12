@@ -88,6 +88,7 @@ export const TemplateEmail = (name: string) => (
             <Link href={name} style={link}>
               Link
             </Link>
+            <p>Platnosť linku je 15 minút</p>
           </>
         )}
 
