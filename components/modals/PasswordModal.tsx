@@ -34,7 +34,7 @@ const PasswordModal = () => {
         }
 
         console.log(email, url, config)
-
+        /* resend */
         await axios.post(
           '/api/resend',
           {
@@ -44,17 +44,16 @@ const PasswordModal = () => {
           config
         )
 
-        /* uses Nodemailer */
-        // const { data } = await axios.post(
-        //   '/api/auth/forgotPassword',
-        //   {
-        //     email,
-        //     url,
-        //   },
-        //   config
-        // )
+        /* uses Nodemailer out of auth folder! */
+        await axios.post(
+          '/api/forgotPassword',
+          {
+            email,
+            url,
+          },
+          config
+        )
 
-        //localStorage.setItem('token', JSON.stringify(data))
         setIsLoading(false)
 
         toast.success('Link odoslaný na zadaný email.')

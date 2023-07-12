@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import prisma from '@/libs/prismadb'
 
 export default function createResetToken(existingUser: Object, url: String) {
   const resetToken = crypto.randomBytes(32).toString('hex')

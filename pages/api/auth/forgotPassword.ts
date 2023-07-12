@@ -15,7 +15,6 @@ export default async function forgotPasswordHandler(
   const email = req.body.email
   const origURL = req.body.url
   console.log('fP:', req.body)
-  //let existingUser
 
   try {
     const existingUser = await prisma.user.findUnique({
