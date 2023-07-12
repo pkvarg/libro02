@@ -45,14 +45,14 @@ const PasswordModal = () => {
         )
 
         /* uses Nodemailer out of auth folder! */
-        await axios.post(
-          '/api/forgotPassword',
-          {
-            email,
-            url,
-          },
-          config
-        )
+        // await axios.post(
+        //   '/api/forgotPassword',
+        //   {
+        //     email,
+        //     url,
+        //   },
+        //   config
+        // )
 
         setIsLoading(false)
 
