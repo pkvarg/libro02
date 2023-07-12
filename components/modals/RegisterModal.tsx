@@ -58,7 +58,7 @@ const RegisterModal = () => {
           },
         }
 
-        /* react resend */
+        /* react resend works on Vercel */
         await axios.post(
           '/api/resend',
           {
@@ -69,7 +69,7 @@ const RegisterModal = () => {
           config
         )
 
-        /* test email API*/
+        /* nodemailer email API works on VPS */
         // await axios.post(
         //   '/api/email',
         //   {

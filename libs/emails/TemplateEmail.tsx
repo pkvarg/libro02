@@ -7,6 +7,7 @@ import {
   Preview,
   Text,
 } from '@react-email/components'
+import { Link } from '@react-email/link'
 import * as React from 'react'
 
 const main = {
@@ -65,17 +66,30 @@ const code = {
   color: '#333',
 }
 
-export const WelcomeEmail = (name: String) => (
+export const TemplateEmail = (name: string) => (
   <Html>
     <Head />
-    <Preview>Log in with this magic link</Preview>
+    {/* <Preview>Log in with this magic link</Preview> */}
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Vitaj na Librosophii `${name}`</Heading>
-
-        <Text style={{ ...text, marginBottom: '14px' }}>
-          Registrácia bola úspešná
-        </Text>
+        {!name.includes('http') ? (
+          <>
+            <Heading style={h1}>Vitaj na Librosophii {name}</Heading>
+            <Text style={{ ...text, marginBottom: '14px' }}>
+              Registrácia bola úspešná
+            </Text>
+          </>
+        ) : (
+          <>
+            <Heading style={h1}>Link pre obnovu hesla</Heading>
+            <Text style={{ ...text, marginBottom: '14px' }}>
+              Kliknite na link pre obnovu hesla:
+            </Text>
+            <Link href={name} style={link}>
+              Link
+            </Link>
+          </>
+        )}
 
         <Text style={footer}>Vaša Librosophia</Text>
       </Container>
@@ -83,4 +97,4 @@ export const WelcomeEmail = (name: String) => (
   </Html>
 )
 
-export default WelcomeEmail
+export default TemplateEmail

@@ -27,11 +27,19 @@ model User {
   hasNotification Boolean?
   active          Boolean? @default(true)
   isAdmin         Boolean? @default(false)
+  passwordResetToken String? 
+  passwordResetExpires DateTime? @default(now())
+
+  
 
   posts         Post[]
   comments      Comment[]
   notifications Notification[]
+
+  
 }
+
+
 
 model Post {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId
