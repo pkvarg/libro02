@@ -66,7 +66,7 @@ const code = {
   color: '#333',
 }
 
-export const TemplateEmail = (name: string) => (
+export const emailTemplate = (name: string) => (
   <Html>
     <Head />
     {/* <Preview>Log in with this magic link</Preview> */}
@@ -98,4 +98,4 @@ export const TemplateEmail = (name: string) => (
   </Html>
 )
 
-export default TemplateEmail
+export default emailTemplate

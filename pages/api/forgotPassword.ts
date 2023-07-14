@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 import createResetToken from '@/libs/createResetToken'
-import EmailNodemailer from '@/libs/emailNodemailer'
+import EmailViaNodemailer from '@/libs/emailViaNodemailer'
+import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 
 export default async function forgotPasswordHandler(
   req: NextApiRequest,
@@ -11,7 +12,9 @@ export default async function forgotPasswordHandler(
     return res.status(405).end()
   }
 
-  const { email, url } = req.body
+  const { email, url, name, username, type } = req.body
+
+  console.log('fP:', req.body)
 
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -22,7 +25,18 @@ export default async function forgotPasswordHandler(
   if (existingUser) {
     const { resetURL, resetToken } = await createResetToken(existingUser, url)
     try {
-      await new EmailNodemailer(email, resetURL).send()
+      if (type === 'reset-password-nodemailer') {
+        await new EmailViaNodemailer(
+          email,
+          username,
+          name,
+          type,
+          resetURL
+        ).send()
+      } else if (type === 'reset-password-resend') {
+        console.log(type)
+        await EmailViaResend(url, email, name)
+      }
 
       return res.status(200).json(resetToken)
     } catch (error) {

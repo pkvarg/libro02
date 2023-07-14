@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
+import EmailViaNodemailer from '@/libs/emailViaNodemailer'
+import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 
 import prisma from '@/libs/prismadb'
 
@@ -12,7 +14,9 @@ export default async function handler(
   }
 
   try {
-    const { email, username, name, password } = req.body
+    const { email, username, name, password, type, url } = req.body
+
+    console.log('reg:', req.body)
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
@@ -24,6 +28,12 @@ export default async function handler(
         hashedPassword,
       },
     })
+
+    if (type === 'register-nodemailer') {
+      await new EmailViaNodemailer(email, username, name, type, url).send()
+    } else if (type === 'register-resend') {
+      await EmailViaResend(url, email, name)
+    }
 
     return res.status(200).json(user)
   } catch (error) {

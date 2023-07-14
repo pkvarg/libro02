@@ -42,13 +42,6 @@ const RegisterModal = () => {
       try {
         setIsLoading(true)
 
-        await axios.post('/api/register', {
-          email,
-          password,
-          username,
-          name,
-        })
-
         const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
         const config = {
@@ -58,27 +51,18 @@ const RegisterModal = () => {
           },
         }
 
-        /* react resend works on Vercel */
         await axios.post(
-          '/api/resend',
+          '/api/register',
           {
             email,
-            name,
+            password,
             username,
+            name,
+            //type: 'register-nodemailer', // sends welcome email via Nodemailer
+            type: 'register-resend', // send welcome email via Resend
           },
           config
         )
-
-        /* nodemailer email API works on VPS */
-        // await axios.post(
-        //   '/api/email',
-        //   {
-        //     email,
-        //     username,
-        //     name,
-        //   }
-        // config
-        //)
 
         setIsLoading(false)
 
