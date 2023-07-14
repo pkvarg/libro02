@@ -30,7 +30,7 @@ export default async function passwordReset(
     checkTokens = hashedDBToken === hashActualToken
     const date = new Date()
     const dateISO = date.toISOString()
-    if (tokenExpiry >= date) {
+    if (tokenExpiry > date) {
       expiry = true
     } else {
       expiry = false
