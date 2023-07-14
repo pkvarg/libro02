@@ -5,9 +5,10 @@ import { SessionProvider } from 'next-auth/react'
 import Layout from '@/components/Layout'
 import LoginModal from '@/components/modals/LoginModal'
 import RegisterModal from '@/components/modals/RegisterModal'
-import PasswordModal from '@/components/modals/PasswordModal'
+import ForgotPasswordModal from '@/components/modals/ForgotPasswordModal'
 import '@/styles/globals.css'
 import EditModal from '@/components/modals/EditModal'
+import ResetPasswordModal from '@/components/modals/ResetPasswordModal'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -15,7 +16,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <Toaster />
       <RegisterModal />
       <LoginModal />
-      <PasswordModal />
+      <ForgotPasswordModal />
+      <ResetPasswordModal />
       <EditModal />
       <Layout>
         <Component {...pageProps} />

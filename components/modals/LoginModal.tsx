@@ -4,14 +4,14 @@ import useLoginModal from '@/hooks/useLoginModal'
 import Input from '../../components/Input'
 import Modal from '../../components/Modal'
 import useRegisterModal from '@/hooks/useRegisterModal'
-import usePasswordModal from '@/hooks/usePasswordModal'
+import useForgotPasswordModal from '@/hooks/useForgotPasswordModal'
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
 
 const LoginModal = () => {
   const loginModal = useLoginModal()
   const registerModal = useRegisterModal()
-  const passwordModal = usePasswordModal()
+  const forgotPasswordModal = useForgotPasswordModal()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -27,8 +27,8 @@ const LoginModal = () => {
 
   const forgotPassword = useCallback(() => {
     loginModal.onClose()
-    passwordModal.onOpen()
-  }, [loginModal, passwordModal])
+    forgotPasswordModal.onOpen()
+  }, [loginModal, forgotPasswordModal])
 
   const onSubmit = useCallback(async () => {
     if (email !== '' && password !== '') {

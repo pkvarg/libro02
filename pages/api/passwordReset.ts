@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
-import crypto from 'crypto'
+import bcrypt from 'bcrypt'
 
 export default async function passwordReset(
   req: NextApiRequest,
@@ -9,7 +9,7 @@ export default async function passwordReset(
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
-  const { token, email } = req.body
+  const { email, password } = req.body
 
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -17,29 +17,21 @@ export default async function passwordReset(
     },
   })
 
-  let checkTokens: boolean
-  let expiry: boolean
+  const hashedPassword = await bcrypt.hash(password, 12)
 
   if (existingUser) {
-    const hashedDBToken = existingUser?.passwordResetToken
-    const tokenExpiry = existingUser?.passwordResetExpires?.toISOString()
-    const hashActualToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex')
-    checkTokens = hashedDBToken === hashActualToken
-    const date = new Date()
-    const dateISO = date.toISOString()
-
-    if (tokenExpiry !== undefined && tokenExpiry > dateISO) {
-      expiry = true
-    } else {
-      expiry = false
-    }
-
-    if (expiry && checkTokens) {
-      return res.status(200).json(checkTokens)
-    } else {
+    try {
+      await prisma.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          hashedPassword,
+        },
+      })
+      return res.status(200).json('OK')
+    } catch (error) {
+      console.log(error)
       return res.status(400).end()
     }
   }

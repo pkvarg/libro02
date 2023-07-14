@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useCallback, useEffect, useState } from 'react'
-import usePasswordModal from '@/hooks/usePasswordModal'
+import useForgotPasswordModal from '@/hooks/useForgotPasswordModal'
 import { useRouter } from 'next/router'
 import Input from '../Input'
 import Modal from '../Modal'
 
-const PasswordModal = () => {
-  const passwordModal = usePasswordModal()
+const ForgotPasswordModal = () => {
+  const forgotPasswordModal = useForgotPasswordModal()
 
   const [email, setEmail] = useState('')
   const [url, setUrl] = useState('')
@@ -33,18 +33,6 @@ const PasswordModal = () => {
           },
         }
 
-        console.log(email, url, config)
-        /* using resend */
-        // await axios.post(
-        //   '/api/resend',
-        //   {
-        //     email,
-        //     url,
-        //   },
-        //   config
-        // )
-
-        /* using Nodemailer API folder! */
         await axios.post(
           '/api/forgotPassword',
           {
@@ -59,11 +47,11 @@ const PasswordModal = () => {
         setIsLoading(false)
 
         toast.success('Link odoslaný na zadaný email.')
-        passwordModal.onClose()
+        forgotPasswordModal.onClose()
       } catch (error) {
         toast.error('Nastala chyba')
         console.log(error)
-        passwordModal.onClose()
+        forgotPasswordModal.onClose()
       }
     } else {
       setIsLoading(false)
@@ -85,14 +73,14 @@ const PasswordModal = () => {
   return (
     <Modal
       disabled={isLoading}
-      isOpen={passwordModal.isOpen}
+      isOpen={forgotPasswordModal.isOpen}
       title='Zabudnuté heslo'
       actionLabel='Poslať link'
-      onClose={passwordModal.onClose}
+      onClose={forgotPasswordModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}
     />
   )
 }
 
-export default PasswordModal
+export default ForgotPasswordModal
