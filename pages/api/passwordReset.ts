@@ -31,7 +31,7 @@ export default async function passwordReset(
     const date = new Date()
     const dateISO = date.toISOString()
 
-    if (tokenExpiry > dateISO) {
+    if (tokenExpiry !== undefined && tokenExpiry > dateISO) {
       expiry = true
     } else {
       expiry = false
