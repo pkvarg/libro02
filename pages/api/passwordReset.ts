@@ -22,7 +22,7 @@ export default async function passwordReset(
 
   if (existingUser) {
     const hashedDBToken = existingUser.passwordResetToken
-    const tokenExpiry = existingUser.passwordResetExpires
+    const tokenExpiry = existingUser.passwordResetExpires.toISOString()
     const hashActualToken = crypto
       .createHash('sha256')
       .update(token)
@@ -30,7 +30,8 @@ export default async function passwordReset(
     checkTokens = hashedDBToken === hashActualToken
     const date = new Date()
     const dateISO = date.toISOString()
-    if (tokenExpiry > date) {
+
+    if (tokenExpiry > dateISO) {
       expiry = true
     } else {
       expiry = false
