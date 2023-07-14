@@ -21,8 +21,8 @@ export default async function passwordReset(
   let expiry: boolean
 
   if (existingUser) {
-    const hashedDBToken = existingUser.passwordResetToken
-    const tokenExpiry = existingUser.passwordResetExpires.toISOString()
+    const hashedDBToken = existingUser?.passwordResetToken
+    const tokenExpiry = existingUser?.passwordResetExpires?.toISOString()
     const hashActualToken = crypto
       .createHash('sha256')
       .update(token)
