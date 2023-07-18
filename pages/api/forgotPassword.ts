@@ -33,7 +33,7 @@ export default async function forgotPasswordHandler(
         ).send()
       } else if (type === 'reset-password-resend') {
         console.log(type)
-        await EmailViaResend(url, email, name)
+        await EmailViaResend(url, email, name, type)
       }
 
       return res.status(200).json(resetToken)

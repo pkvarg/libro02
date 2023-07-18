@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 
 import useLoginModal from '@/hooks/useLoginModal'
@@ -19,6 +19,12 @@ const RegisterModal = () => {
   const [name, setName] = useState('')
   const [checkedBox, setCheckedBox] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [url, setUrl] = useState('')
+
+  useEffect(() => {
+    const currentURL = `${window.location.origin}`
+    setUrl(currentURL)
+  }, [url])
 
   const onToggle = useCallback(() => {
     if (isLoading) {
@@ -51,27 +57,41 @@ const RegisterModal = () => {
           },
         }
 
+        // await axios.post(
+        //   '/api/register',
+        //   {
+        //     email,
+        //     password,
+        //     username,
+        //     name,
+        //     //type: 'register-nodemailer', // sends welcome email via Nodemailer
+        //     type: 'register-resend', // send welcome email via Resend
+        //   },
+        //   config
+        // )
+
         await axios.post(
-          '/api/register',
+          '/api/reg-link',
           {
             email,
             password,
             username,
             name,
-            //type: 'register-nodemailer', // sends welcome email via Nodemailer
-            type: 'register-resend', // send welcome email via Resend
+            url,
+            //type: 'reg-link-nodemailer', // sends welcome email via Nodemailer
+            type: 'reg-link-resend', // send welcome email via Resend
           },
           config
         )
 
         setIsLoading(false)
 
-        toast.success('Účet vytvorený.')
+        // toast.success('Účet vytvorený.')
 
-        signIn('credentials', {
-          email,
-          password,
-        })
+        // signIn('credentials', {
+        //   email,
+        //   password,
+        // })
 
         registerModal.onClose()
       } catch (error) {
