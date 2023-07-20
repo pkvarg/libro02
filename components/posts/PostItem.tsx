@@ -63,7 +63,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     if (postId && whosPost === userId) {
       try {
         const response = await axios.delete(`/api/posts/${postId}`)
-        console.log('res:', response)
+        console.log('resp:', response)
       } catch (error) {
         console.log(error)
       }
