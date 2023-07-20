@@ -60,8 +60,13 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const whosPost = data.userId
 
   const deletePost = async (postId: String, userId: String) => {
-    if (whosPost === userId) {
-      const response = await axios.delete(`/api/posts/${postId}`)
+    if (postId && whosPost === userId) {
+      try {
+        const response = await axios.delete(`/api/posts/${postId}`)
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     router.push(`/users/${whoIsCurrentUser}`)
