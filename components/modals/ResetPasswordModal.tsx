@@ -5,7 +5,6 @@ import useResetPasswordModal from '@/hooks/useResetPasswordModal'
 import useForgotPasswordModal from '@/hooks/useForgotPasswordModal'
 import Input from '../Input'
 import Modal from '../Modal'
-import Button from '../Button'
 import { useRouter } from 'next/router'
 
 const ResetPasswordModal = () => {
@@ -21,7 +20,7 @@ const ResetPasswordModal = () => {
 
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+  const [isDisabled, setIsDisabled] = useState<boolean | undefined>(undefined)
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -48,10 +47,10 @@ const ResetPasswordModal = () => {
   }, [resetPasswordPathname])
 
   useEffect(() => {
-    if (resetPasswordPathname) {
+    if (email !== undefined && token !== undefined) {
       const checkToken = async () => {
         try {
-          const data = await axios.post(
+          const { data } = await axios.post(
             '/api/checkResetToken',
             {
               email,
@@ -59,8 +58,7 @@ const ResetPasswordModal = () => {
             },
             config
           )
-          console.log('dataCheckTok', data)
-          if (data.data === true) {
+          if (data === true) {
             setIsDisabled(false)
           } else {
             toast.error('Link pravdepodobne expiroval')
@@ -73,7 +71,7 @@ const ResetPasswordModal = () => {
       }
       checkToken()
     }
-  }, [email, token, resetPasswordPathname])
+  }, [email, token])
 
   const onSubmit = useCallback(async () => {
     if (
@@ -127,7 +125,8 @@ const ResetPasswordModal = () => {
 
   const bodyContent = (
     <div className='flex flex-col gap-4 '>
-      {isDisabled && (
+      {isDisabled === undefined && ''}
+      {isDisabled === true && (
         <div className='flex gap-4 items-center'>
           <h1 className='text-[#b33a3a] text-center'>Link expiroval!</h1>
 

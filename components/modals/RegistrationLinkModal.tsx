@@ -1,13 +1,10 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useRegistrationLinkModal from '@/hooks/useRegistrationLinkModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
-import { signIn } from 'next-auth/react'
 
-import Input from '../Input'
 import Modal from '../Modal'
-import Button from '../Button'
 import { useRouter } from 'next/router'
 import useLoginModal from '@/hooks/useLoginModal'
 
@@ -23,7 +20,7 @@ const RegistrationLinkModal = () => {
   const [email, setEmail] = useState<string | undefined>()
   const [token, setToken] = useState<string | undefined>()
 
-  const [isDisabled, setIsDisabled] = useState<boolean>(true)
+  const [isDisabled, setIsDisabled] = useState<boolean | undefined>(undefined)
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -85,14 +82,17 @@ const RegistrationLinkModal = () => {
 
   const bodyContent = (
     <div className='flex flex-col gap-4 '>
-      {isDisabled && (
+      {isDisabled === undefined && (
+        <h1 className='text-center text-[27.5px]'>................</h1>
+      )}
+      {isDisabled === true && (
         <div className='flex flex-col gap-4 items-center'>
           <h1 className='text-[#b33a3a] text-center text-[27.5px]'>
             Link expiroval!
           </h1>
         </div>
       )}
-      {!isDisabled && (
+      {isDisabled === false && (
         <h1 className='text-[35px] text-green-600 text-center'>
           Registrácia bola úspešná!
         </h1>

@@ -69,27 +69,20 @@ const code = {
 export const emailRegister = (name: string) => (
   <Html>
     <Head />
-    {/* <Preview>Log in with this magic link</Preview> */}
+    <Preview>Dokončite svoju registráciu na Librosophia.sk</Preview>
     <Body style={main}>
       <Container style={container}>
-        {!name.includes('http') ? (
-          <>
-            <Heading style={h1}>Vitaj na Librosophii {name}</Heading>
-            <Text style={{ ...text, marginBottom: '14px' }}>
-              Registrácia bola úspešná
-            </Text>
-          </>
-        ) : (
-          <>
-            <Heading style={h1}>Registračný link</Heading>
-            <Text style={{ ...text, marginBottom: '14px' }}>
-              Kliknite na link pre dokončenie registrácie:
-            </Text>
-            <Link href={name} style={link}>
-              Link
-            </Link>
-          </>
-        )}
+        <>
+          <Heading style={h1}>Vitajte na Librosophii</Heading>
+
+          <Text style={{ ...text, marginBottom: '14px' }}>
+            Kliknite na link pre dokončenie registrácie:
+          </Text>
+          <Link href={name} style={link}>
+            Link
+          </Link>
+          <p style={text}>Platnosť linku je 15 minút</p>
+        </>
 
         <Text style={footer}>Vaša Librosophia</Text>
       </Container>

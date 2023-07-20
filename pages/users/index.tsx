@@ -1,13 +1,19 @@
 import React from 'react'
 import useUsers from '@/hooks/useUsers'
 import Avatar from '@/components/Avatar'
+import useCurrentUser from '@/hooks/useCurrentUser'
 
 const index = () => {
   const { data: users = [] } = useUsers()
+  const { data: currentUser } = useCurrentUser()
+  const isCurrentUser = currentUser !== undefined
 
   if (users.length === 0) {
     return null
+  } else if (!isCurrentUser) {
+    return null
   }
+
   return (
     <div className='px-6 py-4 block'>
       <div className='bg-neutral-800 rounded-xl p-4'>

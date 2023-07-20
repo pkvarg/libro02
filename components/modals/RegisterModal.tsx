@@ -68,7 +68,7 @@ const RegisterModal = () => {
           toast.error(`Užívateľ s emailom ${email} už existuje`)
         } else {
           await axios.post(
-            '/api/reg-link',
+            '/api/register',
             {
               email,
               password,

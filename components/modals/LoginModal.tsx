@@ -54,14 +54,18 @@ const LoginModal = () => {
         )
 
         if (data.isRegistered) {
-          await signIn('credentials', {
-            email,
-            password,
-          })
+          try {
+            const data = await signIn('credentials', {
+              email,
+              password,
+            })
+            console.log(data)
+            toast.success('Úspešné prihlásenie')
 
-          toast.success('Úspešné prihlásenie')
-
-          loginModal.onClose()
+            loginModal.onClose()
+          } catch (error) {
+            console.log(error)
+          }
         } else {
           toast.error('Užívateľ nie je registrovaný!')
         }

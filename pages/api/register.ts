@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
 import EmailViaNodemailer from '@/libs/emailViaNodemailer'
 import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
-
+import createRegisterToken from '@/libs/createRegisterToken'
 import prisma from '@/libs/prismadb'
 
 export default async function handler(
@@ -16,7 +16,8 @@ export default async function handler(
   try {
     const { email, username, name, password, type, url } = req.body
 
-    console.log('reg:', req.body)
+    const { registerToken, registerTokenExpires, token, registerURL } =
+      await createRegisterToken(email, url)
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
@@ -26,16 +27,33 @@ export default async function handler(
         username,
         name,
         hashedPassword,
+        isRegistered: false,
+        registerToken,
+        registerTokenExpires,
       },
     })
 
-    if (type === 'register-nodemailer') {
-      await new EmailViaNodemailer(email, username, name, type, url).send()
-    } else if (type === 'register-resend') {
-      await EmailViaResend(url, email, name, type)
+    /* old registration*/
+    // if (type === 'register-nodemailer') {
+    //   await new EmailViaNodemailer(email, username, name, type, url).send()
+    // } else if (type === 'register-resend') {
+    //   await EmailViaResend(url, email, name, type)
+    // }
+
+    /* nodemailer not implemented */
+    if (type === 'reg-link-nodemailer') {
+      await new EmailViaNodemailer(
+        email,
+        username,
+        name,
+        type,
+        registerURL
+      ).send()
+    } else if (type === 'reg-link-resend') {
+      await EmailViaResend(registerURL, email, name, type)
     }
 
-    return res.status(200).json(user)
+    return res.status(200).json('OK')
   } catch (error) {
     console.log(error)
     return res.status(400).end()

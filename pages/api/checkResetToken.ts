@@ -10,12 +10,15 @@ export default async function checkResetToken(
     return res.status(405).end()
   }
   const { token, email } = req.body
+  let existingUser
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  })
+  if (email) {
+    existingUser = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    })
+  }
 
   let checkTokens: boolean
   let expiry: boolean
@@ -37,10 +40,14 @@ export default async function checkResetToken(
       expiry = false
     }
 
+    console.log('chReTok:', checkTokens, expiry)
+
     if (expiry && checkTokens) {
       return res.status(200).json(checkTokens)
     } else {
       return res.status(400).end()
     }
+  } else {
+    return res.status(400).end()
   }
 }

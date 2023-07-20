@@ -15,7 +15,7 @@ model User {
   name            String?
   username        String?   @unique
   bio             String?
-  email           String?   @unique
+  email           String   @unique
   emailVerified   DateTime?
   image           String?
   coverImage      String?

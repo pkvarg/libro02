@@ -49,20 +49,22 @@ const Sidebar = () => {
             />
           ))}
           {currentUser && (
-            <SidebarItem
-              onClick={() => signOut()}
-              icon={BiLogOut}
-              label='Odhlásiť'
-            />
+            <>
+              <SidebarItem
+                onClick={() => signOut()}
+                icon={BiLogOut}
+                label='Odhlásiť'
+              />
+              <div className='block lg:hidden text-[30px]'>
+                <SidebarItem
+                  key='users'
+                  href='/users'
+                  label='Sledovať'
+                  icon={ImUserPlus}
+                />
+              </div>
+            </>
           )}
-          <div className='block lg:hidden text-[30px]'>
-            <SidebarItem
-              key='users'
-              href='/users'
-              label='Sledovať'
-              icon={ImUserPlus}
-            />
-          </div>
           <SidebarTweetButton />
         </div>
       </div>

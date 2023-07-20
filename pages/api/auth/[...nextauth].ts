@@ -35,7 +35,8 @@ export const authOptions: AuthOptions = {
         )
 
         if (!isCorrectPassword) {
-          throw new Error('Neplatné prihlasovacie údaje')
+          // throw new Error('Neplatné prihlasovacie údaje')
+          return Promise.resolve(null)
         }
 
         return user

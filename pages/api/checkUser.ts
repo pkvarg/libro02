@@ -14,9 +14,9 @@ export default async function handler(
   try {
     const existingUser = await checkUserExists(email)
 
-    if (existingUser) {
-      console.log(existingUser)
-    }
+    // if (existingUser) {
+    //   console.log(existingUser)
+    // }
 
     return res.status(200).json(existingUser)
   } catch (error) {

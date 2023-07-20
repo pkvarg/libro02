@@ -31,7 +31,6 @@ export default async function checkRegistrationToken(
       .update(token)
       .digest('hex')
 
-    console.log('chRT:', token, hashActualToken, hashedDBToken)
     const tokenExpiry = existingUser?.registerTokenExpires?.toISOString()
 
     checkTokens = hashedDBToken === hashActualToken
@@ -45,16 +44,20 @@ export default async function checkRegistrationToken(
     }
 
     if (expiry && checkTokens) {
-      const setExistingUserToRegistered = await prisma.user.update({
-        where: {
-          email: email,
-        },
-        data: {
-          isRegistered: true,
-        },
-      })
+      try {
+        const setExistingUserToRegistered = await prisma.user.update({
+          where: {
+            email: email,
+          },
+          data: {
+            isRegistered: true,
+          },
+        })
 
-      return res.status(200).json(checkTokens)
+        return res.status(200).json(checkTokens)
+      } catch (error) {
+        return res.status(400).end()
+      }
     } else {
       return res.status(400).end()
     }
