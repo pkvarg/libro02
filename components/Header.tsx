@@ -12,7 +12,8 @@ const Header: React.FC<HeaderProps> = ({ label, showBackArrow }) => {
   const router = useRouter()
 
   const handleBack = useCallback(() => {
-    router.back()
+    // router.back()
+    router.push('/')
   }, [router])
 
   return (

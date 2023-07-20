@@ -33,7 +33,6 @@ model User {
   passwordResetToken String? 
   passwordResetExpires DateTime? @default(now())
 
-  
 
   posts         Post[]
   comments      Comment[]

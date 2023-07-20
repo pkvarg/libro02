@@ -6,6 +6,7 @@ import { formatDistanceToNowStrict } from 'date-fns'
 import useLoginModal from '@/hooks/useLoginModal'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useLike from '@/hooks/useLike'
+import axios from 'axios'
 
 import Avatar from '../Avatar'
 interface PostItemProps {
@@ -54,6 +55,17 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
     return formatDistanceToNowStrict(new Date(data.createdAt))
   }, [data.createdAt])
+
+  const whoIsCurrentUser = currentUser.id
+  const whosPost = data.userId
+
+  const deletePost = async (postId: any, userId: any) => {
+    if (whosPost === userId) {
+      const response = await axios.delete(`/api/posts/${postId}`)
+    }
+
+    router.push(`/users/${whoIsCurrentUser}`)
+  }
 
   return (
     <div
@@ -131,6 +143,14 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             </div>
           </div>
         </div>
+        {whoIsCurrentUser === whosPost && (
+          <button
+            onClick={() => deletePost(data.id, data.user.id)}
+            className='ml-auto cursor-pointer text-[#ff0000]'
+          >
+            Zmazať
+          </button>
+        )}
       </div>
     </div>
   )
