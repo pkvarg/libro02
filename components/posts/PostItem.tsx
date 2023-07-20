@@ -56,11 +56,11 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     return formatDistanceToNowStrict(new Date(data.createdAt))
   }, [data.createdAt])
 
-  const whoIsCurrentUser = currentUser.id
-  const whosPost = data.userId
+  const whoIsCurrentUser = currentUser?.id
+  const whosPost = data?.userId
 
   const deletePost = async (postId: String, userId: String) => {
-    if (postId && whosPost === userId) {
+    if (postId !== undefined && whosPost === userId) {
       try {
         const response = await axios.delete(`/api/posts/${postId}`)
         console.log('resp:', response)
