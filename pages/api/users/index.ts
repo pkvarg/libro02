@@ -10,6 +10,9 @@ export default async function handler(
   }
   try {
     const users = await prisma.user.findMany({
+      where: {
+        isRegistered: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },

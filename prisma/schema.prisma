@@ -26,6 +26,9 @@ model User {
   followingIds    String[] @db.ObjectId
   hasNotification Boolean?
   active          Boolean? @default(true)
+  isRegistered    Boolean? @default(false)
+  registerToken   String?
+  registerTokenExpires DateTime? @default(now())
   isAdmin         Boolean? @default(false)
   passwordResetToken String? 
   passwordResetExpires DateTime? @default(now())
@@ -76,11 +79,11 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Registration {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  email           String   @unique
-  registerToken   String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  registerTokenExpires DateTime? @default(now())
-}
+// model Registration {
+//   id              String @id @default(auto()) @map("_id") @db.ObjectId
+//   email           String   @unique
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @updatedAt
+//   registerToken   String
+//   registerTokenExpires DateTime? @default(now())
+// }

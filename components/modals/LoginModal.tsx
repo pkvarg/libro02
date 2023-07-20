@@ -7,6 +7,7 @@ import useRegisterModal from '@/hooks/useRegisterModal'
 import useForgotPasswordModal from '@/hooks/useForgotPasswordModal'
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
+import axios from 'axios'
 
 const LoginModal = () => {
   const loginModal = useLoginModal()
@@ -35,16 +36,38 @@ const LoginModal = () => {
       try {
         setIsLoading(true)
 
-        await signIn('credentials', {
-          email,
-          password,
-        })
+        const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
-        toast.success('Úspešné prihlásenie')
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
 
-        loginModal.onClose()
+        const { data } = await axios.post(
+          '/api/checkUser',
+          {
+            email,
+          },
+          config
+        )
+
+        if (data.isRegistered) {
+          await signIn('credentials', {
+            email,
+            password,
+          })
+
+          toast.success('Úspešné prihlásenie')
+
+          loginModal.onClose()
+        } else {
+          toast.error('Užívateľ nie je registrovaný!')
+        }
       } catch (error) {
         console.log(error, 'Nastala chyba')
+        toast.error('Skontrolujte údaje')
       } finally {
         setIsLoading(false)
       }

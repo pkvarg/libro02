@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useCallback, useState, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
 
 import useLoginModal from '@/hooks/useLoginModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
@@ -57,41 +56,36 @@ const RegisterModal = () => {
           },
         }
 
-        // await axios.post(
-        //   '/api/register',
-        //   {
-        //     email,
-        //     password,
-        //     username,
-        //     name,
-        //     //type: 'register-nodemailer', // sends welcome email via Nodemailer
-        //     type: 'register-resend', // send welcome email via Resend
-        //   },
-        //   config
-        // )
-
-        await axios.post(
-          '/api/reg-link',
+        const { data } = await axios.post(
+          '/api/checkUser',
           {
             email,
-            password,
-            username,
-            name,
-            url,
-            //type: 'reg-link-nodemailer', // sends welcome email via Nodemailer
-            type: 'reg-link-resend', // send welcome email via Resend
           },
           config
         )
 
+        if (data && data.isRegistered) {
+          toast.error(`Užívateľ s emailom ${email} už existuje`)
+        } else {
+          await axios.post(
+            '/api/reg-link',
+            {
+              email,
+              password,
+              username,
+              name,
+              url,
+              //type: 'reg-link-nodemailer', // sends reg link email via Nodemailer
+              type: 'reg-link-resend', // send reg link email via Resend
+            },
+            config
+          )
+          toast.success('Registračný link bol poslaný na Váš email.')
+        }
+
+        console.log(data)
+
         setIsLoading(false)
-
-        // toast.success('Účet vytvorený.')
-
-        // signIn('credentials', {
-        //   email,
-        //   password,
-        // })
 
         registerModal.onClose()
       } catch (error) {

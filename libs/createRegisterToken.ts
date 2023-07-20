@@ -1,5 +1,4 @@
 import crypto from 'crypto'
-import prisma from '@/libs/prismadb'
 
 export default async function createRegisterToken(email: string, url: String) {
   const token = crypto.randomBytes(32).toString('hex')
@@ -11,21 +10,10 @@ export default async function createRegisterToken(email: string, url: String) {
 
   const registerURL: string = `${url}/registerLink/${token}/${email}`
 
-  try {
-    const registration = await prisma.registration.create({
-      data: {
-        email,
-        registerToken,
-        registerTokenExpires,
-      },
-    })
-  } catch (error) {
-    console.log(error)
-  }
-
   const data = {
     email,
     registerToken,
+    registerTokenExpires,
     token,
     registerURL,
   }

@@ -3,11 +3,13 @@ import { toast } from 'react-hot-toast'
 import { useCallback, useEffect, useState } from 'react'
 import useRegistrationLinkModal from '@/hooks/useRegistrationLinkModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
+import { signIn } from 'next-auth/react'
 
 import Input from '../Input'
 import Modal from '../Modal'
 import Button from '../Button'
 import { useRouter } from 'next/router'
+import useLoginModal from '@/hooks/useLoginModal'
 
 const RegistrationLinkModal = () => {
   const router = useRouter()
@@ -17,6 +19,7 @@ const RegistrationLinkModal = () => {
   console.log('rLM:', registerLinkPathname)
   const registrationLinkModal = useRegistrationLinkModal()
   const registerModal = useRegisterModal()
+  const loginModal = useLoginModal()
   const [email, setEmail] = useState<string | undefined>()
   const [token, setToken] = useState<string | undefined>()
 
@@ -68,43 +71,15 @@ const RegistrationLinkModal = () => {
     }
   }, [email, token])
 
-  const onSubmit = useCallback(async () => {
-    if (isDisabled === false) {
-      try {
-        setIsLoading(true)
-
-        const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
-
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        }
-
-        /*
-        SingIn
-        */
-
-        setIsLoading(false)
-
-        toast.success('Úspešné prihlásenie.')
-
-        registrationLinkModal.onClose()
-        router.push('/')
-      } catch (error) {
-        toast.error('Nastala chyba')
-        console.log(error)
-      } finally {
-        setIsLoading(false)
-      }
-    } else {
-      toast.error('Skontrolujte údaje')
-    }
-  }, [email])
+  const logIn = () => {
+    registrationLinkModal.onClose()
+    router.push('/')
+    loginModal.onOpen()
+  }
 
   const registerAgain = () => {
     registrationLinkModal.onClose()
+
     registerModal.onOpen()
   }
 
@@ -112,31 +87,29 @@ const RegistrationLinkModal = () => {
     <div className='flex flex-col gap-4 '>
       {isDisabled && (
         <div className='flex flex-col gap-4 items-center'>
-          <h1 className='text-[#b33a3a] text-center'>Link expiroval!</h1>
-
-          <button
-            className='cursor-pointer text-[25px]'
-            onClick={registerAgain}
-          >
-            Opakovať registráciu
-          </button>
+          <h1 className='text-[#b33a3a] text-center text-[27.5px]'>
+            Link expiroval!
+          </h1>
         </div>
       )}
-
-      <h1 className='text-[35px] text-green-600 text-center'>
-        Registrácia bola úspešná!
-      </h1>
+      {!isDisabled && (
+        <h1 className='text-[35px] text-green-600 text-center'>
+          Registrácia bola úspešná!
+        </h1>
+      )}
     </div>
   )
 
   return (
     <Modal
-      disabled={isDisabled}
+      // disabled={isDisabled}
       isOpen={registrationLinkModal.isOpen}
       title='Vaša Registrácia'
-      actionLabel='Pokračovať k prihláseniu'
+      actionLabel={
+        isDisabled ? ' Opakovať registráciu' : 'Pokračovať k prihláseniu'
+      }
       onClose={registrationLinkModal.onClose}
-      onSubmit={onSubmit}
+      onSubmit={isDisabled ? registerAgain : logIn}
       body={bodyContent}
     />
   )

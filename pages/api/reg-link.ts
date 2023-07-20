@@ -3,6 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import EmailViaNodemailer from '@/libs/emailViaNodemailer'
 import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 import createRegisterToken from '@/libs/createRegisterToken'
+import prisma from '@/libs/prismadb'
+import checkUserExists from '@/libs/checkUserExists'
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,14 +17,22 @@ export default async function handler(
   try {
     const { email, username, name, password, type, url } = req.body
 
-    console.log('reg-link:', req.body)
+    const { registerToken, registerTokenExpires, token, registerURL } =
+      await createRegisterToken(email, url)
 
-    const { registerToken, token, registerURL } = await createRegisterToken(
-      email,
-      url
-    )
+    const hashedPassword = await bcrypt.hash(password, 12)
 
-    console.log(registerToken, token, registerURL)
+    const user = await prisma.user.create({
+      data: {
+        email,
+        username,
+        name,
+        hashedPassword,
+        isRegistered: false,
+        registerToken,
+        registerTokenExpires,
+      },
+    })
 
     /* nodemailer not implemented */
     if (type === 'reg-link-nodemailer') {
