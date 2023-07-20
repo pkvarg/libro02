@@ -9,6 +9,7 @@ import ForgotPasswordModal from '@/components/modals/ForgotPasswordModal'
 import '@/styles/globals.css'
 import EditModal from '@/components/modals/EditModal'
 import ResetPasswordModal from '@/components/modals/ResetPasswordModal'
+import RegistrationLinkModal from '@/components/modals/RegistrationLinkModal'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -18,6 +19,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <LoginModal />
       <ForgotPasswordModal />
       <ResetPasswordModal />
+      <RegistrationLinkModal />
       <EditModal />
       <Layout>
         <Component {...pageProps} />

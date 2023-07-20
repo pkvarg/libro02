@@ -32,7 +32,7 @@ export default async function handler(
     if (type === 'register-nodemailer') {
       await new EmailViaNodemailer(email, username, name, type, url).send()
     } else if (type === 'register-resend') {
-      await EmailViaResend(url, email, name)
+      await EmailViaResend(url, email, name, type)
     }
 
     return res.status(200).json(user)

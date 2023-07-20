@@ -17,7 +17,7 @@ export default async function handler(
 
     console.log('reg-link:', req.body)
 
-    const { registerToken, token, registerURL } = createRegisterToken(
+    const { registerToken, token, registerURL } = await createRegisterToken(
       email,
       url
     )

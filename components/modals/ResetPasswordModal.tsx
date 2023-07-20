@@ -10,6 +10,9 @@ import { useRouter } from 'next/router'
 
 const ResetPasswordModal = () => {
   const router = useRouter()
+  const route = router.route
+  const resetPasswordPathname = route.includes('resetPassword')
+  console.log('rPM:', resetPasswordPathname)
   const slug = router.query.slug
   const resetPasswordModal = useResetPasswordModal()
   const forgotPasswordModal = useForgotPasswordModal()
@@ -39,30 +42,38 @@ const ResetPasswordModal = () => {
   }, [slug, email])
 
   useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const data = await axios.post(
-          '/api/checkResetToken',
-          {
-            email,
-            token,
-          },
-          config
-        )
-        console.log('dataCheckTok', data)
-        if (data.data === true) {
-          setIsDisabled(false)
-        } else {
-          toast.error('Link pravdepodobne expiroval')
-          setIsDisabled(true)
-          resetPasswordModal.onClose()
-        }
-      } catch (error) {
-        console.log(error)
-      }
+    if (!resetPasswordPathname) {
+      resetPasswordModal.onClose()
     }
-    checkToken()
-  }, [email, token])
+  }, [resetPasswordPathname])
+
+  useEffect(() => {
+    if (resetPasswordPathname) {
+      const checkToken = async () => {
+        try {
+          const data = await axios.post(
+            '/api/checkResetToken',
+            {
+              email,
+              token,
+            },
+            config
+          )
+          console.log('dataCheckTok', data)
+          if (data.data === true) {
+            setIsDisabled(false)
+          } else {
+            toast.error('Link pravdepodobne expiroval')
+            setIsDisabled(true)
+            resetPasswordModal.onClose()
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      checkToken()
+    }
+  }, [email, token, resetPasswordPathname])
 
   const onSubmit = useCallback(async () => {
     if (
