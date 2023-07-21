@@ -65,7 +65,7 @@ const Sidebar = () => {
               </div>
             </>
           )}
-          <SidebarTweetButton />
+          {!currentUser && <SidebarTweetButton />}
         </div>
       </div>
     </div>

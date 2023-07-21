@@ -3,9 +3,12 @@ import React, { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { FaShare } from 'react-icons/fa'
 import useLoginModal from '@/hooks/useLoginModal'
+import useCurrentUser from '@/hooks/useCurrentUser'
+
 const SidebarTweetButton = () => {
   const router = useRouter()
   const loginModal = useLoginModal()
+  const { data: currentUser } = useCurrentUser()
 
   const onClick = useCallback(() => {
     loginModal.onOpen()
