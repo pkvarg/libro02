@@ -49,27 +49,25 @@ const DeleteAlert: React.FC<DeleteAlertProps> = ({ onDelete, onCancel }) => {
             focus:outline-none
             '
           >
-            {/*header*/}
             <div
               className='
               flex 
               
-              
+              justify-center
               p-10 
-              rounded-t
+              rounded
               '
             >
-              <h3 className='text-3xl font-semibold text-white text-center'>
+              <h3 className='text-3xl font-semibold text-white'>
                 Naozaj chcete vymazať príspevok?
               </h3>
             </div>
-
             <div className='relative px-10 pt-10 py-10 flex flex-row justify-center items-center gap-16'>
               <button
                 onClick={handleDelete}
                 className='
                   py-4 
-                  px-4
+                  px-12
                   border-0 
                   text-white 
                   hover:opacity-70
@@ -84,7 +82,7 @@ const DeleteAlert: React.FC<DeleteAlertProps> = ({ onDelete, onCancel }) => {
                 onClick={handleCancel}
                 className='
                   py-4 
-                  px-4
+                  px-12
                   border-0 
                   text-white 
                   hover:opacity-70
