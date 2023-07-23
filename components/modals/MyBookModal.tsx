@@ -21,7 +21,7 @@ const MyBookModal = () => {
   const [bookLanguage, setBookLanguage] = useState('')
   const [bookAuthor, setBookAuthor] = useState('')
   const [bookLendingDuration, setBookLendingDuration] = useState('')
-  const [bookLendingStatus, setBookLendingStatus] = useState('')
+  const [bookAvailable, setBookAvailable] = useState('')
   const [bookReview, setBookReview] = useState('')
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const MyBookModal = () => {
         bookLanguage,
         bookAuthor,
         bookLendingDuration,
-        bookLendingStatus,
+        bookAvailable,
         bookReview,
       })
       //mutateFetchedUser()
@@ -62,7 +62,7 @@ const MyBookModal = () => {
     bookLanguage,
     bookAuthor,
     bookLendingDuration,
-    bookLendingStatus,
+    bookAvailable,
     bookReview,
     //mutateFetchedUser,
   ])
@@ -94,15 +94,15 @@ const MyBookModal = () => {
         disabled={isLoading}
       />
       <Input
-        placeholder='Požičiam na dobu'
+        placeholder='Požičiam na ? mesiacov'
         onChange={(e) => setBookLendingDuration(e.target.value)}
         value={bookLendingDuration}
         disabled={isLoading}
       />{' '}
       <Input
         placeholder='Status (voľná/požičaná)'
-        onChange={(e) => setBookLendingStatus(e.target.value)}
-        value={bookLendingStatus}
+        onChange={(e) => setBookAvailable(e.target.value)}
+        value={bookAvailable}
         disabled={isLoading}
       />{' '}
       <Input

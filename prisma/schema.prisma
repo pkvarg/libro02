@@ -37,6 +37,7 @@ model User {
   posts         Post[]
   comments      Comment[]
   notifications Notification[]
+  books         Book[]
 
   
 }
@@ -78,11 +79,24 @@ model Notification {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// model Registration {
-//   id              String @id @default(auto()) @map("_id") @db.ObjectId
-//   email           String   @unique
-//   createdAt       DateTime @default(now())
-//   updatedAt       DateTime @updatedAt
-//   registerToken   String
-//   registerTokenExpires DateTime? @default(now())
-// }
+model Book {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  bookOwnerEmail     String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  userId             String @db.ObjectId
+  bookImage          String?
+  bookTitle          String 
+  bookLanguage       String 
+  bookAuthor         String
+  bookLendingDuration String?
+  bookAvailable       Boolean   
+  bookReview          String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+   
+
+
+  
+}
