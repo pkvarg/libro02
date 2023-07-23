@@ -6,6 +6,7 @@ import useCurrentUser from '@/hooks/useCurrentUser'
 import useUser from '@/hooks/useUser'
 import useFollow from '@/hooks/useFollow'
 import useEditModal from '@/hooks/useEditModal'
+import useMyBookModal from '@/hooks/useMyBookModal'
 
 import Button from '../Button'
 
@@ -18,6 +19,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
   const { data: fetchedUser } = useUser(userId)
 
   const editModal = useEditModal()
+  const myBookModal = useMyBookModal()
 
   const { isFollowing, toggleFollow } = useFollow(userId)
 
@@ -74,6 +76,9 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
           <div className='flex flex-row items-center gap-1'>
             <p className='text-white'>{fetchedUser?.followersCount || 0}</p>
             <p className='text-neutral-500'>Sledujúcich</p>
+          </div>
+          <div className='ml-auto'>
+            <Button onClick={myBookModal.onOpen} label='+ Kniha' />
           </div>
         </div>
       </div>

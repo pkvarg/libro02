@@ -74,28 +74,28 @@ const EditModal = () => {
         value={profileImage}
         disabled={isLoading}
         onChange={(image) => setProfileImage(image)}
-        label='Upload profile image'
+        label='Najhrajte profilový obrázok'
       />
       <ImageUpload
         value={coverImage}
         disabled={isLoading}
         onChange={(image) => setCoverImage(image)}
-        label='Upload cover image'
+        label='Nahrajte pozadie'
       />
       <Input
-        placeholder='Name'
+        placeholder='Meno'
         onChange={(e) => setName(e.target.value)}
         value={name}
         disabled={isLoading}
       />
       <Input
-        placeholder='Username'
+        placeholder='Užívateľské meno'
         onChange={(e) => setUsername(e.target.value)}
         value={username}
         disabled={isLoading}
       />
       <Input
-        placeholder='Bio'
+        placeholder='O Vás'
         onChange={(e) => setBio(e.target.value)}
         value={bio}
         disabled={isLoading}
@@ -107,8 +107,8 @@ const EditModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={editModal.isOpen}
-      title='Edit your profile'
-      actionLabel='Save'
+      title='Upravte svoj profil'
+      actionLabel='Uložiť'
       onClose={editModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}

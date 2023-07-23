@@ -121,7 +121,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
         <div className='relative'>
           <button
             onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-4'
+            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-0'
           >
             <BsTrash />
           </button>
@@ -131,7 +131,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
         <div className='relative'>
           <button
             onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-4'
+            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-0'
           >
             <BsTrash />
           </button>
