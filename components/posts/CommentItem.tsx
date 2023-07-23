@@ -38,8 +38,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
   const whoIsCurrentUser = currentUser?.id
   const whosComment = data?.userId
   const postIsCommented = router.query?.postId
-  const postIsMine = whoIsCurrentUser === whosPost
-  const commentIsMine = whoIsCurrentUser === whosComment
 
   useEffect(() => {
     if (postIsCommented !== undefined) {
@@ -54,8 +52,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
       }
     }
   }, [postIsCommented])
-
-  console.log('cuCI:', whoIsCurrentUser, whosPost, whosComment)
 
   const handleDelete = async (commentId: String, userId: String) => {
     if (commentId !== undefined && whosComment === userId) {
@@ -125,7 +121,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
         <div className='relative'>
           <button
             onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 right-2 lg:right-4'
+            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-4'
           >
             <BsTrash />
           </button>
@@ -135,7 +131,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
         <div className='relative'>
           <button
             onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 right-2 lg:right-4'
+            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-4'
           >
             <BsTrash />
           </button>

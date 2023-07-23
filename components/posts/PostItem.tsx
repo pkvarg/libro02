@@ -168,7 +168,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
         <div className='relative'>
           <button
             onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-24 right-2 lg:right-4'
+            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-24 right-1 lg:right-4'
           >
             <BsTrash />
           </button>
