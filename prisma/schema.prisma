@@ -90,7 +90,7 @@ model Book {
   bookLanguage       String 
   bookAuthor         String
   bookLendingDuration String?
-  bookAvailable       Boolean   
+  bookAvailable       String   
   bookReview          String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -15,14 +15,14 @@ const MyBookModal = () => {
   const { mutate: mutateFetchedUser } = useUser(currentUser?.id)
   const myBookModal = useMyBookModal()
 
-  const [bookOwnerEmail, setBookOwnerEmail] = useState('')
-  const [bookImage, setBookImage] = useState('')
-  const [bookTitle, setBookTitle] = useState('')
-  const [bookLanguage, setBookLanguage] = useState('')
-  const [bookAuthor, setBookAuthor] = useState('')
-  const [bookLendingDuration, setBookLendingDuration] = useState('')
-  const [bookAvailable, setBookAvailable] = useState('')
-  const [bookReview, setBookReview] = useState('')
+  const [bookOwnerEmail, setBookOwnerEmail] = useState<string>('')
+  const [bookImage, setBookImage] = useState<string>('')
+  const [bookTitle, setBookTitle] = useState<string>('')
+  const [bookLanguage, setBookLanguage] = useState<string>('')
+  const [bookAuthor, setBookAuthor] = useState<string>('')
+  const [bookLendingDuration, setBookLendingDuration] = useState<string>('')
+  const [bookAvailable, setBookAvailable] = useState<string>()
+  const [bookReview, setBookReview] = useState<string>('')
 
   useEffect(() => {
     setBookOwnerEmail(currentUser?.email)
@@ -34,7 +34,7 @@ const MyBookModal = () => {
     try {
       setIsLoading(true)
 
-      await axios.patch('/api/createMyBook', {
+      const { data } = await axios.post('/api/createMyBook', {
         bookOwnerEmail,
         bookImage,
         bookTitle,
@@ -45,7 +45,7 @@ const MyBookModal = () => {
         bookReview,
       })
       //mutateFetchedUser()
-
+      console.log('book:', data)
       toast.success('Kniha pridaná')
 
       myBookModal.onClose()
@@ -116,7 +116,7 @@ const MyBookModal = () => {
 
   return (
     <Modal
-      disabled={isLoading}
+      //disabled={isLoading}
       isOpen={myBookModal.isOpen}
       title='Nahrajte info o Vašej knihe na požičanie'
       actionLabel='Uložiť'
