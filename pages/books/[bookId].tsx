@@ -3,8 +3,10 @@ import { useRouter } from 'next/router'
 import { ClipLoader } from 'react-spinners'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { BsTrash } from 'react-icons/bs'
-
+import DeleteAlert from '@/components/alerts/DeleteAlert'
 import useBook from '@/hooks/useBook'
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
 
 import Header from '@/components/Header'
 import Form from '@/components/Form'
@@ -29,13 +31,30 @@ const BookView = () => {
     )
   }
 
+  const handleDelete = async (bookId: String) => {
+    if (bookId !== undefined) {
+      setShowAlert(true)
+
+      try {
+        const response = await axios.delete(`/api/books/${bookId}`)
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    router.push(`/users/${whoIsCurrentUser}`)
+    toast.success('Kniha vymazaná!')
+    //router.reload()
+    setShowAlert(false)
+  }
+
+  const handleCancel = () => {
+    setShowAlert(false)
+  }
+
   return (
     <>
-      {/* <Header showBackArrow label='Zdieľaj' />
-      <BookItem data={fetchedPost} /> */}
-      {/* <Form bookId={bookId as string} isComment placeholder='Zdieľaj odpoveď' /> */}
-      {/* <CommentFeed comments={fetchedPost?.comments} /> */}
-
       <div
         className='
         border-b-[1px] 
@@ -135,7 +154,7 @@ const BookView = () => {
 
       {showAlert && (
         <DeleteAlert
-          onDelete={() => handleDelete(data.id, data.user.id)}
+          onDelete={() => handleDelete(fetchedPost.id)}
           onCancel={handleCancel}
         />
       )}
