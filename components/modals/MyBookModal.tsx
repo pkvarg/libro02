@@ -5,9 +5,10 @@ import useMyBookModal from '@/hooks/useMyBookModal'
 import Input from '../Input'
 import Modal from '../Modal'
 import ImageUpload from '../ImageUpload'
-import { ok } from 'assert'
+import { useRouter } from 'next/router'
 
 const MyBookModal = () => {
+  const router = useRouter()
   const myBookModal = useMyBookModal()
   const [bookImage, setBookImage] = useState<string>('')
   const [bookTitle, setBookTitle] = useState<string>('')
@@ -27,7 +28,7 @@ const MyBookModal = () => {
       try {
         setIsLoading(true)
 
-        const { data } = await axios.post('/api/createMyBook', {
+        const { data } = await axios.post('/api/books', {
           bookImage,
           bookTitle,
           bookAuthor,
@@ -38,6 +39,7 @@ const MyBookModal = () => {
         if (data === 'OK') {
           toast.success('Kniha pridaná')
           myBookModal.onClose()
+          router.reload()
         }
       } catch (error) {
         toast.error('Nastala chyba')
@@ -85,7 +87,8 @@ const MyBookModal = () => {
       <div
         className='w-full
           flex
-          flex-row
+          flex-col
+          lg:flex-row
           gap-4
           p-4 
           text-lg 
@@ -179,7 +182,7 @@ const MyBookModal = () => {
         </button>
       </div> */}
       <Input
-        placeholder='Recenzia (krátky popis príp. recenzia)'
+        placeholder='Krátky popis'
         onChange={(e) => setBookReview(e.target.value)}
         value={bookReview}
         disabled={isLoading}

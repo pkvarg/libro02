@@ -35,7 +35,10 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
     <div className='border-b-[1px] border-neutral-800 pb-4'>
       <div className='flex justify-end p-2'>
         {currentUser?.id === userId ? (
-          <Button secondary label='Upraviť' onClick={editModal.onOpen} />
+          <div className='flex flex-col lg:flex-row gap-1'>
+            <Button secondary label='Upraviť' onClick={editModal.onOpen} />
+            <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+          </div>
         ) : (
           <Button
             onClick={toggleFollow}
@@ -44,7 +47,11 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
             outline={isFollowing}
           />
         )}
+        {/* {currentUser?.id === fetchedUser?.id && (
+          <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+        )} */}
       </div>
+
       <div className='mt-8 px-4'>
         <div className='flex flex-col'>
           <p className='text-white text-2xl font-semibold'>
@@ -77,12 +84,12 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
             <p className='text-white'>{fetchedUser?.followersCount || 0}</p>
             <p className='text-neutral-500'>Sledujúcich</p>
           </div>
-          {currentUser?.id === fetchedUser?.id && (
-            <div className='ml-auto'>
-              <Button onClick={myBookModal.onOpen} label='+ Kniha' />
-            </div>
-          )}
         </div>
+        {/* {currentUser?.id === fetchedUser?.id && (
+          <div className='mt-4 flex justify-end'>
+            <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+          </div>
+        )} */}
       </div>
     </div>
   )

@@ -66,7 +66,7 @@ const Modal: React.FC<ModalProps> = ({
           {/*content*/}
           <div
             className='
-            h-full
+            h-auto
             lg:h-auto
             border-0 
             rounded-lg 
