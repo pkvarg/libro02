@@ -138,7 +138,9 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
               Výpožičná doba: {data.bookLendingDuration}{' '}
               {data.bookLendingDuration !== '1' ? 'mesiace' : 'mesiac'}
             </p>
-            <p className='text-[20px]'>Popis : {data.bookReview}</p>
+            <p className='text-[20px] mb-8 lg:mb-0'>
+              Popis : {data.bookReview}
+            </p>
           </div>
           {/* <div className='text-white mt-1'>{data.body}</div> */}
           {/* <div className='flex flex-row items-center mt-3 gap-10'>
@@ -179,13 +181,13 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
             <div>
               <button
                 onClick={() => setShowAlert(true)}
-                className='cursor-pointer text-[#ff0000] absolute bottom-0 -right-1 lg:-right-1'
+                className='cursor-pointer text-[#ff0000] absolute bottom-3 -right-1 lg:-right-1'
               >
                 <BsTrash />
               </button>
               <button
                 onClick={goToBook}
-                className='border rounded-xl px-2 cursor-pointer absolute -bottom-1 right-8'
+                className='border rounded-xl px-2 cursor-pointer absolute bottom-2 right-8'
               >
                 Upraviť
               </button>

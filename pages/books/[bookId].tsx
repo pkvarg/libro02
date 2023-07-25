@@ -114,7 +114,7 @@ const BookView = () => {
             </p>
             <p className='text-[25px]'>Popis : {fetchedPost.bookReview}</p>
           </div>
-          <div className='flex flex-row items-center mt-3 gap-10'>
+          {/* <div className='flex flex-row items-center mt-3 gap-10'>
             <div
               className='
                 flex 
@@ -139,11 +139,11 @@ const BookView = () => {
                 hover:text-red-500
             '
             ></div>
-          </div>
+          </div> */}
         </div>
       </div>
       {whoIsCurrentUser === whosBook && (
-        <div className='relative'>
+        <div className='relative my-4 lg:-mt-2'>
           <button
             onClick={() => setShowAlert(true)}
             className='cursor-pointer text-[#ff0000] absolute bottom-4 right-2 lg:right-1'

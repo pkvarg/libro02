@@ -94,8 +94,6 @@ export default async function handler(
         bookReview,
       } = req.body
 
-      console.log('BOOK-UPDATE', req.query, 'body:', req.body)
-
       if (!bookId || typeof bookId !== 'string') {
         throw new Error('Neplatné ID')
       }
