@@ -1,70 +1,59 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-
-import useCurrentUser from '@/hooks/useCurrentUser'
 import useMyBookModal from '@/hooks/useMyBookModal'
-import useUser from '@/hooks/useUser'
-
 import Input from '../Input'
 import Modal from '../Modal'
 import ImageUpload from '../ImageUpload'
+import { ok } from 'assert'
 
 const MyBookModal = () => {
-  const { data: currentUser } = useCurrentUser()
-  const { mutate: mutateFetchedUser } = useUser(currentUser?.id)
   const myBookModal = useMyBookModal()
-
-  const [bookOwnerEmail, setBookOwnerEmail] = useState<string>('')
   const [bookImage, setBookImage] = useState<string>('')
   const [bookTitle, setBookTitle] = useState<string>('')
-  const [bookLanguage, setBookLanguage] = useState<string>('')
   const [bookAuthor, setBookAuthor] = useState<string>('')
   const [bookLendingDuration, setBookLendingDuration] = useState<string>('')
-  const [bookAvailable, setBookAvailable] = useState<string>()
   const [bookReview, setBookReview] = useState<string>('')
-
-  useEffect(() => {
-    setBookOwnerEmail(currentUser?.email)
-  }, [currentUser?.email])
 
   const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = useCallback(async () => {
-    try {
-      setIsLoading(true)
+    if (
+      bookTitle !== '' &&
+      bookAuthor !== '' &&
+      bookLendingDuration !== '' &&
+      bookReview !== ''
+    ) {
+      try {
+        setIsLoading(true)
 
-      const { data } = await axios.post('/api/createMyBook', {
-        bookOwnerEmail,
-        bookImage,
-        bookTitle,
-        bookLanguage,
-        bookAuthor,
-        bookLendingDuration,
-        bookAvailable,
-        bookReview,
-      })
-      //mutateFetchedUser()
-      console.log('book:', data)
-      toast.success('Kniha pridaná')
-
-      myBookModal.onClose()
-    } catch (error) {
-      toast.error('Nastala chyba')
-    } finally {
-      setIsLoading(false)
+        const { data } = await axios.post('/api/createMyBook', {
+          bookImage,
+          bookTitle,
+          bookAuthor,
+          bookLendingDuration,
+          bookReview,
+        })
+        console.log('book:', data)
+        if (data === 'OK') {
+          toast.success('Kniha pridaná')
+          myBookModal.onClose()
+        }
+      } catch (error) {
+        toast.error('Nastala chyba')
+      } finally {
+        setIsLoading(false)
+      }
+    } else {
+      toast.error('Skontrolujte údaje')
     }
   }, [
     myBookModal,
-    bookOwnerEmail,
     bookImage,
     bookTitle,
-    bookLanguage,
     bookAuthor,
     bookLendingDuration,
-    bookAvailable,
     bookReview,
-    //mutateFetchedUser,
   ])
 
   const bodyContent = (
@@ -81,30 +70,114 @@ const MyBookModal = () => {
         value={bookTitle}
         disabled={isLoading}
       />
-      <Input
-        placeholder='Jazyk knihy'
+      {/* <Input
+        placeholder='Jazyk knihy (napr. SK, CZ, EN)'
         onChange={(e) => setBookLanguage(e.target.value)}
         value={bookLanguage}
         disabled={isLoading}
-      />
+      /> */}
       <Input
         placeholder='Autor knihy'
         onChange={(e) => setBookAuthor(e.target.value)}
         value={bookAuthor}
         disabled={isLoading}
       />
-      <Input
-        placeholder='Požičiam na ? mesiacov'
-        onChange={(e) => setBookLendingDuration(e.target.value)}
-        value={bookLendingDuration}
-        disabled={isLoading}
-      />{' '}
-      <Input
-        placeholder='Status (voľná/požičaná)'
-        onChange={(e) => setBookAvailable(e.target.value)}
-        value={bookAvailable}
-        disabled={isLoading}
-      />{' '}
+      <div
+        className='w-full
+          flex
+          flex-row
+          gap-4
+          p-4 
+          text-lg 
+          bg-black 
+          border-2
+          border-neutral-800 
+          rounded-md
+          outline-none
+          text-[#9ca3af]
+          focus:border-sky-500
+          focus:border-2
+          transition
+          disabled:bg-neutral-900
+          disabled:opacity-70
+          disabled:cursor-not-allowed'
+      >
+        <h1>Požičiam na</h1>
+        <button
+          onClick={() => setBookLendingDuration('1')}
+          className={
+            bookLendingDuration === '1'
+              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
+              : 'border border-[#9ca3af] rounded-xl px-2 '
+          }
+        >
+          1 mesiac
+        </button>
+        <button
+          onClick={() => setBookLendingDuration('2')}
+          className={
+            bookLendingDuration === '2'
+              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
+              : 'border border-[#9ca3af] rounded-xl px-2 '
+          }
+        >
+          2 mesiace
+        </button>
+
+        <button
+          onClick={() => setBookLendingDuration('3')}
+          className={
+            bookLendingDuration === '3'
+              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
+              : 'border border-[#9ca3af] rounded-xl px-2 '
+          }
+        >
+          3 mesiace
+        </button>
+      </div>
+
+      {/* <div
+        className='w-full
+          flex
+          flex-row
+          gap-4
+          p-4 
+          text-lg 
+          bg-black 
+          border-2
+          border-neutral-800 
+          rounded-md
+          outline-none
+          text-[#9ca3af]
+          focus:border-sky-500
+          focus:border-2
+          transition
+          disabled:bg-neutral-900
+          disabled:opacity-70
+          disabled:cursor-not-allowed'
+      >
+        <h1>Status</h1>
+        <button
+          onClick={() => setBookAvailable('voľná')}
+          className={
+            bookLendingDuration === 'voľná'
+              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
+              : 'border border-[#9ca3af] rounded-xl px-2 '
+          }
+        >
+          voľná
+        </button>
+        <button
+          onClick={() => setBookAvailable('požičaná')}
+          className={
+            bookLendingDuration === 'požičaná'
+              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
+              : 'border border-[#9ca3af] rounded-xl px-2 '
+          }
+        >
+          požičaná
+        </button>
+      </div> */}
       <Input
         placeholder='Recenzia (krátky popis príp. recenzia)'
         onChange={(e) => setBookReview(e.target.value)}

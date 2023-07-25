@@ -77,9 +77,11 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
             <p className='text-white'>{fetchedUser?.followersCount || 0}</p>
             <p className='text-neutral-500'>Sledujúcich</p>
           </div>
-          <div className='ml-auto'>
-            <Button onClick={myBookModal.onOpen} label='+ Kniha' />
-          </div>
+          {currentUser.id === fetchedUser.id && (
+            <div className='ml-auto'>
+              <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+            </div>
+          )}
         </div>
       </div>
     </div>

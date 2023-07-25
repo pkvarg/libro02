@@ -14,26 +14,20 @@ export default async function handler(
     const { currentUser } = await serverAuth(req, res)
 
     const {
-      bookOwnerEmail,
       bookImage,
       bookTitle,
-      bookLanguage,
       bookAuthor,
       bookLendingDuration,
-      bookAvailable,
       bookReview,
     } = req.body
 
     const myBook = await prisma.book.create({
       data: {
         userId: currentUser.id,
-        bookOwnerEmail,
         bookImage,
         bookTitle,
-        bookLanguage,
         bookAuthor,
         bookLendingDuration,
-        bookAvailable,
         bookReview,
       },
     })
