@@ -31,9 +31,9 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
     [router, data.userId]
   )
 
-  // const goToBook = useCallback(() => {
-  //   router.push(`/books/${data.id}`)
-  // }, [router, data.id])
+  const goToBook = useCallback(() => {
+    router.push(`/books/${data.id}`)
+  }, [router, data.id])
 
   const onLike = useCallback(
     async (ev: any) => {
@@ -179,9 +179,15 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
             <div>
               <button
                 onClick={() => setShowAlert(true)}
-                className='cursor-pointer text-[#ff0000] absolute top-3 lg:-right-1'
+                className='cursor-pointer text-[#ff0000] absolute bottom-0 -right-1 lg:-right-1'
               >
                 <BsTrash />
+              </button>
+              <button
+                onClick={goToBook}
+                className='border rounded-xl px-2 cursor-pointer absolute -bottom-1 right-8'
+              >
+                Upraviť
               </button>
             </div>
           )}

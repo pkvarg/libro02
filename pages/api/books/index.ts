@@ -22,7 +22,7 @@ export default async function handler(
         bookReview,
       } = req.body
 
-      const myBook = await prisma.book.create({
+      await prisma.book.create({
         data: {
           userId: currentUser.id,
           bookImage,

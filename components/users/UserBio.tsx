@@ -6,7 +6,7 @@ import useCurrentUser from '@/hooks/useCurrentUser'
 import useUser from '@/hooks/useUser'
 import useFollow from '@/hooks/useFollow'
 import useEditModal from '@/hooks/useEditModal'
-import useMyBookModal from '@/hooks/useMyBookModal'
+import useBookModal from '@/hooks/useBookModal'
 
 import Button from '../Button'
 
@@ -19,7 +19,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
   const { data: fetchedUser } = useUser(userId)
 
   const editModal = useEditModal()
-  const myBookModal = useMyBookModal()
+  const BookModal = useBookModal()
 
   const { isFollowing, toggleFollow } = useFollow(userId)
 
@@ -37,7 +37,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
         {currentUser?.id === userId ? (
           <div className='flex flex-col lg:flex-row gap-1'>
             <Button secondary label='Upraviť' onClick={editModal.onOpen} />
-            <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+            <Button onClick={BookModal.onOpen} label='+ Kniha' />
           </div>
         ) : (
           <Button
@@ -48,7 +48,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
           />
         )}
         {/* {currentUser?.id === fetchedUser?.id && (
-          <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+          <Button onClick={BookModal.onOpen} label='+ Kniha' />
         )} */}
       </div>
 
@@ -87,7 +87,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
         </div>
         {/* {currentUser?.id === fetchedUser?.id && (
           <div className='mt-4 flex justify-end'>
-            <Button onClick={myBookModal.onOpen} label='+ Kniha' />
+            <Button onClick={BookModal.onOpen} label='+ Kniha' />
           </div>
         )} */}
       </div>

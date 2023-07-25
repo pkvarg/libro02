@@ -3,7 +3,7 @@ interface InputProps {
   value?: string
   checked?: boolean
   type?: string
-  disabled?: boolean
+  disabled?: boolean | undefined
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
 }

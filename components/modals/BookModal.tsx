@@ -1,15 +1,15 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import useMyBookModal from '@/hooks/useMyBookModal'
+import useBookModal from '@/hooks/useBookModal'
 import Input from '../Input'
 import Modal from '../Modal'
 import ImageUpload from '../ImageUpload'
 import { useRouter } from 'next/router'
 
-const MyBookModal = () => {
+const BookModal = () => {
   const router = useRouter()
-  const myBookModal = useMyBookModal()
+  const BookModal = useBookModal()
   const [bookImage, setBookImage] = useState<string>('')
   const [bookTitle, setBookTitle] = useState<string>('')
   const [bookAuthor, setBookAuthor] = useState<string>('')
@@ -38,7 +38,7 @@ const MyBookModal = () => {
         console.log('book:', data)
         if (data === 'OK') {
           toast.success('Kniha pridaná')
-          myBookModal.onClose()
+          BookModal.onClose()
           router.reload()
         }
       } catch (error) {
@@ -50,7 +50,7 @@ const MyBookModal = () => {
       toast.error('Skontrolujte údaje')
     }
   }, [
-    myBookModal,
+    BookModal,
     bookImage,
     bookTitle,
     bookAuthor,
@@ -193,14 +193,14 @@ const MyBookModal = () => {
   return (
     <Modal
       //disabled={isLoading}
-      isOpen={myBookModal.isOpen}
+      isOpen={BookModal.isOpen}
       title='Nahrajte info o Vašej knihe na požičanie'
       actionLabel='Uložiť'
-      onClose={myBookModal.onClose}
+      onClose={BookModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}
     />
   )
 }
 
-export default MyBookModal
+export default BookModal

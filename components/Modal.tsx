@@ -11,7 +11,7 @@ interface ModalProps {
   body?: React.ReactElement
   footer?: React.ReactElement
   actionLabel: string
-  disabled?: boolean
+  disabled?: boolean | undefined
 }
 
 const Modal: React.FC<ModalProps> = ({
