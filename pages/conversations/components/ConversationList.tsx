@@ -25,15 +25,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
   initialItems,
   users,
 }) => {
-  let init
-  let usrs
-
-  // useCallBack(() => {
-  //   init = ConversationsListProps()
-  // }, [])
-
-  console.log(init)
-
   const [items, setItems] = useState(initialItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -68,15 +59,15 @@ const ConversationList: React.FC<ConversationListProps> = ({
       )
     }
 
-    // const newHandler = (conversation: FullConversationType) => {
-    //   setItems((current) => {
-    //     if (find(current, { id: conversation.id })) {
-    //       return current
-    //     }
+    const newHandler = (conversation: FullConversationType) => {
+      setItems((current) => {
+        if (find(current, { id: conversation.id })) {
+          return current
+        }
 
-    //     return [conversation, ...current]
-    //   })
-    // }
+        return [conversation, ...current]
+      })
+    }
 
     const removeHandler = (conversation: FullConversationType) => {
       setItems((current) => {
@@ -107,7 +98,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
         lg:w-80
         lg:block
         overflow-y-auto
-        border-r
         border-gray-200
       `,
           isOpen ? 'hidden' : 'block w-full left-0'

@@ -8,9 +8,14 @@ import SidebarItem from './SidebarItem'
 import SidebarTweetButton from './SidebarTweetButton'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 const Sidebar = () => {
   const { data: currentUser } = useCurrentUser()
+  const router = useRouter()
+  const route = router.route
+
+  const wrongPathname = route.includes('conversations')
 
   const items = [
     {
@@ -36,37 +41,39 @@ const Sidebar = () => {
   return (
     <div className='col-span-1 h-full pr-4 md:pr-6'>
       <div className='flex flex-col items-end'>
-        <div className='space-y-2 lg:w-[230px]'>
-          {/* <SidebarLogo /> */}
-          {items.map((item) => (
-            <SidebarItem
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              icon={item.icon}
-              auth={item.auth}
-              alert={item.alert}
-            />
-          ))}
-          {currentUser && (
-            <>
+        {!wrongPathname && (
+          <div className='space-y-2 lg:w-[230px]'>
+            {/* <SidebarLogo /> */}
+            {items.map((item) => (
               <SidebarItem
-                onClick={() => signOut()}
-                icon={BiLogOut}
-                label='Odhlásiť'
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                icon={item.icon}
+                auth={item.auth}
+                alert={item.alert}
               />
-              <div className='block lg:hidden text-[30px]'>
+            ))}
+            {currentUser && (
+              <>
                 <SidebarItem
-                  key='users'
-                  href='/users'
-                  label='Sledovať'
-                  icon={ImUserPlus}
+                  onClick={() => signOut()}
+                  icon={BiLogOut}
+                  label='Odhlásiť'
                 />
-              </div>
-            </>
-          )}
-          {!currentUser && <SidebarTweetButton />}
-        </div>
+                <div className='block lg:hidden text-[30px]'>
+                  <SidebarItem
+                    key='users'
+                    href='/users'
+                    label='Sledovať'
+                    icon={ImUserPlus}
+                  />
+                </div>
+              </>
+            )}
+            {!currentUser && <SidebarTweetButton />}
+          </div>
+        )}
       </div>
     </div>
   )
