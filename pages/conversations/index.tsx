@@ -19,16 +19,18 @@ const Home = () => {
     const getActions = async () => {
       const { data } = await axios.get('/api/conversations/actions')
       console.log('ddat:', data)
+
       setUsers(data.users)
       setConversations(data.conversations)
     }
     getActions()
   }, [])
 
+  console.log('indexC:', conversations)
+  console.log('indexU:', users)
+
   return (
-    <div
-      className={clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')}
-    >
+    <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}>
       <ConversationList
         initialItems={conversations}
         users={users}

@@ -10,13 +10,13 @@ const EmptyState = () => {
         h-full 
         flex 
         justify-center 
-        items-center 
+         
         
       '
     >
-      <div className='text-center items-center flex flex-col'>
+      <div className='text-center flex flex-col'>
         <h3 className='mt-2 text-2xl font-semibold text-gray-100'>
-          Select a chat or start a new conversation
+          Zvoľte si správu alebo začnite novú
         </h3>
       </div>
     </div>

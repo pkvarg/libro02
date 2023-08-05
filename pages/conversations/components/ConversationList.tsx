@@ -8,15 +8,18 @@ import { useEffect, useMemo, useState } from 'react'
 import { MdOutlineGroupAdd } from 'react-icons/md'
 import clsx from 'clsx'
 import { find, uniq } from 'lodash'
+import SidebarItem from '@/components/layout/SidebarItem'
+import { BsHouseFill } from 'react-icons/bs'
 
 import useConversation from '@/hooks/useConversation'
 // import { pusherClient } from '@/app/libs/pusher'
 // import GroupChatModal from '@/app/components/modals/GroupChatModal'
-// import ConversationBox from './ConversationBox'
+import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
 
 interface ConversationListProps {
   initialItems: FullConversationType[]
+
   users: User[]
   title?: string
 }
@@ -80,6 +83,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
     // pusherClient.bind('conversation:remove', removeHandler)
   }, [pusherKey, router])
 
+  console.log('Clist:', initialItems)
+
   return (
     <>
       {/* <GroupChatModal
@@ -105,7 +110,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
       >
         <div className='px-5'>
           <div className='flex justify-between mb-4 pt-4'>
-            <div className='text-2xl font-bold text-[#ffffff]'>Messages</div>
+            <div className='text-2xl font-bold text-[#ffffff]'>Správy</div>
+            {/* Open Group Chat */}
             <div
               onClick={() => setIsModalOpen(true)}
               className='
@@ -121,14 +127,21 @@ const ConversationList: React.FC<ConversationListProps> = ({
               <MdOutlineGroupAdd size={20} />
             </div>
           </div>
-          {/* {items.map((item) => (
+          <h1>Here?</h1>
+
+          {initialItems?.map((item) => (
             <ConversationBox
               key={item.id}
               data={item}
               selected={conversationId === item.id}
             />
-          ))} */}
+          ))}
         </div>
+        <SidebarItem
+          onClick={() => router.push('/')}
+          icon={BsHouseFill}
+          label='Domov'
+        />
       </aside>
     </>
   )

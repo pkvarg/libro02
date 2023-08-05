@@ -3,6 +3,7 @@ import { BsBellFill, BsHouseFill } from 'react-icons/bs'
 import { FaUser, FaUserPlus } from 'react-icons/fa'
 import { ImUserPlus } from 'react-icons/im'
 import { BiLogOut } from 'react-icons/bi'
+import { BsChatDots } from 'react-icons/bs'
 import SidebarLogo from './SidebarLogo'
 import SidebarItem from './SidebarItem'
 import SidebarTweetButton from './SidebarTweetButton'
@@ -56,6 +57,11 @@ const Sidebar = () => {
             ))}
             {currentUser && (
               <>
+                <SidebarItem
+                  onClick={() => router.push('/conversations')}
+                  icon={BsChatDots}
+                  label='Chat'
+                />
                 <SidebarItem
                   onClick={() => signOut()}
                   icon={BiLogOut}
