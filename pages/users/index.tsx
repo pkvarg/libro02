@@ -54,7 +54,7 @@ const index = () => {
               <div className='ml-auto'>
                 <button
                   onClick={() => startConversation(user.id)}
-                  className='bg-[#20aceb] w-[100px] rounded-xl cursor-pointer hover:opacity-[0.7]'
+                  className='bg-[#20aceb] w-[125%] lg:w-[90px] rounded-xl cursor-pointer hover:opacity-[0.7]'
                 >
                   Chat
                 </button>

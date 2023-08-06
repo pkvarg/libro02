@@ -1,7 +1,5 @@
 'use client'
 
-// import getConversations from '@/actions/getConversations'
-// import getUsers from '@/actions/getUsers'
 import ConversationList from './components/ConversationList'
 
 import clsx from 'clsx'
@@ -40,27 +38,5 @@ const Home = () => {
     </div>
   )
 }
-
-// async function ConversationsLayout({
-//   children,
-// }: {
-//   children: React.ReactNode
-// }) {
-//   const conversations = await getConversations()
-//   const users = await getUsers()
-
-//   return (
-//     <>
-//       <div className='h-full bg-[#ffffff]'>
-//         <ConversationList
-//           users={users}
-//           title='Messages'
-//           initialItems={conversations}
-//         />
-//         {children}
-//       </div>
-//     </>
-//   )
-// }
 
 export default Home

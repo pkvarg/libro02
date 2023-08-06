@@ -109,7 +109,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         )}
       >
         <div className='px-5'>
-          <div className='flex justify-between mb-4 pt-4'>
+          <div className='flex gap-4 mb-4 pt-4'>
             <div className='text-2xl font-bold text-[#ffffff]'>Správy</div>
             {/* Open Group Chat */}
             <div
@@ -127,7 +127,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
               <MdOutlineGroupAdd size={20} />
             </div>
           </div>
-          <h1>Here?</h1>
 
           {initialItems?.map((item) => (
             <ConversationBox
