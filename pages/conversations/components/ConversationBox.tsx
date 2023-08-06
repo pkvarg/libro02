@@ -30,10 +30,10 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   }, [data, router])
 
   const lastMessage = useMemo(() => {
-    const messages = data?.messages || []
+    const messages = data?.messages || [] || undefined
 
     return messages[messages.length - 1]
-  }, [data.messages])
+  }, [data?.messages])
 
   const userEmail = useMemo(
     () => session.data?.user?.email,
@@ -86,7 +86,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
           selected ? 'bg-neutral-100' : ''
         )}
       >
-        {data.isGroup ? (
+        {data?.isGroup ? (
           ''
         ) : (
           // <AvatarGroup users={data?.users} />
@@ -97,7 +97,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
             <span className='absolute inset-0' aria-hidden='true' />
             <div className='flex justify-between items-center mb-1'>
               <p className='text-md font-medium text-white-900'>
-                {data.name || otherUser.name}
+                {data?.name || otherUser?.name}
               </p>
               {lastMessage?.createdAt && (
                 <p

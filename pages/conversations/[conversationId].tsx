@@ -29,16 +29,16 @@ const ChatId = () => {
 
   // Sidebar
 
-  useEffect(() => {
-    const getActions = async () => {
-      const { data } = await axios.get('/api/conversations/actions')
-      console.log('ddat:', data)
+  // useEffect(() => {
+  //   const getActions = async () => {
+  //     const { data } = await axios.get('/api/conversations/actions')
+  //     console.log('ddat:', data)
 
-      setUsers(data.users)
-      setConversations(data.conversations)
-    }
-    getActions()
-  }, [])
+  //     setUsers(data.users)
+  //     setConversations(data.conversations)
+  //   }
+  //   getActions()
+  // }, [])
 
   // getConversationById
 
@@ -86,11 +86,11 @@ const ChatId = () => {
   return (
     <>
       <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}>
-        <ConversationList
+        {/* <ConversationList
           initialItems={conversations}
           users={users}
           title='Messages'
-        />
+        /> */}
         <div className='h-full mt-2'>
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />

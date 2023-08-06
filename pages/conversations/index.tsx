@@ -7,6 +7,7 @@ import useConversation from '@/hooks/useConversation'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import getUsers from '@/actions/getUsers'
 
 const Home = () => {
   const { isOpen } = useConversation()
@@ -17,9 +18,10 @@ const Home = () => {
     const getActions = async () => {
       const { data } = await axios.get('/api/conversations/actions')
       console.log('ddat:', data)
-
-      setUsers(data.users)
-      setConversations(data.conversations)
+      if (data) {
+        setUsers(data?.users)
+        setConversations(data?.conversations)
+      }
     }
     getActions()
   }, [])

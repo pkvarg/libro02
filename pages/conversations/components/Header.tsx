@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   // const { members } = useActiveList()
   // const isActive = members.indexOf(otherUser?.email!) !== -1
   const statusText = useMemo(() => {
-    if (conversation.isGroup) {
+    if (conversation?.isGroup) {
       return `${conversation.users.length} members`
     }
     return 'Active'
@@ -69,14 +69,14 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         >
           <HiChevronLeft size={32} />
         </Link>
-        {conversation.isGroup ? (
+        {conversation?.isGroup ? (
           ''
         ) : (
           // <AvatarGroup users={conversation?.users} />
           <AvatarChat user={otherUser} />
         )}
         <div className='flex flex-col'>
-          <div>{conversation.name || otherUser.name}</div>
+          <div>{conversation?.name || otherUser?.name}</div>
           <div className='text-sm font-light text-neutral-500'>
             {statusText}
           </div>
