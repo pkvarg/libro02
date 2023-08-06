@@ -2,6 +2,7 @@ import Header from '@/pages/conversations/components/Header'
 import Body from '@/pages/conversations/components/Body'
 import Form from '@/pages/conversations/components/Form'
 import ConversationList from './components/ConversationList'
+import AConversationList from './components/AConversationList'
 
 import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
@@ -29,16 +30,16 @@ const ChatId = () => {
 
   // Sidebar
 
-  // useEffect(() => {
-  //   const getActions = async () => {
-  //     const { data } = await axios.get('/api/conversations/actions')
-  //     console.log('ddat:', data)
+  useEffect(() => {
+    const getActions = async () => {
+      const { data } = await axios.get('/api/conversations/actions')
+      console.log('ddat:', data)
 
-  //     setUsers(data.users)
-  //     setConversations(data.conversations)
-  //   }
-  //   getActions()
-  // }, [])
+      setUsers(data.users)
+      setConversations(data.conversations)
+    }
+    getActions()
+  }, [])
 
   // getConversationById
 
@@ -85,12 +86,14 @@ const ChatId = () => {
 
   return (
     <>
-      <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}>
-        {/* <ConversationList
+      {/* <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}> */}
+
+      <div className={clsx('h-full lg:block')}>
+        <ConversationList
           initialItems={conversations}
           users={users}
           title='Messages'
-        /> */}
+        />
         <div className='h-full mt-2'>
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />

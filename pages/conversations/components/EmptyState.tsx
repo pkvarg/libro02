@@ -9,6 +9,7 @@ const EmptyState = () => {
         lg:py-6 
         h-full 
         flex 
+        
         justify-center 
          
         

@@ -1,6 +1,7 @@
 'use client'
 
 import ConversationList from './components/ConversationList'
+import AConversationList from './components/AConversationList'
 
 import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
@@ -26,11 +27,10 @@ const Home = () => {
     getActions()
   }, [])
 
-  console.log('indexC:', conversations)
-  console.log('indexU:', users)
-
   return (
-    <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}>
+    // <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}>
+
+    <div className={clsx('h-full  lg:block')}>
       <ConversationList
         initialItems={conversations}
         users={users}

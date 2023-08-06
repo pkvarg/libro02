@@ -10,6 +10,7 @@ import clsx from 'clsx'
 import { find, uniq } from 'lodash'
 import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
+import axios from 'axios'
 
 import useConversation from '@/hooks/useConversation'
 // import { pusherClient } from '@/app/libs/pusher'
@@ -18,23 +19,31 @@ import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
 
 interface ConversationListProps {
-  initialItems: FullConversationType[]
-
-  users: User[]
   title?: string
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({
-  initialItems,
-  users,
-}) => {
-  const [items, setItems] = useState(initialItems)
+const AConversationList: React.FC<ConversationListProps> = ({ title }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const router = useRouter()
   const session = useSession()
 
+  const [users, setUsers] = useState([])
+  const [conversations, setConversations] = useState<FullConversationType[]>()
+
   const { conversationId, isOpen } = useConversation()
+
+  useEffect(() => {
+    const getActions = async () => {
+      const { data } = await axios.get('/api/conversations/actions')
+      console.log('ddat:', data)
+      if (data) {
+        setUsers(data?.users)
+        setConversations(data?.conversations)
+      }
+    }
+    getActions()
+  }, [])
 
   const pusherKey = useMemo(() => {
     return session.data?.user?.email
@@ -47,43 +56,41 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
     //pusherClient.subscribe(pusherKey)
 
-    const updateHandler = (conversation: FullConversationType) => {
-      setItems((current) =>
-        current.map((currentConversation) => {
-          if (currentConversation.id === conversation.id) {
-            return {
-              ...currentConversation,
-              messages: conversation.messages,
-            }
-          }
+    // const updateHandler = (conversation: FullConversationType) => {
+    //   setItems((current) =>
+    //     current.map((currentConversation) => {
+    //       if (currentConversation.id === conversation.id) {
+    //         return {
+    //           ...currentConversation,
+    //           messages: conversation.messages,
+    //         }
+    //       }
 
-          return currentConversation
-        })
-      )
-    }
+    //       return currentConversation
+    //     })
+    //   )
+    // }
 
-    const newHandler = (conversation: FullConversationType) => {
-      setItems((current) => {
-        if (find(current, { id: conversation.id })) {
-          return current
-        }
+    // const newHandler = (conversation: FullConversationType) => {
+    //   setItems((current) => {
+    //     if (find(current, { id: conversation.id })) {
+    //       return current
+    //     }
 
-        return [conversation, ...current]
-      })
-    }
+    //     return [conversation, ...current]
+    //   })
+    // }
 
-    const removeHandler = (conversation: FullConversationType) => {
-      setItems((current) => {
-        return [...current.filter((convo) => convo.id !== conversation.id)]
-      })
-    }
+    // const removeHandler = (conversation: FullConversationType) => {
+    //   setItems((current) => {
+    //     return [...current.filter((convo) => convo.id !== conversation.id)]
+    //   })
+    // }
 
     // pusherClient.bind('conversation:update', updateHandler)
     // pusherClient.bind('conversation:new', newHandler)
     // pusherClient.bind('conversation:remove', removeHandler)
   }, [pusherKey, router])
-
-  console.log('Clist:', initialItems)
 
   return (
     <>
@@ -129,7 +136,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             </div>
           </div>
 
-          {initialItems?.map((item) => (
+          {conversations?.map((item) => (
             <ConversationBox
               key={item.id}
               data={item}
@@ -147,4 +154,4 @@ const ConversationList: React.FC<ConversationListProps> = ({
   )
 }
 
-export default ConversationList
+export default AConversationList
