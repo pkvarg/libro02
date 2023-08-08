@@ -1,8 +1,9 @@
 'use client'
+import axios from 'axios'
 
 import { HiChevronLeft } from 'react-icons/hi'
 import { HiEllipsisHorizontal } from 'react-icons/hi2'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
 
@@ -13,6 +14,9 @@ import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
 // import ProfileDrawer from './ProfileDrawer'
 
+import { useRouter } from 'next/router'
+import { FullConversationType } from '@/types'
+
 interface HeaderProps {
   conversation: Conversation & {
     users: User[]
@@ -21,15 +25,37 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const otherUser = useOtherUser(conversation)
+
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   // const { members } = useActiveList()
   // const isActive = members.indexOf(otherUser?.email!) !== -1
+
+  // test cn
+
+  // const router = useRouter()
+  // const { conversationId } = router.query
+
+  // useEffect(() => {
+  //   if (conversationId) {
+  //     const getConversationById = async () => {
+  //       const { data } = await axios.get(`/api/conversations/${conversationId}`)
+  //       console.log('getHEADERcbId:', data)
+
+  //       // setUsers(data.users)
+  //       setConv(data)
+  //     }
+  //     getConversationById()
+  //   }
+  // }, [conversationId])
+
+  console.log('HeaderConv', conversation)
+
   const statusText = useMemo(() => {
     if (conversation?.isGroup) {
       return `${conversation.users.length} members`
     }
-    return 'Active'
+    return 'Aktívny'
     //return isActive ? 'Active' : 'Offline'
   }, [conversation])
 

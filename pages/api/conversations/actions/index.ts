@@ -14,8 +14,6 @@ export default async function GetAction(
   let conversations
   let users
 
-  console.log('act:')
-
   if (!currentUser?.id) {
     return []
   }

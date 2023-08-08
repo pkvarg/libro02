@@ -33,7 +33,6 @@ const ChatId = () => {
   useEffect(() => {
     const getActions = async () => {
       const { data } = await axios.get('/api/conversations/actions')
-      console.log('ddat:', data)
 
       setUsers(data.users)
       setConversations(data.conversations)
@@ -58,22 +57,6 @@ const ChatId = () => {
 
   console.log('conversation', conversation)
 
-  // GetMessages
-
-  useEffect(() => {
-    if (conversationId) {
-    }
-    const getMessages = async () => {
-      const { data } = await axios.get(`/api/messages/${conversationId}`)
-      console.log('Mess:', data)
-
-      setMessages(data)
-    }
-    getMessages()
-  }, [conversationId])
-
-  console.log('messages', messages)
-
   if (!conversation) {
     return (
       <div className='lg:pl-80 h-full'>
@@ -97,7 +80,7 @@ const ChatId = () => {
         <div className='h-full mt-2'>
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
-            <Body initialMessages={messages} />
+            <Body />
             <Form />
           </div>
         </div>

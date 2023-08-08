@@ -4,25 +4,42 @@ import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 
 // import { pusherClient } from '@/app/libs/pusher'
-import useConversation from '@/hooks/useConversation'
-// import MessageBox from './MessageBox'
+import { useRouter } from 'next/router'
+
+import MessageBox from './MessageBox'
 import { FullMessageType } from '@/types'
 import { find } from 'lodash'
 
-interface BodyProps {
-  // delete Undefined!!!!!
-  initialMessages: FullMessageType[] | undefined
-}
+// interface BodyProps {
+//   initialMessages: FullMessageType[]
+// }
 
-const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
+const Body = () => {
   const bottomRef = useRef<HTMLDivElement>(null)
-  const [messages, setMessages] = useState(initialMessages)
+  const [messages, setMessages] = useState<any[]>([])
 
-  const { conversationId } = useConversation()
+  const router = useRouter()
+  const { conversationId } = router.query
 
-  // useEffect(() => {
-  //   axios.post(`/api/conversations/${conversationId}/seen`)
-  // }, [conversationId])
+  console.log('Boody', messages)
+
+  useEffect(() => {
+    if (conversationId) {
+    }
+    const getMessages = async () => {
+      const { data } = await axios.get(`/api/messages/${conversationId}`)
+      console.log('Mess:', data)
+
+      setMessages(data)
+    }
+    getMessages()
+  }, [conversationId])
+
+  console.log('messages', messages)
+
+  useEffect(() => {
+    axios.post(`/api/conversations/${conversationId}/seen`)
+  }, [conversationId])
 
   // useEffect(() => {
   //   pusherClient.subscribe(conversationId)
@@ -65,17 +82,16 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
   // }, [conversationId])
 
   return (
-    <h1>BOdy!</h1>
-    // <div className='flex-1 overflow-y-auto'>
-    //   {messages.map((message, i) => (
-    //     <MessageBox
-    //       isLast={i === messages.length - 1}
-    //       key={message.id}
-    //       data={message}
-    //     />
-    //   ))}
-    //   <div className='pt-24' ref={bottomRef} />
-    // </div>
+    <div className='flex-1 overflow-y-auto'>
+      {messages.map((message, i) => (
+        <MessageBox
+          isLast={i === messages.length - 1}
+          key={message.id}
+          data={message}
+        />
+      ))}
+      <div className='pt-24' ref={bottomRef} />
+    </div>
   )
 }
 

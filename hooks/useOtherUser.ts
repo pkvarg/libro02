@@ -15,7 +15,7 @@ const useOtherUser = (
       (user) => user.email !== currentUserEmail
     )
     if (otherUser !== undefined) return otherUser[0]
-  }, [session.data?.user?.email])
+  }, [session.data?.user?.email, conversation?.users])
 
   return otherUser
 }
