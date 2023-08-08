@@ -1,7 +1,7 @@
 'use client'
 
+import { useState, ChangeEvent } from 'react'
 import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2'
-import MessageInput from './MessageInput'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
@@ -22,12 +22,12 @@ const Form = () => {
     },
   })
 
-  console.log(register)
-
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setValue('message', '', { shouldValidate: true })
+    console.log(message)
+    // setValue('message', '', { shouldValidate: true })
     axios.post('/api/messages', {
-      ...data,
+      message,
+      //...data,
       conversationId: conversationId,
     })
   }
@@ -37,6 +37,12 @@ const Form = () => {
       image: result.info.secure_url,
       conversationId: conversationId,
     })
+  }
+
+  const [message, setMessage] = useState<string>('')
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value)
   }
 
   return (
@@ -64,12 +70,14 @@ const Form = () => {
         onSubmit={handleSubmit(onSubmit)}
         className='flex items-center gap-2 lg:gap-4 w-full'
       >
-        <MessageInput
+        <input
           id='message'
-          register={register}
-          errors={errors}
+          value={message}
+          //register={register}
+          //errors={errors}
           required
           placeholder='Napíšte správu'
+          onChange={handleChange}
         />
         <button
           type='submit'
