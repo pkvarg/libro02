@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, ChangeEvent } from 'react'
 import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2'
+import MessageInput from './MessageInput'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
@@ -23,11 +23,9 @@ const Form = () => {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(message)
-    // setValue('message', '', { shouldValidate: true })
+    setValue('message', '', { shouldValidate: true })
     axios.post('/api/messages', {
-      message,
-      //...data,
+      ...data,
       conversationId: conversationId,
     })
   }
@@ -39,30 +37,24 @@ const Form = () => {
     })
   }
 
-  const [message, setMessage] = useState<string>('')
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value)
-  }
-
   return (
     <div
       className='
-        py-4
-        px-4
-        bg-[#262626]
-        border-t
-        flex
-        items-center
-        gap-2
-        lg:gap-4
+        py-4 
+        px-4 
+         
+        border-t 
+        flex 
+        items-center 
+        gap-2 
+        lg:gap-4 
         w-full
       '
     >
       <CldUploadButton
         options={{ maxFiles: 1 }}
         onUpload={handleUpload}
-        uploadPreset='ug3mdafi'
+        uploadPreset='pgc9ehd5'
       >
         <HiPhoto size={30} className='text-sky-500' />
       </CldUploadButton>
@@ -70,23 +62,21 @@ const Form = () => {
         onSubmit={handleSubmit(onSubmit)}
         className='flex items-center gap-2 lg:gap-4 w-full'
       >
-        <input
+        <MessageInput
           id='message'
-          value={message}
-          //register={register}
-          //errors={errors}
+          register={register}
+          errors={errors}
           required
           placeholder='Napíšte správu'
-          onChange={handleChange}
         />
         <button
           type='submit'
           className='
-            rounded-full
-            p-2
-            bg-sky-500
-            cursor-pointer
-            hover:bg-sky-600
+            rounded-full 
+            p-2 
+            bg-sky-500 
+            cursor-pointer 
+            hover:bg-sky-600 
             transition
           '
         >

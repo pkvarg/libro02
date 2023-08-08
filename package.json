@@ -11,6 +11,7 @@
     "email": "email dev --dir pages/emails "
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.16",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.11.0",
     "@react-email/button": "0.0.9",

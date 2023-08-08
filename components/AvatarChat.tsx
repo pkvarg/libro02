@@ -11,7 +11,8 @@ interface AvatarProps {
 
 const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
   const { members } = useActiveList()
-  const isActive = members.indexOf(user?.email!) !== -1
+  // const isActive = members.indexOf(user?.email!) !== -1
+  const isActive = true
 
   return (
     <div className='relative'>
@@ -28,8 +29,12 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
       '
       >
         <Image
+          style={{
+            objectFit: 'cover',
+            borderRadius: '100%',
+          }}
           fill
-          src={user?.image || '/images/placeholder.png'}
+          src={user?.profileImage || '/images/placeholder.png'}
           alt='Avatar'
         />
       </div>
