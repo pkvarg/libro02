@@ -12,6 +12,7 @@ const Form = () => {
   const { conversationId } = router.query
 
   const {
+    //@ts-ignore
     register,
     handleSubmit,
     setValue,
@@ -64,6 +65,7 @@ const Form = () => {
       >
         <MessageInput
           id='message'
+          //@ts-ignore
           register={register}
           errors={errors}
           required
