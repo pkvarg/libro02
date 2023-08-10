@@ -32,8 +32,8 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   // const isActive = members.indexOf(otherUser?.email!) !== -1
 
   const statusText = useMemo(() => {
-    if (conversation?.isGroup !== undefined) {
-      return `${conversation.users.length} members`
+    if (conversation?.isGroup === true) {
+      return `${conversation.users.length} členovia`
     }
     return 'Aktívny'
     //return isActive ? 'Active' : 'Offline'
@@ -75,9 +75,8 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
             <HiChevronLeft size={32} />
           </Link>
           {conversation?.isGroup ? (
-            ''
+            <AvatarGroup users={conversation?.users} />
           ) : (
-            // <AvatarGroup users={conversation?.users} />
             <AvatarChat user={otherUser} />
           )}
           <div className='flex flex-col'>

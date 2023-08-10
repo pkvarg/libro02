@@ -13,7 +13,7 @@ import { BsHouseFill } from 'react-icons/bs'
 
 import useConversation from '@/hooks/useConversation'
 // import { pusherClient } from '@/app/libs/pusher'
-// import GroupChatModal from '@/app/components/modals/GroupChatModal'
+import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
 import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
 
@@ -87,11 +87,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   return (
     <>
-      {/* <GroupChatModal
+      <GroupChatModal
         users={users}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      /> */}
+      />
       <aside
         className={clsx(
           `

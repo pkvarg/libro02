@@ -87,9 +87,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         )}
       >
         {data?.isGroup ? (
-          ''
+          <AvatarGroup users={data?.users} />
         ) : (
-          // <AvatarGroup users={data?.users} />
           <AvatarChat user={otherUser} />
         )}
         <div className='min-w-0 flex-1'>

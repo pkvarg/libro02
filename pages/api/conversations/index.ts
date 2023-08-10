@@ -44,7 +44,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       //   }
       // })
 
-      // return res.json(newConversation)
+      return res.json(newConversation)
     }
 
     const existingConversations = await prisma.conversation.findMany({
@@ -95,7 +95,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     //   }
     // })
 
-    // return res.json(newConversation)
+    return res.json(newConversation)
   } catch (error: any) {
     throw new Error('Internal error')
   }

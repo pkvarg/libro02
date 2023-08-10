@@ -24,7 +24,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
         id={id}
         type={type}
         autoComplete={id}
-        // @ts-ignore-enable
         {...register(id)}
         required
         placeholder={placeholder}

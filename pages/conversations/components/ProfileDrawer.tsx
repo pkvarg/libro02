@@ -11,7 +11,7 @@ import useActiveList from '@/hooks/useActiveList'
 
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
-//import ConfirmModal from './ConfirmModal'
+import ConfirmModal from './ConfirmModal'
 
 interface ProfileDrawerProps {
   isOpen: boolean
@@ -46,19 +46,18 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   const isActive = members.indexOf(otherUser?.email!) !== -1
 
   const statusText = useMemo(() => {
-    if (data?.isGroup !== undefined) {
-      return `${data.users.length} members`
+    if (data?.isGroup === true) {
+      return `${data.users.length} členovia`
     }
-
     return isActive ? 'Active' : 'Offline'
   }, [data, isActive])
 
   return (
     <>
-      {/* <ConfirmModal
+      <ConfirmModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-      /> */}
+      />
       <Transition.Root show={isOpen ? true : false} as={Fragment}>
         <Dialog as='div' className='relative z-50' onClose={onClose}>
           <Transition.Child
@@ -123,7 +122,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 <IoTrash size={20} />
                               </div>
                               <div className='text-sm font-light text-neutral-600'>
-                                Delete
+                                Vymazať
                               </div>
                             </div>
                           </div>
@@ -141,7 +140,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   sm:flex-shrink-0
                                 '
                                   >
-                                    Emails
+                                    Emaily
                                   </dt>
                                   <dd
                                     className='

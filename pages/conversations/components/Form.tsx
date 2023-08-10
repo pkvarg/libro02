@@ -6,13 +6,13 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
+import { type } from 'os'
 
 const Form = () => {
   const router = useRouter()
   const { conversationId } = router.query
 
   const {
-    //@ts-ignore
     register,
     handleSubmit,
     setValue,
@@ -65,7 +65,6 @@ const Form = () => {
       >
         <MessageInput
           id='message'
-          //@ts-ignore
           register={register}
           errors={errors}
           required
