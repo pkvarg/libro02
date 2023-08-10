@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import serverAuth from '@/libs/serverAuth'
-//import { pusherServer } from '@/app/libs/pusher'
+import { pusherServer } from '@/libs/pusher'
 import prisma from '@/libs/prismadb'
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -24,11 +24,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
       include: {
         messages: {
-          include: {
-            seen: true,
-          },
+          // include: {
+          //   seen: true,
+          // },
         },
-        users: true,
+        //users: true,
       },
     })
 
@@ -48,10 +48,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       where: {
         id: lastMessage.id,
       },
-      include: {
-        sender: true,
-        seen: true,
-      },
+      // include: {
+      //   sender: true,
+      //   seen: true,
+      // },
+
       data: {
         seen: {
           connect: {
@@ -61,7 +62,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    // Update all connections with new seen
+    //Update all connections with new seen
     // await pusherServer.trigger(currentUser.email, 'conversation:update', {
     //   id: conversationId,
     //   messages: [updatedMessage],
@@ -72,7 +73,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       return res.json(conversation)
     }
 
-    // Update last message seen
+    //Update last message seen
     // await pusherServer.trigger(
     //   conversationId!,
     //   'message:update',

@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     domains: ['res.cloudinary.com'],
   },
+
+  api: {
+    responseLimit: false,
+  },
 }
 
 module.exports = nextConfig

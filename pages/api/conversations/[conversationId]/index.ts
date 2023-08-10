@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 import serverAuth from '@/libs/serverAuth'
-//import { pusherServer } from "@/libs/pusher";
+import { pusherServer } from '@/libs/pusher'
 
 export default async function GetConversationById(
   req: NextApiRequest,
@@ -46,15 +46,15 @@ export default async function GetConversationById(
         },
       })
 
-      // existingConversation.users.forEach((user) => {
-      //   if (user.email) {
-      //     pusherServer.trigger(
-      //       user.email,
-      //       'conversation:remove',
-      //       existingConversation
-      //     )
-      //   }
-      // })
+      existingConversation.users.forEach((user) => {
+        if (user.email) {
+          pusherServer.trigger(
+            user.email,
+            'conversation:remove',
+            existingConversation
+          )
+        }
+      })
 
       return res.json(deletedConversation)
     } catch (error) {

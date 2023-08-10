@@ -8,8 +8,6 @@ export default async function GetMessages(
   try {
     const { conversationId } = req.query
 
-    console.log('messs:', conversationId)
-
     if (!conversationId || typeof conversationId !== 'string') {
       throw new Error('Neplatné ID')
     }
@@ -19,13 +17,34 @@ export default async function GetMessages(
         conversationId: conversationId,
       },
       include: {
-        sender: true,
+        //sender: true,
+        sender: {
+          select: {
+            // Specify the keys you want to include in the 'sender' object
+            id: true,
+            name: true,
+            email: true,
+            profileImage: true,
+          },
+        },
         seen: true,
+        // seen: {
+        //   select: {
+        //     // Specify the keys you want to include in the 'sender' object
+        //     id: true,
+
+        //     // Exclude other keys you don't want
+        //     // excludedKey1: false,
+        //     // excludedKey2: false,
+        //   },
+        // },
       },
       orderBy: {
         createdAt: 'asc',
       },
     })
+
+    //console.log('msgs', messages)
 
     return res.status(200).json(messages)
   } catch (error: any) {

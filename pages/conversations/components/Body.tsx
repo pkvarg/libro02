@@ -3,7 +3,7 @@
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 
-// import { pusherClient } from '@/app/libs/pusher'
+import { pusherClient } from '@/libs/pusher'
 import { useRouter } from 'next/router'
 
 import MessageBox from './MessageBox'
@@ -35,14 +35,14 @@ const Body = () => {
     getMessages()
   }, [conversationId])
 
-  console.log('messages', messages)
+  console.log('body', conversationId.toString())
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`)
   }, [conversationId])
 
   // useEffect(() => {
-  //   pusherClient.subscribe(conversationId)
+  //   pusherClient.subscribe(conversationId.toString())
   //   bottomRef?.current?.scrollIntoView()
 
   //   const messageHandler = (message: FullMessageType) => {
@@ -75,7 +75,7 @@ const Body = () => {
   //   pusherClient.bind('message:update', updateMessageHandler)
 
   //   return () => {
-  //     pusherClient.unsubscribe(conversationId)
+  //     pusherClient.unsubscribe(conversationId.toString())
   //     pusherClient.unbind('messages:new', messageHandler)
   //     pusherClient.unbind('message:update', updateMessageHandler)
   //   }

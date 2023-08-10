@@ -2,8 +2,6 @@ import Header from '@/pages/conversations/components/Header'
 import Body from '@/pages/conversations/components/Body'
 import Form from '@/pages/conversations/components/Form'
 import ConversationList from './components/ConversationList'
-import AConversationList from './components/AConversationList'
-
 import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
 import { useEffect, useState } from 'react'
@@ -12,6 +10,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import Sidebar from '@/components/layout/Sidebar'
 import EmptyState from '@/pages/conversations/components/EmptyState'
+import LoadingModal from './components/LoadingModal'
 
 // interface IParams {
 //   conversationId: string
@@ -28,14 +27,18 @@ const ChatId = () => {
   const router = useRouter()
   const { conversationId } = router.query
 
+  const [isLoading, setIsloading] = useState(false)
+
   // Sidebar
 
   useEffect(() => {
+    setIsloading(true)
     const getActions = async () => {
       const { data } = await axios.get('/api/conversations/actions')
 
       setUsers(data.users)
       setConversations(data.conversations)
+      setIsloading(false)
     }
     getActions()
   }, [])
@@ -44,18 +47,17 @@ const ChatId = () => {
 
   useEffect(() => {
     if (conversationId) {
+      setIsloading(true)
+
       const getConversationById = async () => {
         const { data } = await axios.get(`/api/conversations/${conversationId}`)
         console.log('getCBId:', data)
-
-        // setUsers(data.users)
         setConversation(data)
+        setIsloading(false)
       }
       getConversationById()
     }
   }, [conversationId])
-
-  console.log('conversation', conversation)
 
   if (!conversation) {
     return (
@@ -70,7 +72,7 @@ const ChatId = () => {
   return (
     <>
       {/* <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}> */}
-
+      {isLoading && <LoadingModal />}
       <div className={clsx('h-full lg:block')}>
         <ConversationList
           initialItems={conversations}
