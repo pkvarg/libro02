@@ -1,4 +1,4 @@
-'use client'
+// @ts-nocheck
 
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 

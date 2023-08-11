@@ -21,8 +21,6 @@ const Body = () => {
   const router = useRouter()
   const { conversationId } = router.query
 
-  console.log('Boody', messages)
-
   useEffect(() => {
     if (conversationId) {
     }
@@ -35,14 +33,12 @@ const Body = () => {
     getMessages()
   }, [conversationId])
 
-  console.log('body', conversationId.toString())
-
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`)
   }, [conversationId])
 
   useEffect(() => {
-    pusherClient.subscribe(conversationId.toString())
+    pusherClient.subscribe(conversationId?.toString())
     bottomRef?.current?.scrollIntoView()
 
     const messageHandler = (message: FullMessageType) => {
