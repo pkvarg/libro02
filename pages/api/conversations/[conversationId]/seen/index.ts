@@ -24,11 +24,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
       include: {
         messages: {
-          // include: {
-          //   seen: true,
-          // },
+          include: {
+            seen: true,
+          },
         },
-        //users: true,
+        users: true,
       },
     })
 
@@ -48,10 +48,10 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       where: {
         id: lastMessage.id,
       },
-      // include: {
-      //   sender: true,
-      //   seen: true,
-      // },
+      include: {
+        sender: true,
+        seen: true,
+      },
 
       data: {
         seen: {
@@ -63,10 +63,10 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     })
 
     //Update all connections with new seen
-    // await pusherServer.trigger(currentUser.email, 'conversation:update', {
-    //   id: conversationId,
-    //   messages: [updatedMessage],
-    // })
+    await pusherServer.trigger(currentUser.email, 'conversation:update', {
+      id: conversationId,
+      messages: [updatedMessage],
+    })
 
     // If user has already seen the message, no need to go further
     if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
@@ -74,11 +74,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
 
     //Update last message seen
-    // await pusherServer.trigger(
-    //   conversationId!,
-    //   'message:update',
-    //   updatedMessage
-    // )
+    await pusherServer.trigger(
+      conversationId!,
+      'message:update',
+      updatedMessage
+    )
 
     return res.json('Success')
   } catch (error) {

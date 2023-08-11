@@ -41,7 +41,7 @@ const ChatId = () => {
       setIsloading(false)
     }
     getActions()
-  }, [])
+  }, [conversationId])
 
   // getConversationById
 

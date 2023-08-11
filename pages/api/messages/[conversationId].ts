@@ -17,16 +17,16 @@ export default async function GetMessages(
         conversationId: conversationId,
       },
       include: {
-        //sender: true,
-        sender: {
-          select: {
-            // Specify the keys you want to include in the 'sender' object
-            id: true,
-            name: true,
-            email: true,
-            profileImage: true,
-          },
-        },
+        sender: true,
+        // sender: {
+        //   select: {
+        //     // Specify the keys you want to include in the 'sender' object
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //     profileImage: true,
+        //   },
+        // },
         seen: true,
         // seen: {
         //   select: {

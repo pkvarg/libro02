@@ -17,16 +17,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const newMessage = await prisma.message.create({
       include: {
         seen: true,
-        //sender: true,
-        sender: {
-          select: {
-            // Specify the keys you want to include in the 'sender' object
-            id: true,
-            name: true,
-            email: true,
-            profileImage: true,
-          },
-        },
+        sender: true,
+        // sender: {
+        //   select: {
+        //     // Specify the keys you want to include in the 'sender' object
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //     profileImage: true,
+        //   },
+        // },
       },
       data: {
         body: message,
@@ -59,15 +59,15 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         },
       },
       include: {
-        //users: true,
-        users: {
-          select: {
-            // Specify the keys you want to include in the 'sender' object
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
+        users: true,
+        // users: {
+        //   select: {
+        //     // Specify the keys you want to include in the 'sender' object
+        //     id: true,
+        //     name: true,
+        //     email: true,
+        //   },
+        // },
         messages: {
           include: {
             seen: true,
@@ -76,47 +76,43 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    const excludedKeys = ['coverImage', 'profileImage']
+    // const excludedKeys = ['coverImage', 'profileImage']
 
-    const modifiedNewMessage = newMessage.seen.map((seen) => {
-      const { coverImage, ...rest } = seen
-      return rest
-    })
+    // const modifiedNewMessage = newMessage.seen.map((seen) => {
+    //   const { coverImage, ...rest } = seen
+    //   return rest
+    // })
 
     // const { coverImage, profileImage, ...rest } = seen
     // return rest
 
-    const modifiedUpdatedConversation = updatedConversation.messages.map(
-      (message) => ({
-        ...message,
-        seen: message.seen.map((seenItem) => {
-          const { coverImage, profileImage, ...rest } = seenItem
-          return rest
-        }),
-      })
-    )
+    // const modifiedUpdatedConversation = updatedConversation.messages.map(
+    //   (message) => ({
+    //     ...message,
+    //     seen: message.seen.map((seenItem) => {
+    //       const { coverImage, profileImage, ...rest } = seenItem
+    //       return rest
+    //     }),
+    //   })
+    // )
 
     //console.log('mdff', modifiedCnv2)
 
     // console.log('newM', newMessage)
 
-    // await pusherServer.trigger(
-    //   conversationId,
-    //   'messages:new',
-    //   modifiedNewMessage
-    // )
+    await pusherServer.trigger(conversationId, 'messages:new', newMessage)
 
-    // const lastMessage =
-    //   updatedConversation.messages[updatedConversation.messages.length - 1]
+    const lastMessage =
+      updatedConversation.messages[updatedConversation.messages.length - 1]
 
-    // updatedConversation.users.map((user) => {
-    //   pusherServer.trigger(user.email!, 'conversation:update', {
-    //     id: conversationId,
-    //     messages: [lastMessage],
-    //   })
-    // })
+    updatedConversation.users.map((user) => {
+      pusherServer.trigger(user.email!, 'conversation:update', {
+        id: conversationId,
+        messages: [lastMessage],
+      })
+    })
 
-    return res.json(modifiedNewMessage)
+    return res.json(newMessage)
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')
     return res.status(500).json('Error')

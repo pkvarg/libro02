@@ -9,6 +9,9 @@ import useUser from '@/hooks/useUser'
 import Input from '../Input'
 import Modal from '../Modal'
 import ImageUpload from '../ImageUpload'
+import { HiPhoto } from 'react-icons/hi2'
+
+import { CldUploadButton } from 'next-cloudinary'
 
 const EditModal = () => {
   const { data: currentUser } = useCurrentUser()
@@ -36,6 +39,13 @@ const EditModal = () => {
   ])
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const handleUploadProfileImage = (result: any) => {
+    setProfileImage(result.info.secure_url)
+  }
+  const handleUploadCoverImage = (result: any) => {
+    setCoverImage(result.info.secure_url)
+  }
 
   const onSubmit = useCallback(async () => {
     try {
@@ -70,18 +80,37 @@ const EditModal = () => {
 
   const bodyContent = (
     <div className='flex flex-col gap-4'>
-      <ImageUpload
+      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
+        <h1>Nahjrate profilový obrázok</h1>
+        <CldUploadButton
+          options={{ maxFiles: 1 }}
+          onUpload={handleUploadProfileImage}
+          uploadPreset='ug3mdafi'
+        ></CldUploadButton>
+        <img src={profileImage} height='100' width='100' alt='Uploaded image' />
+      </div>
+      {/* <ImageUpload
         value={profileImage}
         disabled={isLoading}
         onChange={(image) => setProfileImage(image)}
         label='Najhrajte profilový obrázok'
-      />
-      <ImageUpload
+      /> */}
+
+      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
+        <h1>Nahjrate pozadie</h1>
+        <CldUploadButton
+          options={{ maxFiles: 1 }}
+          onUpload={handleUploadCoverImage}
+          uploadPreset='ug3mdafi'
+        ></CldUploadButton>
+        <img src={coverImage} height='100' width='100' alt='Uploaded image' />
+      </div>
+      {/* <ImageUpload
         value={coverImage}
         disabled={isLoading}
         onChange={(image) => setCoverImage(image)}
         label='Nahrajte pozadie'
-      />
+      /> */}
       <Input
         placeholder='Meno'
         onChange={(e) => setName(e.target.value)}

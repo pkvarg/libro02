@@ -5,6 +5,7 @@ import useCurrentUser from '@/hooks/useCurrentUser'
 import Avatar from '../Avatar'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { BsChatDots } from 'react-icons/bs'
 
 const FollowBar = () => {
   const { data: users = [] } = useUsers()
@@ -43,23 +44,28 @@ const FollowBar = () => {
       <div className='bg-neutral-800 rounded-xl p-4'>
         <h2 className='text-white text-xl font-semibold'>Sledovať</h2>
         <div className='flex flex-col gap-6 mt-4'>
-          {users.map((user: Record<string, any>) => (
-            <div key={user.id} className='flex flex-row gap-4'>
-              <Avatar userId={user.id} />
-              <div className='flex flex-col'>
-                <p className='text-white font-semibold text-sm'>{user.name}</p>
-                <p className='text-neutral-400 text-sm'>@{user.username}</p>
-              </div>
-              <div className='ml-auto'>
-                <button
-                  onClick={() => startConversation(user.id)}
-                  className='bg-[#20aceb] w-[125%] rounded-xl cursor-pointer hover:opacity-[0.7] mr-1'
-                >
-                  Chat
-                </button>
-              </div>
-            </div>
-          ))}
+          {users.map(
+            (user: Record<string, any>) =>
+              user.id !== currentUser?.id && (
+                <div key={user.id} className='flex flex-row gap-4'>
+                  <Avatar userId={user.id} />
+                  <div className='flex flex-col'>
+                    <p className='text-white font-semibold text-sm'>
+                      {user.name}
+                    </p>
+                    <p className='text-neutral-400 text-sm'>@{user.username}</p>
+                  </div>
+                  <div className='ml-auto mt-2'>
+                    <button
+                      onClick={() => startConversation(user.id)}
+                      className='cursor-pointer hover:opacity-[0.7] mr-1'
+                    >
+                      <BsChatDots />
+                    </button>
+                  </div>
+                </div>
+              )
+          )}
         </div>
       </div>
     </div>

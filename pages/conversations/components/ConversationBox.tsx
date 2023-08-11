@@ -56,14 +56,14 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
 
   const lastMessageText = useMemo(() => {
     if (lastMessage?.image) {
-      return 'Poslal obrázok'
+      return 'Poslaný obrázok'
     }
 
     if (lastMessage?.body) {
       return lastMessage?.body
     }
 
-    return 'Začal konverzáciu'
+    return 'Začatá konverzácia'
   }, [lastMessage])
 
   return (

@@ -12,7 +12,7 @@ import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
 
 import useConversation from '@/hooks/useConversation'
-// import { pusherClient } from '@/app/libs/pusher'
+import { pusherClient } from '@/libs/pusher'
 import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
 import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
@@ -45,7 +45,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
       return
     }
 
-    //pusherClient.subscribe(pusherKey)
+    pusherClient.subscribe(pusherKey)
 
     const updateHandler = (conversation: FullConversationType) => {
       setItems((current) =>
@@ -78,9 +78,9 @@ const ConversationList: React.FC<ConversationListProps> = ({
       })
     }
 
-    // pusherClient.bind('conversation:update', updateHandler)
-    // pusherClient.bind('conversation:new', newHandler)
-    // pusherClient.bind('conversation:remove', removeHandler)
+    pusherClient.bind('conversation:update', updateHandler)
+    pusherClient.bind('conversation:new', newHandler)
+    pusherClient.bind('conversation:remove', removeHandler)
   }, [pusherKey, router])
 
   console.log('Clist:', initialItems)
@@ -111,7 +111,12 @@ const ConversationList: React.FC<ConversationListProps> = ({
       >
         <div className='px-5'>
           <div className='flex gap-4 mb-4 pt-4'>
-            <div className='text-2xl font-bold text-[#ffffff]'>Správy</div>
+            <div
+              onClick={() => router.push('/conversations')}
+              className='cursor-pointer text-2xl font-bold text-[#ffffff]'
+            >
+              Správy
+            </div>
             {/* Open Group Chat */}
             <div
               onClick={() => setIsModalOpen(true)}
