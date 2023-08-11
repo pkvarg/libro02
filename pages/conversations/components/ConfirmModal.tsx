@@ -29,7 +29,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
       .then(() => {
         onClose()
         router.push('/conversations')
-        router.reload()
+        //router.reload()
       })
       .catch(() => toast.error('Nastala chyba!'))
       .finally(() => setIsLoading(false))

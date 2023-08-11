@@ -14,9 +14,9 @@ import { find } from 'lodash'
 //   initialMessages: FullMessageType[]
 // }
 
-const Body = () => {
+const Body = ({ messages, setMessages }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
-  const [messages, setMessages] = useState<any[]>([])
+  // const [messages, setMessages] = useState<any[]>([])
 
   const router = useRouter()
   const { conversationId } = router.query

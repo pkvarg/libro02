@@ -18,7 +18,7 @@ import LoadingModal from './components/LoadingModal'
 
 const ChatId = () => {
   const [conversation, setConversation] = useState()
-  const [messages, setMessages] = useState()
+  const [messages, setMessages] = useState([])
 
   const { isOpen } = useConversation()
   const [users, setUsers] = useState([])
@@ -31,6 +31,8 @@ const ChatId = () => {
 
   // Sidebar
 
+  // if messages and conversations change, update conversations in Sidebar
+
   useEffect(() => {
     setIsloading(true)
     const getActions = async () => {
@@ -41,7 +43,7 @@ const ChatId = () => {
       setIsloading(false)
     }
     getActions()
-  }, [conversationId])
+  }, [conversationId, messages])
 
   // getConversationById
 
@@ -82,7 +84,7 @@ const ChatId = () => {
         <div className='h-full mt-2'>
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
-            <Body />
+            <Body messages={messages} setMessages={setMessages} />
             <Form />
           </div>
         </div>

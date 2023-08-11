@@ -41,7 +41,6 @@ export default async function handler(
   } else if (req.method === 'GET') {
     try {
       const { userId } = req.query
-      console.log('rQ:', userId)
       let books
 
       if (userId && typeof userId === 'string') {
