@@ -53,7 +53,6 @@ const ChatId = () => {
 
       const getConversationById = async () => {
         const { data } = await axios.get(`/api/conversations/${conversationId}`)
-        console.log('getCBId:', data)
         setConversation(data)
         setIsloading(false)
       }

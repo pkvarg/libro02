@@ -17,7 +17,6 @@ const Home = () => {
   useEffect(() => {
     const getActions = async () => {
       const { data } = await axios.get('/api/conversations/actions')
-      console.log('ddat:', data)
       if (data) {
         setUsers(data?.users)
         setConversations(data?.conversations)

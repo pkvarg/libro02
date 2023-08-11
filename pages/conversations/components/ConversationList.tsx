@@ -128,7 +128,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
               Správy
             </div>
             {/* Open Group Chat */}
-            <div
+            {/* <div
               onClick={() => setIsModalOpen(true)}
               className='
                 rounded-full 
@@ -141,7 +141,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
               '
             >
               <MdOutlineGroupAdd size={20} />
-            </div>
+            </div> */}
           </div>
 
           {initialItems?.map((item) => (

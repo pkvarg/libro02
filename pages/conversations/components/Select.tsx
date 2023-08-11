@@ -31,13 +31,14 @@ const Select: React.FC<SelectProps> = ({
         {label}
       </label>
       <div className='mt-2'>
-        <ReactSelect
+        // @ts-ignore
+        {/* <ReactSelect
           isDisabled={disabled}
           value={value}
           onChange={onChange}
           isMulti
           options={options}
-          menuPortalTarget={document?.body}
+          menuPortalTarget={document?.body!}
           styles={{
             menuPortal: (base) => ({
               ...base,
@@ -45,13 +46,10 @@ const Select: React.FC<SelectProps> = ({
               color: 'black',
             }),
           }}
-          // styles={{
-          //   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-          // }}
           classNames={{
             control: () => 'text-sm',
           }}
-        />
+        /> */}
       </div>
     </div>
   )

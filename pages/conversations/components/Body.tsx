@@ -26,7 +26,6 @@ const Body = ({ messages, setMessages }) => {
     }
     const getMessages = async () => {
       const { data } = await axios.get(`/api/messages/${conversationId}`)
-      console.log('Mess:', data)
 
       setMessages(data)
     }
@@ -79,7 +78,7 @@ const Body = ({ messages, setMessages }) => {
 
   return (
     <div className='flex-1 overflow-y-auto'>
-      {messages.map((message, i) => (
+      {messages?.map((message, i) => (
         <MessageBox
           isLast={i === messages.length - 1}
           key={message.id}

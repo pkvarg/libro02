@@ -25,6 +25,7 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
 }) => {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [name, setName] = useState('')
 
   const {
     register,
@@ -41,12 +42,29 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
 
   const members = watch('members')
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  // const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  //   setIsLoading(true)
+
+  //   axios
+  //     .post('/api/conversations', {
+  //       ...data,
+  //       isGroup: true,
+  //     })
+  //     .then(() => {
+  //       router.refresh()
+  //       onClose()
+  //     })
+  //     .catch(() => toast.error('Nastala chyba!'))
+  //     .finally(() => setIsLoading(false))
+  // }
+
+  const onSubmit = () => {
     setIsLoading(true)
 
     axios
       .post('/api/conversations', {
-        ...data,
+        name,
+        members,
         isGroup: true,
       })
       .then(() => {
@@ -59,62 +77,67 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className='space-y-12'>
-          <div className='border-b border-gray-900/10 pb-12'>
-            <h2
-              className='
+      {/* <form onSubmit={handleSubmit(onSubmit)}> */}
+      <div className='space-y-12'>
+        <div className='border-b border-gray-900/10 pb-12'>
+          <h2
+            className='
                 text-base 
                 font-semibold 
                 leading-7 
                 text-white
               '
-            >
-              Vytvoriť skupinový chat
-            </h2>
-            <p className='mt-1 text-sm leading-6 text-gray-100'>
-              Chatujte s viac ako 2 užívateľmi.
-            </p>
-            <div className='mt-10 flex flex-col gap-y-8'>
-              <Input
+          >
+            Vytvoriť skupinový chat
+          </h2>
+          <p className='mt-1 text-sm leading-6 text-gray-100'>
+            Chatujte s viac ako 2 užívateľmi.
+          </p>
+          <div className='mt-10 flex flex-col gap-y-8'>
+            {/* <Input
                 disabled={isLoading}
                 label='Meno'
                 id='name'
                 errors={errors}
                 required
                 register={register}
-              />
-              <Select
-                disabled={isLoading}
-                label='Členovia'
-                options={users.map((user) => ({
-                  value: user.id,
-                  label: user.name,
-                }))}
-                onChange={(value) =>
-                  setValue('members', value, {
-                    shouldValidate: true,
-                  })
-                }
-                value={members}
-              />
-            </div>
+              /> */}
+            <input
+              className='text-black px-2 h-9 rounded'
+              id='name'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              //errors={errors}
+              required
+              placeholder='Meno'
+            />
+
+            {/* <Select
+              disabled={isLoading}
+              label='Členovia'
+              options={users.map((user) => ({
+                value: user.id,
+                label: user.name,
+              }))}
+              onChange={(value) =>
+                setValue('members', value, {
+                  shouldValidate: true,
+                })
+              }
+              value={members}
+            /> */}
           </div>
         </div>
-        <div className='mt-6 flex items-center justify-end gap-x-6'>
-          <Button
-            disabled={isLoading}
-            onClick={onClose}
-            type='button'
-            secondary
-          >
-            Zrušiť
-          </Button>
-          <Button disabled={isLoading} type='submit'>
-            Vytvoriť
-          </Button>
-        </div>
-      </form>
+      </div>
+      <div className='mt-6 flex items-center justify-end gap-x-6'>
+        <Button disabled={isLoading} onClick={onClose} type='button' secondary>
+          Zrušiť
+        </Button>
+        <Button onClick={onSubmit} disabled={isLoading}>
+          Vytvoriť
+        </Button>
+      </div>
+      {/* </form> */}
     </Modal>
   )
 }

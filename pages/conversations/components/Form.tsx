@@ -6,11 +6,13 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
-import { type } from 'os'
+import { useState } from 'react'
 
 const Form = () => {
   const router = useRouter()
   const { conversationId } = router.query
+
+  const [message, setMessage] = useState('')
 
   const {
     register,
@@ -23,10 +25,17 @@ const Form = () => {
     },
   })
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setValue('message', '', { shouldValidate: true })
+  // const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  //   setValue('message', '', { shouldValidate: true })
+  //   axios.post('/api/messages', {
+  //     ...data,
+  //     conversationId: conversationId,
+  //   })
+  // }
+
+  const onSubmit = () => {
     axios.post('/api/messages', {
-      ...data,
+      message,
       conversationId: conversationId,
     })
   }
@@ -59,20 +68,30 @@ const Form = () => {
       >
         <HiPhoto size={30} className='text-sky-500' />
       </CldUploadButton>
-      <form
+      {/* <form
         onSubmit={handleSubmit(onSubmit)}
         className='flex items-center gap-2 lg:gap-4 w-full'
-      >
-        <MessageInput
+      > */}
+      {/* <MessageInput
           id='message'
           register={register}
           errors={errors}
           required
           placeholder='Napíšte správu'
-        />
-        <button
-          type='submit'
-          className='
+        /> */}
+      <input
+        className='text-black px-2 rounded-xl'
+        id='message'
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        //errors={errors}
+        required
+        placeholder='Napíšte správu'
+      />
+      <button
+        onClick={onSubmit}
+        //type='submit'
+        className='
             rounded-full 
             p-2 
             bg-sky-500 
@@ -80,10 +99,10 @@ const Form = () => {
             hover:bg-sky-600 
             transition
           '
-        >
-          <HiPaperAirplane size={18} className='text-white' />
-        </button>
-      </form>
+      >
+        <HiPaperAirplane size={18} className='text-white' />
+      </button>
+      {/* </form> */}
     </div>
   )
 }

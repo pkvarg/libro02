@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
 
 import useOtherUser from '@/hooks/useOtherUser'
-// import useActiveList from '@/hooks/useActiveList'
+import useActiveList from '@/hooks/useActiveList'
 
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
@@ -28,16 +28,16 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
 
   const [drawerOpen, setDrawerOpen] = useState(false)
 
-  // const { members } = useActiveList()
-  // const isActive = members.indexOf(otherUser?.email!) !== -1
+  const { members } = useActiveList()
+  const isActive = members.indexOf(otherUser?.email!) !== -1
 
   const statusText = useMemo(() => {
     if (conversation?.isGroup === true) {
       return `${conversation.users.length} členovia`
     }
-    return 'Aktívny'
-    //return isActive ? 'Active' : 'Offline'
-  }, [conversation])
+    //return 'Aktívny'
+    return isActive ? 'Aktívny' : 'Offline'
+  }, [conversation, isActive])
 
   return (
     <>

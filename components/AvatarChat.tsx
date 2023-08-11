@@ -11,8 +11,8 @@ interface AvatarProps {
 
 const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
   const { members } = useActiveList()
-  // const isActive = members.indexOf(user?.email!) !== -1
-  const isActive = true
+  const isActive = members.indexOf(user?.email!) !== -1
+  //const isActive = true
 
   return (
     <div className='relative'>

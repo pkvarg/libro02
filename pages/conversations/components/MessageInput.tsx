@@ -1,5 +1,4 @@
-// @ts-nocheck
-
+'use client'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 
 interface MessageInputProps {
@@ -20,12 +19,11 @@ const MessageInput: React.FC<MessageInputProps> = ({
 }) => {
   return (
     <div className='relative w-full'>
-      <input
+      {/* <input
         id={id}
         type={type}
         autoComplete={id}
-        {...register(id)}
-        required
+        {...register(id, { required })}
         placeholder={placeholder}
         className='
           text-black
@@ -37,7 +35,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           rounded-full
           focus:outline-none
         '
-      />
+      /> */}
     </div>
   )
 }
