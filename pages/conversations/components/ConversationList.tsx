@@ -116,7 +116,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         overflow-y-auto
         border-gray-200
       `,
-          isOpen ? 'hidden' : 'block w-[25%] lg:w-full left-0'
+          isOpen ? 'hidden' : 'block w-[25%] lg:w-[25%] left-0'
         )}
       >
         <div className='px-5'>

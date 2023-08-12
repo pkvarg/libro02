@@ -73,7 +73,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         className={clsx(
           `
         w-min
-        lg:w-full 
+        lg:w-max 
         relative 
         flex 
         items-center 
