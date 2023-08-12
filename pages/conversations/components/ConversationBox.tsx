@@ -72,7 +72,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         onClick={handleClick}
         className={clsx(
           `
-        w-full 
+        w-fit  
+        lg:w-full 
         relative 
         flex 
         items-center 
@@ -91,24 +92,27 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         ) : (
           <AvatarChat user={otherUser} />
         )}
-        <div className='min-w-0 flex-1'>
+        <div className='min-w-0 hidden lg:flex'>
           <div className='focus:outline-none'>
             <span className='absolute inset-0' aria-hidden='true' />
-            <div className='flex justify-between items-center mb-1'>
+            <div className='flex flex-row justify-betweem items-center gap-2 mb-1'>
               <p className='text-md font-medium text-white-900'>
                 {data?.name || otherUser?.name}
               </p>
-              {lastMessage?.createdAt && (
-                <p
-                  className='
+              <div>
+                {lastMessage?.createdAt && (
+                  <p
+                    className='
                   text-xs 
                   text-gray-400 
                   font-light
+                  
                 '
-                >
-                  {format(new Date(lastMessage.createdAt), 'p')}
-                </p>
-              )}
+                  >
+                    {format(new Date(lastMessage.createdAt), 'p')}
+                  </p>
+                )}
+              </div>
             </div>
             <p
               className={clsx(

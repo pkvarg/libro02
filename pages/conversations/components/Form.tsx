@@ -38,6 +38,7 @@ const Form = () => {
       message,
       conversationId: conversationId,
     })
+    setMessage('')
   }
 
   const handleUpload = (result: any) => {

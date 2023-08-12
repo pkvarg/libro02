@@ -123,7 +123,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
           <div className='flex gap-4 mb-4 pt-4'>
             <div
               onClick={() => router.push('/conversations')}
-              className='cursor-pointer text-2xl font-bold text-[#ffffff]'
+              className='cursor-pointer lg:text-2xl font-bold text-[#ffffff]'
             >
               Správy
             </div>
@@ -152,11 +152,13 @@ const ConversationList: React.FC<ConversationListProps> = ({
             />
           ))}
         </div>
-        <SidebarItem
-          onClick={() => router.push('/')}
-          icon={BsHouseFill}
-          label='Domov'
-        />
+        <div className='ml-6'>
+          <SidebarItem
+            onClick={() => router.push('/')}
+            icon={BsHouseFill}
+            label='Domov'
+          />
+        </div>
       </aside>
     </>
   )

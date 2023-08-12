@@ -13,8 +13,8 @@ const EmptyState = () => {
       '
     >
       <div className='text-center flex flex-col'>
-        <h3 className='mt-2 text-2xl font-semibold text-gray-100'>
-          Zvoľte si správu alebo začnite novú
+        <h3 className='-mt-5 lg:-mt-2 lg:text-2xl font-semibold text-gray-100'>
+          Zvoľte si správu
         </h3>
       </div>
     </div>
