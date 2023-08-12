@@ -5,6 +5,8 @@ import useBookModal from '@/hooks/useBookModal'
 import Input from '../Input'
 import Modal from '../Modal'
 import ImageUpload from '../ImageUpload'
+import { CldUploadButton } from 'next-cloudinary'
+
 import { useRouter } from 'next/router'
 
 const BookModal = () => {
@@ -17,6 +19,10 @@ const BookModal = () => {
   const [bookReview, setBookReview] = useState<string>('')
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const handleUploadBookImage = (result: any) => {
+    setBookImage(result.info.secure_url)
+  }
 
   const onSubmit = useCallback(async () => {
     if (
@@ -60,12 +66,22 @@ const BookModal = () => {
 
   const bodyContent = (
     <div className='flex flex-col gap-4'>
-      <ImageUpload
+      {/* <ImageUpload
         value={bookImage}
         disabled={isLoading}
         onChange={(image) => setBookImage(image)}
-        label='Najhrajte obrázok knihy'
-      />
+        label='Nahrajte obrázok knihy'
+      /> */}
+      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
+        <h1>Nahrajte obrázok knihy</h1>
+
+        <CldUploadButton
+          options={{ maxFiles: 1 }}
+          onUpload={handleUploadBookImage}
+          uploadPreset='ug3mdafi'
+        ></CldUploadButton>
+        <img src={bookImage} height='100' width='100' alt='Uploaded image' />
+      </div>
       <Input
         placeholder='Názov'
         onChange={(e) => setBookTitle(e.target.value)}

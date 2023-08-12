@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { BsTrash } from 'react-icons/bs'
+import { BsChatDots, BsTrash } from 'react-icons/bs'
 import useLoginModal from '@/hooks/useLoginModal'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useLike from '@/hooks/useLike'
@@ -19,6 +19,7 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
   const router = useRouter()
   const loginModal = useLoginModal()
   const [showAlert, setShowAlert] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { data: currentUser } = useCurrentUser()
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId })
@@ -86,6 +87,25 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
     setShowAlert(false)
   }
 
+  const goToChat = useCallback(
+    (ownerId: string) => {
+      console.log(ownerId)
+
+      setIsLoading(true)
+      axios
+        .post('/api/conversations', {
+          userId: ownerId,
+        })
+        .then((data) => {
+          router.push(`/conversations/${data.data.id}`)
+        })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    },
+    [currentUser, router]
+  )
+
   return (
     <>
       <div
@@ -141,7 +161,20 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
             <p className='text-[20px] mb-8 lg:mb-0'>
               Popis : {data.bookReview}
             </p>
+            {/* do not start chat with myself */}
+            {whoIsCurrentUser !== whosBook && (
+              <div
+                onClick={() => goToChat(data.userId)}
+                className='text-white mt-auto cursor-pointer'
+              >
+                <div className='flex items-center gap-2 mb-2 text-[20px] w-fit p-2 rounded-[25px] bg-[#0da6e9]'>
+                  <p>Kontakt</p>
+                  <BsChatDots />
+                </div>
+              </div>
+            )}
           </div>
+
           {/* <div className='text-white mt-1'>{data.body}</div> */}
           {/* <div className='flex flex-row items-center mt-3 gap-10'>
             <div
