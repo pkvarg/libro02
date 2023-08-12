@@ -72,7 +72,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         onClick={handleClick}
         className={clsx(
           `
-        w-fit  
+        w-min
         lg:w-full 
         relative 
         flex 

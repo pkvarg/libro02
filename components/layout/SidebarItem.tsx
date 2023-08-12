@@ -1,3 +1,4 @@
+'use client'
 import React, { useCallback } from 'react'
 import { IconType } from 'react-icons'
 import { useRouter } from 'next/router'
@@ -79,6 +80,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
       '
       >
         <Icon size={24} color='white' />
+
         <p className='hidden lg:block text-white text-xl'>{label}</p>
         {alert ? (
           <BsDot className='text-sky-500 absolute -top-4 left-0' size={70} />
