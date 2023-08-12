@@ -10,6 +10,7 @@ import SidebarTweetButton from './SidebarTweetButton'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { MdOutlineFeed } from 'react-icons/md'
 
 const Sidebar = () => {
   const { data: currentUser } = useCurrentUser()
@@ -35,6 +36,12 @@ const Sidebar = () => {
       label: 'Profil',
       href: `/users/${currentUser?.id}`,
       icon: FaUser,
+      auth: true,
+    },
+    {
+      label: 'Tweety',
+      href: `/posts`,
+      icon: MdOutlineFeed,
       auth: true,
     },
   ]
