@@ -81,7 +81,7 @@ const Form = () => {
           placeholder='Napíšte správu'
         /> */}
       <input
-        className='text-black px-2 rounded-xl'
+        className='text-black px-2 rounded-xl w-full h-8'
         id='message'
         value={message}
         onChange={(e) => setMessage(e.target.value)}
