@@ -6,7 +6,10 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import io from 'socket.io-client'
+
+let socket
 
 const Form = () => {
   const router = useRouter()
@@ -33,7 +36,22 @@ const Form = () => {
   //   })
   // }
 
-  const onSubmit = () => {
+  // useEffect(() => {
+  //   const socketInitializer = async () => {
+  //     await fetch('/api/socket')
+  //     socket = io()
+
+  //     socket.on('connect', () => {
+  //       console.log('connected')
+  //     })
+  //   }
+  //   socketInitializer()
+  // }, [])
+
+  const onSubmit = (e: any) => {
+    e.preventDefault()
+    console.log('prevented?', message)
+    // socket?.emit('input-change', message)
     axios.post('/api/messages', {
       message,
       conversationId: conversationId,
@@ -90,7 +108,7 @@ const Form = () => {
         placeholder='Napíšte správu'
       />
       <button
-        onClick={onSubmit}
+        onClick={(e) => onSubmit(e)}
         //type='submit'
         className='
             rounded-full 
