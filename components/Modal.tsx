@@ -60,6 +60,7 @@ const Modal: React.FC<ModalProps> = ({
           focus:outline-none
           bg-neutral-800
           bg-opacity-70
+
         '
       >
         <div className='relative w-full lg:w-3/6 my-6 mx-auto lg:max-w-3xl h-full lg:h-auto'>
@@ -86,8 +87,10 @@ const Modal: React.FC<ModalProps> = ({
               flex 
               items-center 
               justify-between 
-              p-10 
+              pt-4 
+              px-10
               rounded-t
+
               '
             >
               <h3 className='text-3xl font-semibold text-white'>{title}</h3>

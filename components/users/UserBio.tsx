@@ -36,7 +36,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
       <div className='flex justify-end p-2'>
         {currentUser?.id === userId ? (
           <div className='flex flex-col lg:flex-row gap-1'>
-            <Button secondary label='Upraviť' onClick={editModal.onOpen} />
+            <Button label='Upraviť' onClick={editModal.onOpen} />
             <Button onClick={BookModal.onOpen} label='+ Kniha' />
           </div>
         ) : (
@@ -47,9 +47,6 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
             outline={isFollowing}
           />
         )}
-        {/* {currentUser?.id === fetchedUser?.id && (
-          <Button onClick={BookModal.onOpen} label='+ Kniha' />
-        )} */}
       </div>
 
       <div className='mt-8 px-4'>
@@ -85,11 +82,6 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
             <p className='text-neutral-500'>Sledujúcich</p>
           </div>
         </div>
-        {/* {currentUser?.id === fetchedUser?.id && (
-          <div className='mt-4 flex justify-end'>
-            <Button onClick={BookModal.onOpen} label='+ Kniha' />
-          </div>
-        )} */}
       </div>
     </div>
   )

@@ -96,7 +96,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
           <div className='focus:outline-none'>
             <span className='absolute inset-0' aria-hidden='true' />
             <div className='flex flex-row justify-betweem items-center gap-2 mb-1'>
-              <p className='text-md font-medium text-white-900'>
+              <p className='text-md font-medium text-white'>
                 {data?.name || otherUser?.name}
               </p>
               <div>

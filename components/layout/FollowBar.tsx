@@ -58,7 +58,7 @@ const FollowBar = () => {
                   <div className='ml-auto mt-2'>
                     <button
                       onClick={() => startConversation(user.id)}
-                      className='cursor-pointer hover:opacity-[0.7] mr-1'
+                      className='cursor-pointer hover:opacity-[0.7] mr-1 bg-black'
                     >
                       <BsChatDots />
                     </button>

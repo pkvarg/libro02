@@ -220,7 +220,7 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
               </button>
               <button
                 onClick={goToBook}
-                className='border rounded-xl px-2 cursor-pointer absolute bottom-2 right-8'
+                className='border rounded-xl px-2 cursor-pointer absolute bottom-2 right-8 bg-black'
               >
                 Upraviť
               </button>

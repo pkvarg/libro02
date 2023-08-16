@@ -78,7 +78,7 @@ const BookModal = () => {
         <CldUploadButton
           options={{ maxFiles: 1 }}
           onUpload={handleUploadBookImage}
-          uploadPreset='ug3mdafi'
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         ></CldUploadButton>
         <img src={bookImage} height='100' width='100' alt='Uploaded image' />
       </div>

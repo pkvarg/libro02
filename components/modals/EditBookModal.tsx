@@ -101,20 +101,20 @@ const EditBookModal = () => {
   ])
 
   const bodyContent = (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-1'>
       {/* <ImageUpload
         value={bookImage}
         disabled={isLoading}
         onChange={(image) => setBookImage(image)}
         label='Najhrajte obrázok knihy'
       /> */}
-      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
+      <div className='w-full p-2 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
         <h1>Nahrajte obrázok knihy</h1>
 
         <CldUploadButton
           options={{ maxFiles: 1 }}
           onUpload={handleUploadBookImage}
-          uploadPreset='ug3mdafi'
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         ></CldUploadButton>
         <img src={bookImage} height='100' width='100' alt='Uploaded image' />
       </div>

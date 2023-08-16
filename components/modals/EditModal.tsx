@@ -79,13 +79,13 @@ const EditModal = () => {
   ])
 
   const bodyContent = (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-2'>
       <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
         <h1>Nahjrate profilový obrázok</h1>
         <CldUploadButton
           options={{ maxFiles: 1 }}
           onUpload={handleUploadProfileImage}
-          uploadPreset='ug3mdafi'
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         ></CldUploadButton>
         <img src={profileImage} height='100' width='100' alt='Uploaded image' />
       </div>
@@ -101,7 +101,7 @@ const EditModal = () => {
         <CldUploadButton
           options={{ maxFiles: 1 }}
           onUpload={handleUploadCoverImage}
-          uploadPreset='ug3mdafi'
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
         ></CldUploadButton>
         <img src={coverImage} height='100' width='100' alt='Uploaded image' />
       </div>

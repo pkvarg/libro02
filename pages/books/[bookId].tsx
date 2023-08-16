@@ -152,7 +152,7 @@ const BookView = () => {
           </button>
           <button
             onClick={editBookModal.onOpen}
-            className='border rounded-xl px-2 cursor-pointer absolute bottom-3 right-10'
+            className='border rounded-xl px-2 cursor-pointer absolute bottom-3 right-10 bg-black'
           >
             Upraviť
           </button>
