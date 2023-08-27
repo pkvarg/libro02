@@ -4,7 +4,7 @@ import { FaUser, FaUserPlus } from 'react-icons/fa'
 import { ImUserPlus } from 'react-icons/im'
 import { BiLogOut } from 'react-icons/bi'
 import { BsChatDots } from 'react-icons/bs'
-import SidebarLogo from './SidebarLogo'
+import { MdAdminPanelSettings } from 'react-icons/md'
 import SidebarItem from './SidebarItem'
 import SidebarTweetButton from './SidebarTweetButton'
 import useCurrentUser from '@/hooks/useCurrentUser'
@@ -74,6 +74,13 @@ const Sidebar = () => {
                   icon={BiLogOut}
                   label='Odhlásiť'
                 />
+                {currentUser.isAdmin && (
+                  <SidebarItem
+                    onClick={() => router.push('admin')}
+                    icon={MdAdminPanelSettings}
+                    label='Admin'
+                  />
+                )}
                 <div className='block lg:hidden text-[30px]'>
                   <SidebarItem
                     key='users'

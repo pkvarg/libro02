@@ -36,26 +36,30 @@ const Form = () => {
   //   })
   // }
 
-  // useEffect(() => {
-  //   const socketInitializer = async () => {
-  //     await fetch('/api/socket')
-  //     socket = io()
+  useEffect(() => {
+    socketInitializer()
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
 
-  //     socket.on('connect', () => {
-  //       console.log('connected')
-  //     })
-  //   }
-  //   socketInitializer()
-  // }, [])
+  async function socketInitializer() {
+    await fetch('/api/socket')
+    socket = io()
 
+    socket.on('receive-message', (data: object) => {
+      console.log('socket:', data)
+    })
+  }
   const onSubmit = (e: any) => {
     e.preventDefault()
     console.log('prevented?', message)
-    // socket?.emit('input-change', message)
-    axios.post('/api/messages', {
-      message,
-      conversationId: conversationId,
-    })
+    socket.emit('send-message', message)
+    console.log(socket)
+    // axios.post('/api/messages', {
+    //   message,
+    //   conversationId: conversationId,
+    // })
     setMessage('')
   }
 

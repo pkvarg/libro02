@@ -1,23 +1,21 @@
 import { Server } from 'socket.io'
-import { NextApiRequest, NextApiResponse } from 'next'
 
-export default function SocketHandler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  console.log('socket')
-  const io = new Server(4000, {
-    cors: {
-      origin: 'http://localhost:3000',
-    },
-  })
+export default function SocketHandler(req: any, res: any) {
+  if (res.socket.server.io) {
+    console.log('Already set up')
+    res.end()
+    return
+  }
+
+  const io = new Server(res.socket.server)
+  res.socket.server.io = io
 
   io.on('connection', (socket) => {
-    socket.on('input-change', (msg) => {
-      console.log(msg)
-      socket.broadcast.emit('update-input', msg)
+    socket.on('send-message', (obj) => {
+      io.emit('receive-message', obj)
     })
   })
 
+  console.log('Setting up socket')
   res.end()
 }
