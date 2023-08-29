@@ -58,6 +58,9 @@ export default async function handler(
         })
       } else {
         books = await prisma.book.findMany({
+          include: {
+            user: true,
+          },
           // where: {
           //   userId,
           // },

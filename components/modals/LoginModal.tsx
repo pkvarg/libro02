@@ -53,7 +53,7 @@ const LoginModal = () => {
           config
         )
 
-        if (data.isRegistered) {
+        if (data.isRegistered && data.active) {
           try {
             const data = await signIn('credentials', {
               email,
