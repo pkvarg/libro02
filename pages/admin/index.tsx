@@ -31,33 +31,33 @@ const AdminPage = () => {
         <div className='flex flex-row justify-center gap-2 mt-2'>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowUsers(true)}
+            onClick={() => setShowUsers((prev) => !prev)}
           >
             Užívatelia
           </h2>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowBooks(true)}
+            onClick={() => setShowBooks((prev) => !prev)}
           >
             Knihy
           </h2>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowTweets(true)}
+            onClick={() => setShowTweets((prev) => !prev)}
           >
             Tweety
           </h2>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowChats(true)}
+            onClick={() => setShowChats((prev) => !prev)}
           >
             Chaty
           </h2>
         </div>
-        <UsersPanel />
-        <BooksPanel />
-        <TweetsPanel />
-        <ChatsPanel />
+        <UsersPanel showUsers={showUsers} />
+        <BooksPanel showBooks={showBooks} />
+        <TweetsPanel showTweets={showTweets} />
+        <ChatsPanel showChats={showChats} />
       </>
     )
   )

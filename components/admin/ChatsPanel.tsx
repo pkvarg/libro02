@@ -1,7 +1,13 @@
 import React from 'react'
 
-const ChatsPanel = () => {
-  return <div>ChatsPanel</div>
+const ChatsPanel = ({ showChats }) => {
+  return (
+    showChats && (
+      <>
+        <h1>ChatsPanel</h1>
+      </>
+    )
+  )
 }
 
 export default ChatsPanel

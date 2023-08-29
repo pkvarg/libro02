@@ -20,6 +20,7 @@ export default async function handler(
         data: {
           body,
           userId: currentUser.id,
+          active: true,
         },
       })
 
