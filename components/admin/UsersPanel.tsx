@@ -48,6 +48,7 @@ const UsersPanel = ({ showUsers }) => {
     privilege: string,
     status: boolean
   ) => {
+    console.log('send', userId, privilege, status)
     const { data } = await axios.patch(`/api/users/${userId}`, {
       privilege,
       status: !status,
@@ -64,13 +65,13 @@ const UsersPanel = ({ showUsers }) => {
         <h1 className='text-center text-[30px] my-8 '>Užívatelia</h1>
         <div className='flex flex-col gap-6 mt-4 ml-2'>
           {users.map((user: Record<string, any>) => (
-            <div key={user.id} className='flex flex-row gap-4'>
+            <div key={user.id} className='flex flex-col lg:flex-row gap-4'>
               <Avatar userId={user.id} />
               <div className='flex flex-col'>
                 <p className='text-white font-semibold text-sm'>{user.name}</p>
                 <p className='text-neutral-400 text-sm'>@{user.username}</p>
               </div>
-              <div className='ml-auto mr-4 flex flex-row justify-center gap-4 '>
+              <div className='ml-0 lg:ml-auto mr-4 flex flex-col lg:flex-row justify-center gap-2 lg:gap-4 '>
                 <p
                   className={
                     user.isAdmin

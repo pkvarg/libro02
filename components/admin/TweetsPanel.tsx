@@ -16,7 +16,6 @@ const TweetsPanel = ({ showTweets }) => {
     const { data } = await axios.patch(`/api/posts/${tweetId}`, {
       status: !status,
     })
-    console.log(data)
     if (data === 'OK') {
       getTweets()
     }
@@ -34,7 +33,7 @@ const TweetsPanel = ({ showTweets }) => {
           {tweets.map((tweet) => (
             <div
               key={tweet.id}
-              className='flex flex-row gap-2 text-[25px] mx-2'
+              className='flex flex-col lg:flex-row gap-2 text-[25px] mx-2 mt-4 lg:mt-0 border-b-2 lg:border-0'
             >
               <p className='text-[#FFAC1C]'>{tweet.body}</p>
               <p
@@ -46,8 +45,8 @@ const TweetsPanel = ({ showTweets }) => {
               <p
                 className={
                   tweet.active
-                    ? `ml-auto mr-2 text-[#00FF00] cursor-pointer`
-                    : `ml-auto mr-2 text-[#D2042D] cursor-pointer `
+                    ? `ml-0 lg:ml-auto mr-2 text-[#00FF00] cursor-pointer`
+                    : `ml-0 lg:ml-auto mr-2 text-[#D2042D] cursor-pointer `
                 }
                 onClick={() => toggleTweetStatus(tweet.id, tweet.active)}
               >

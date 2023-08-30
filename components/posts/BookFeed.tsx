@@ -11,9 +11,10 @@ const BookFeed: React.FC<BookFeedProps> = ({ userId }) => {
 
   return (
     <>
-      {books.map((book: Record<string, any>) => (
-        <BookItem userId={userId} key={book.id} data={book} />
-      ))}
+      {books.map(
+        (book: Record<string, any>) =>
+          book.active && <BookItem userId={userId} key={book.id} data={book} />
+      )}
     </>
   )
 }

@@ -30,6 +30,7 @@ export default async function handler(
           bookAuthor,
           bookLendingDuration,
           bookReview,
+          active: true,
         },
       })
 
@@ -83,9 +84,10 @@ export default async function handler(
     let books
     try {
       books = await prisma.book.findMany({
-        // include: {
-        //   user: true,
-        //   comments: true,
+        //include: {
+        //user: true,
+        //comments: true,
+
         // },
         orderBy: {
           createdAt: 'desc',

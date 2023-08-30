@@ -11,7 +11,9 @@ export default async function handler(
       if (!userId || typeof userId !== 'string') {
         throw new Error('Neplatné ID')
       }
-      const existingUser = await prisma.user.findUnique({
+      console.log('ww', userId)
+      let existingUser
+      existingUser = await prisma.user.findUnique({
         where: {
           id: userId,
         },
@@ -30,9 +32,7 @@ export default async function handler(
       console.log(error)
       return res.status(400).end()
     }
-  }
-
-  if (req.method === 'PATCH') {
+  } else if (req.method === 'PATCH') {
     try {
       const { privilege, status } = req.body
       const { userId } = req.query

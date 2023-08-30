@@ -101,6 +101,7 @@ model Book {
   bookLendingDuration String?
   bookAvailable       Boolean @default(true)   
   bookReview          String
+  active             Boolean?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   

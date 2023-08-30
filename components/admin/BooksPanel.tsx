@@ -15,6 +15,17 @@ const BooksPanel = ({ showBooks }) => {
     getBooks()
   }, [])
 
+  const toggleBookStatus = async (bookId: string, status: boolean) => {
+    console.log(bookId, status)
+    const { data } = await axios.patch(`/api/books/${bookId}`, {
+      status: !status,
+    })
+    console.log(data)
+    if (data === 'OK') {
+      getBooks()
+    }
+  }
+
   return (
     showBooks && (
       <>
@@ -34,6 +45,16 @@ const BooksPanel = ({ showBooks }) => {
                   className='cursor-pointer text-[#FFAC1C]'
                 >
                   Na profil majiteľa
+                </p>
+                <p
+                  className={
+                    book.active
+                      ? `text-[#00FF00] cursor-pointer`
+                      : `text-[#D2042D] cursor-pointer `
+                  }
+                  onClick={() => toggleBookStatus(book.id, book.active)}
+                >
+                  Aktívny
                 </p>
               </div>
             </div>

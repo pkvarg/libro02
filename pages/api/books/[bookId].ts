@@ -92,6 +92,7 @@ export default async function handler(
         bookLendingDuration,
         bookAvailable,
         bookReview,
+        status,
       } = req.body
 
       if (!bookId || typeof bookId !== 'string') {
@@ -109,6 +110,7 @@ export default async function handler(
           bookLendingDuration,
           bookAvailable,
           bookReview,
+          active: status,
         },
       })
 

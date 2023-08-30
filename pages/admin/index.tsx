@@ -24,32 +24,55 @@ const AdminPage = () => {
     }
   }, [isAdmin])
 
+  useEffect(() => {
+    if (showUsers) {
+      setShowBooks(false)
+      setShowTweets(false)
+      setShowChats(false)
+    }
+    if (showBooks) {
+      setShowUsers(false)
+      setShowTweets(false)
+      setShowChats(false)
+    }
+    if (showTweets) {
+      setShowBooks(false)
+      setShowUsers(false)
+      setShowChats(false)
+    }
+    if (showChats) {
+      setShowBooks(false)
+      setShowTweets(false)
+      setShowUsers(false)
+    }
+  }, [showBooks, showUsers, showTweets, showChats])
+
   return (
     isAdmin && (
       <>
         <h1 className='text-center text-[30px] mt-2'>Hello {name}</h1>
-        <div className='flex flex-row justify-center gap-2 mt-2'>
+        <div className='flex flex-col lg:flex-row justify-center gap-2 mt-2 mx-4 lg:mx-0'>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowUsers((prev) => !prev)}
+            onClick={() => setShowUsers(true)}
           >
             Užívatelia
           </h2>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowBooks((prev) => !prev)}
+            onClick={() => setShowBooks(true)}
           >
             Knihy
           </h2>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowTweets((prev) => !prev)}
+            onClick={() => setShowTweets(true)}
           >
             Tweety
           </h2>
           <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowChats((prev) => !prev)}
+            onClick={() => setShowChats(true)}
           >
             Chaty
           </h2>
