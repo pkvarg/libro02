@@ -25,7 +25,7 @@ const ChatsPanel = () => {
       setShowSearchResults(false)
     } else {
       try {
-        const response = await axios.get(`/api/search/tweets/${query}`)
+        const response = await axios.get(`/api/search/chats/${query}`)
         setSearchResults(response.data)
         setShowSearchResults(true)
         setShowAllChats(false)
@@ -79,7 +79,7 @@ const ChatsPanel = () => {
                   {chat.body}
                   {''}
                 </p>
-                <p> {chat?.user?.name}</p>
+                <p> {chat?.sender?.name}</p>
               </div>
             ))}
           </div>
