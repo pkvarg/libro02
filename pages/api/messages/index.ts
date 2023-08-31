@@ -122,7 +122,6 @@ export default async function handler(
       return res.status(500).json('Error')
     }
   } else if (req.method === 'GET') {
-    console.log('gte?')
     try {
       const messages = await prisma.message.findMany()
       return res.json(messages)

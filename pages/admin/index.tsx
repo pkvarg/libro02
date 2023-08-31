@@ -77,10 +77,10 @@ const AdminPage = () => {
             Chaty
           </h2>
         </div>
-        <UsersPanel showUsers={showUsers} />
-        <BooksPanel showBooks={showBooks} />
-        <TweetsPanel showTweets={showTweets} />
-        <ChatsPanel showChats={showChats} />
+        {showUsers && <UsersPanel />}
+        {showBooks && <BooksPanel />}
+        {showTweets && <TweetsPanel />}
+        {showChats && <ChatsPanel />}
       </>
     )
   )
