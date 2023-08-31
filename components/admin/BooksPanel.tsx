@@ -69,7 +69,7 @@ const BooksPanel = () => {
           {books?.map((book) => (
             <div key={book.id} className='flex flex-row gap-2'>
               <img
-                className='w-[15%]'
+                className='w-[30%] lg:w-[15%]'
                 src={book.bookImage}
                 alt={book.bookTitle}
               />

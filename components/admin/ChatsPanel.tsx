@@ -29,7 +29,6 @@ const ChatsPanel = () => {
         setSearchResults(response.data)
         setShowSearchResults(true)
         setShowAllChats(false)
-        console.log(response.data)
       } catch (error) {
         console.error('Error searching:', error)
       }
@@ -39,7 +38,7 @@ const ChatsPanel = () => {
   return (
     <>
       <h1 className='text-center text-[30px] my-8 '>Správy</h1>
-      <div>
+      <div className='ml-2 mr-2'>
         <div className='flex flex-row gap-2 justify-center items-center '>
           <input
             type='text'
@@ -60,7 +59,7 @@ const ChatsPanel = () => {
               chat.messages.map((message) => (
                 <div
                   key={message.id}
-                  className='flex flex-row gap-2 text-[20px]'
+                  className='flex flex-col lg:flex-row lg:gap-2 text-[20px] border-b-2 lg:border-0'
                 >
                   <p className='text-[#FFAC1C]'>
                     {message.body}
