@@ -59,7 +59,6 @@ const LoginModal = () => {
               email,
               password,
             })
-            console.log(data)
             toast.success('Úspešné prihlásenie')
 
             loginModal.onClose()

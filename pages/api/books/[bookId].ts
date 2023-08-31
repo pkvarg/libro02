@@ -63,8 +63,6 @@ export default async function handler(
     try {
       const { bookId } = req.query
 
-      console.log('BOOK-DEL', bookId)
-
       if (!bookId || typeof bookId !== 'string') {
         throw new Error('Neplatné ID')
       }

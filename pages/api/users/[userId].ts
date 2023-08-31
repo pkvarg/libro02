@@ -11,7 +11,6 @@ export default async function handler(
       if (!userId || typeof userId !== 'string') {
         throw new Error('Neplatné ID')
       }
-      console.log('ww', userId)
       let existingUser
       existingUser = await prisma.user.findUnique({
         where: {

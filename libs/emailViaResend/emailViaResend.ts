@@ -11,7 +11,6 @@ export default async function EmailViaResend(
   name: string,
   type: string
 ) {
-  console.log('url', url)
   if (url === undefined) {
     try {
       await resend.sendEmail({

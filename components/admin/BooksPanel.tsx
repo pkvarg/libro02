@@ -16,11 +16,9 @@ const BooksPanel = () => {
   }, [])
 
   const toggleBookStatus = async (bookId: string, status: boolean) => {
-    console.log(bookId, status)
     const { data } = await axios.patch(`/api/books/${bookId}`, {
       status: !status,
     })
-    console.log(data)
     if (data === 'OK') {
       getBooks()
     }

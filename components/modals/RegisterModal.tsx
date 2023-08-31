@@ -83,8 +83,6 @@ const RegisterModal = () => {
           toast.success('Registračný link bol poslaný na Váš email.')
         }
 
-        console.log(data)
-
         setIsLoading(false)
 
         registerModal.onClose()

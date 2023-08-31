@@ -49,7 +49,7 @@ const AdminPage = () => {
 
   return (
     isAdmin && (
-      <>
+      <div className='h-[100vh]'>
         <h1 className='text-center text-[30px] mt-2'>Hello {name}</h1>
         <div className='flex flex-col lg:flex-row justify-center gap-2 mt-2 mx-4 lg:mx-0'>
           <h2
@@ -81,7 +81,7 @@ const AdminPage = () => {
         {showBooks && <BooksPanel />}
         {showTweets && <TweetsPanel />}
         {showChats && <ChatsPanel />}
-      </>
+      </div>
     )
   )
 }

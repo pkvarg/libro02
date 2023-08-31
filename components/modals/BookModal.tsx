@@ -41,7 +41,6 @@ const BookModal = () => {
           bookLendingDuration,
           bookReview,
         })
-        console.log('book:', data)
         if (data === 'OK') {
           toast.success('Kniha pridaná')
           BookModal.onClose()

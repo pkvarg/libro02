@@ -6,7 +6,6 @@ const ChatsPanel = () => {
 
   const getChats = async () => {
     const { data } = await axios.get('/api/conversations/actions')
-    console.log(data.conversations)
     setChats(data.conversations)
   }
 

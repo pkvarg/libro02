@@ -40,8 +40,6 @@ export default async function checkResetToken(
       expiry = false
     }
 
-    console.log('chReTok:', checkTokens, expiry)
-
     if (expiry && checkTokens) {
       return res.status(200).json(checkTokens)
     } else {

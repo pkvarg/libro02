@@ -56,7 +56,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
   const handleDelete = async (commentId: String, userId: String) => {
     if (commentId !== undefined && whosComment === userId) {
       setShowAlert(true)
-      console.log('comment', commentId)
 
       try {
         const response = await axios.delete(`/api/comments/${commentId}`)

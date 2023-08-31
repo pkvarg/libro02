@@ -48,12 +48,10 @@ const UsersPanel = () => {
     privilege: string,
     status: boolean
   ) => {
-    console.log('send', userId, privilege, status)
     const { data } = await axios.patch(`/api/users/${userId}`, {
       privilege,
       status: !status,
     })
-    console.log(data)
     if (data === 'OK') {
       getUsers()
     }

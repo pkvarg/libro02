@@ -14,8 +14,6 @@ export default async function handler(
   const { currentUser } = await serverAuth(req, res)
   const { commentId } = req.query
 
-  console.log('cmntid', commentId)
-
   if (!commentId || typeof commentId !== 'string') {
     throw new Error('Invalid ID')
   }

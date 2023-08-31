@@ -76,7 +76,6 @@ const EditBookModal = () => {
           bookAvailable,
           bookReview,
         })
-        console.log('book:', data)
         if (data === 'OK') {
           toast.success('Kniha upravená')
           editBookModal.onClose()

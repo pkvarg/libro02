@@ -17,14 +17,12 @@ const FollowBar = () => {
   const startConversation = useCallback(
     (recipientId: string) => {
       setIsLoading(true)
-      console.log(recipientId)
       axios
         .post('/api/conversations', {
           //userId: currentUser?.id,
           userId: recipientId,
         })
         .then((data) => {
-          console.log('dta', data)
           router.push(`/conversations/${data.data.id}`)
         })
         .finally(() => {

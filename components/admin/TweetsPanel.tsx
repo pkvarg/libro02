@@ -12,7 +12,6 @@ const TweetsPanel = () => {
   }
 
   const toggleTweetStatus = async (tweetId: string, status: boolean) => {
-    console.log(tweetId, status)
     const { data } = await axios.patch(`/api/posts/${tweetId}`, {
       status: !status,
     })

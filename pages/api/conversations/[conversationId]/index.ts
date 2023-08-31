@@ -20,8 +20,6 @@ export default async function GetConversationById(
         throw new Error('Neplatné ID')
       }
 
-      console.log('cid:', conversationId)
-
       const existingConversation = await prisma.conversation.findUnique({
         where: {
           id: conversationId,
@@ -30,8 +28,6 @@ export default async function GetConversationById(
           users: true,
         },
       })
-
-      console.log('eC', existingConversation)
 
       if (!existingConversation) {
         return res.status(400).json('Invalid ID')

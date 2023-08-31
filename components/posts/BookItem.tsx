@@ -63,7 +63,6 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
   const whosBook = data?.userId
 
   const handleDelete = async (bookId: String) => {
-    console.log('bid:', bookId)
     if (bookId !== undefined) {
       setShowAlert(true)
 
@@ -89,8 +88,6 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
 
   const goToChat = useCallback(
     (ownerId: string) => {
-      console.log(ownerId)
-
       setIsLoading(true)
       axios
         .post('/api/conversations', {
