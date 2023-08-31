@@ -17,7 +17,6 @@ import ActiveStatus from '@/pages/conversations/components/ActiveStatus'
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <Toaster />
       <RegisterModal />
       <LoginModal />
       <ForgotPasswordModal />
@@ -30,6 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <ActiveStatus />
         <Component {...pageProps} />
       </Layout>
+      <Toaster />
     </SessionProvider>
   )
 }
