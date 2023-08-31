@@ -5,7 +5,7 @@ import Sidebar from '@/components/layout/Sidebar'
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className='bg-black'>
+    <div className='bg-black h-full'>
       <div className='container h-min mx-auto xl:px-30 max-w-6xl'>
         <div className='grid grid-cols-4 h-full'>
           <Sidebar />
