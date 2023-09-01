@@ -9,7 +9,7 @@ import MessageBox from './MessageBox'
 import { FullMessageType } from '@/types'
 import { find } from 'lodash'
 
-const Body = ({ messages, setMessages }) => {
+const Body = ({ messages, setMessages, message }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const router = useRouter()
@@ -20,11 +20,10 @@ const Body = ({ messages, setMessages }) => {
     }
     const getMessages = async () => {
       const { data } = await axios.get(`/api/messages/${conversationId}`)
-
       setMessages(data)
     }
-    getMessages()
-  }, [conversationId])
+    setInterval(getMessages, 3000)
+  }, [conversationId, message])
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`)

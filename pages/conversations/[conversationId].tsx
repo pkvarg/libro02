@@ -23,11 +23,14 @@ const ChatId = () => {
   const { isOpen } = useConversation()
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
+  const [usersInConversation, setUsersInConversation] = useState([])
 
   const router = useRouter()
   const { conversationId } = router.query
 
   const [isLoading, setIsloading] = useState(false)
+
+  const [message, setMessage] = useState('')
 
   // Sidebar
 
@@ -43,7 +46,7 @@ const ChatId = () => {
       setIsloading(false)
     }
     getActions()
-  }, [conversationId, messages])
+  }, [conversationId, messages, message])
 
   // getConversationById
 
@@ -54,11 +57,19 @@ const ChatId = () => {
       const getConversationById = async () => {
         const { data } = await axios.get(`/api/conversations/${conversationId}`)
         setConversation(data)
+        setUsersInConversation(data?.users?.map((user) => user.id))
+        console.log(data)
         setIsloading(false)
       }
       getConversationById()
     }
-  }, [conversationId])
+  }, [conversationId, message])
+
+  console.log(usersInConversation)
+
+  // useEffect(() => {
+
+  // }, [conversation])
 
   if (!conversation) {
     return (
@@ -83,8 +94,12 @@ const ChatId = () => {
         <div className='h-full mt-2'>
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
-            <Body messages={messages} setMessages={setMessages} />
-            <Form />
+            <Body
+              messages={messages}
+              setMessages={setMessages}
+              message={message}
+            />
+            <Form message={message} setMessage={setMessage} />
           </div>
         </div>
       </div>
