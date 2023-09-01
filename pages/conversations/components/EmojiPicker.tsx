@@ -4,13 +4,15 @@ import { Smile } from 'lucide-react'
 import Picker from '@emoji-mart/react'
 import data from '@emoji-mart/data'
 
-import { Popover, PopoverContent, PopoverTrigger } from '../components/Popover'
+import { Popover } from '../components/Popover'
+import { PopoverContent } from '../components/Popover'
+import { PopoverTrigger } from '../components/Popover'
 
 interface EmojiPickerProps {
   onChange: (value: string) => void
 }
 
-export const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
+export default function EmojiPicker({ onChange }: EmojiPickerProps) {
   return (
     <Popover>
       <PopoverTrigger>

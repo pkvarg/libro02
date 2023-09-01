@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import serverAuth from '@/libs/serverAuth'
 
-import { pusherServer } from '@/libs/pusher'
 import prisma from '@/libs/prismadb'
 
 export default async function handler(

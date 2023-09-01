@@ -2,7 +2,6 @@ import serverAuth from '@/libs/serverAuth'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '@/libs/prismadb'
-import { pusherServer } from '@/libs/pusher'
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -38,11 +37,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       })
 
       //Update all connections with new conversation
-      newConversation.users.forEach((user) => {
-        if (user.email) {
-          pusherServer.trigger(user.email, 'conversation:new', newConversation)
-        }
-      })
+      // newConversation.users.forEach((user) => {
+      //   if (user.email) {
+      //     pusherServer.trigger(user.email, 'conversation:new', newConversation)
+      //   }
+      // })
 
       return res.json(newConversation)
     }
@@ -89,11 +88,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     })
 
     //Update all connections with new conversation
-    newConversation.users.map((user) => {
-      if (user.email) {
-        pusherServer.trigger(user.email, 'conversation:new', newConversation)
-      }
-    })
+    // newConversation.users.map((user) => {
+    //   if (user.email) {
+    //     pusherServer.trigger(user.email, 'conversation:new', newConversation)
+    //   }
+    // })
 
     return res.json(newConversation)
   } catch (error: any) {

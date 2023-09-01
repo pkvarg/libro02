@@ -2,10 +2,12 @@
 
 import { SocketIndicator } from '@/components/SocketIndicator'
 
-export const ActiveStatus = () => {
+export default function ActiveStatus() {
   return (
     <div className='ml-auto flex items-center'>
       <SocketIndicator />
     </div>
   )
 }
+
+// export default { ActiveStatus }

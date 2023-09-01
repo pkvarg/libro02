@@ -7,7 +7,7 @@ import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import { EmojiPicker } from './EmojiPicker'
+import EmojiPicker from './EmojiPicker'
 import { useSocket } from '../../../components/providers/SocketProvider'
 
 const Form = ({ message, setMessage }) => {
