@@ -12,7 +12,6 @@ import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
 import { ActiveStatus } from './ActiveStatus'
 import useConversation from '@/hooks/useConversation'
-import { pusherClient } from '@/libs/pusher'
 import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
 import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
@@ -36,17 +35,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   const { conversationId, isOpen } = useConversation()
 
-  const pusherKey = useMemo(() => {
-    return session.data?.user?.email
-  }, [session.data?.user?.email])
-
   useEffect(() => {
-    if (!pusherKey) {
-      return
-    }
-
-    pusherClient.subscribe(pusherKey)
-
     const updateHandler = (conversation: FullConversationType) => {
       setItems((current) =>
         current.map((currentConversation) => {
@@ -81,19 +70,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
         router.push('/conversations')
       }
     }
-
-    pusherClient.bind('conversation:update', updateHandler)
-    pusherClient.bind('conversation:new', newHandler)
-    pusherClient.bind('conversation:remove', removeHandler)
-
-    // not in repo
-    return () => {
-      pusherClient.unsubscribe(pusherKey)
-      pusherClient.unbind('conversation:new', newHandler)
-      pusherClient.unbind('conversation:update', updateHandler)
-      pusherClient.unbind('conversation:remove', removeHandler)
-    }
-  }, [pusherKey, router, conversationId])
+  }, [router, conversationId])
 
   return (
     <>

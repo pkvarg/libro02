@@ -26,7 +26,11 @@ const Form = () => {
     if (!socket) {
       return
     }
-  }, [])
+    socket.on('chat message', (msg) => {
+      // setMessages((prevMessages) => [...prevMessages, msg]);
+    })
+    //socket.on('sent', message)
+  }, [socket])
 
   // useEffect(() => {
   //   // socketInitializer()
@@ -43,17 +47,18 @@ const Form = () => {
   //     console.log('socket:', data)
   //   })
   // }
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault()
-    socket.on(message)
+    //socket.on(message)
     // console.log('prevented?', message)
-    // socket.emit('send-message', message)
+    socket.emit('chat message', message)
     // console.log(socket)
 
-    // axios.post('/api/messages', {
-    //   message,
-    //   conversationId: conversationId,
-    // })
+    const res = await axios.post('/api/socket/messages', {
+      message,
+      conversationId: conversationId,
+    })
+    console.log(res)
     setMessage('')
   }
 

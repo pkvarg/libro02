@@ -3,20 +3,14 @@
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 
-import { pusherClient } from '@/libs/pusher'
 import { useRouter } from 'next/router'
 
 import MessageBox from './MessageBox'
 import { FullMessageType } from '@/types'
 import { find } from 'lodash'
 
-// interface BodyProps {
-//   initialMessages: FullMessageType[]
-// }
-
 const Body = ({ messages, setMessages }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
-  // const [messages, setMessages] = useState<any[]>([])
 
   const router = useRouter()
   const { conversationId } = router.query
@@ -37,9 +31,6 @@ const Body = ({ messages, setMessages }) => {
   }, [conversationId])
 
   useEffect(() => {
-    pusherClient.subscribe(conversationId?.toString())
-    bottomRef?.current?.scrollIntoView()
-
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`)
 
@@ -64,15 +55,6 @@ const Body = ({ messages, setMessages }) => {
           return currentMessage
         })
       )
-    }
-
-    pusherClient.bind('messages:new', messageHandler)
-    pusherClient.bind('message:update', updateMessageHandler)
-
-    return () => {
-      pusherClient.unsubscribe(conversationId.toString())
-      pusherClient.unbind('messages:new', messageHandler)
-      pusherClient.unbind('message:update', updateMessageHandler)
     }
   }, [conversationId])
 
