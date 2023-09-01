@@ -7,55 +7,49 @@ import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import io from 'socket.io-client'
-
-let socket
+import { EmojiPicker } from './EmojiPicker'
+import { useSocket } from '../../../components/providers/SocketProvider'
 
 const Form = () => {
   const router = useRouter()
   const { conversationId } = router.query
+  const { isConnected } = useSocket()
+  const { socket } = useSocket()
+
+  console.log('form is con', isConnected)
 
   const [message, setMessage] = useState('')
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<FieldValues>({
-    defaultValues: {
-      message: '',
-    },
-  })
-
-  // const onSubmit: SubmitHandler<FieldValues> = (data) => {
-  //   setValue('message', '', { shouldValidate: true })
-  //   axios.post('/api/messages', {
-  //     ...data,
-  //     conversationId: conversationId,
-  //   })
-  // }
+  console.log(message)
 
   useEffect(() => {
-    socketInitializer()
-    return () => {
-      socket.disconnect()
+    if (!socket) {
+      return
     }
   }, [])
 
-  async function socketInitializer() {
-    await fetch('/api/socket')
-    socket = io()
+  // useEffect(() => {
+  //   // socketInitializer()
+  //   socket.on('receive-message', (data: object) => {
+  //     console.log('socket:', data)
+  //   })
+  // }, [])
 
-    socket.on('receive-message', (data: object) => {
-      console.log('socket:', data)
-    })
-  }
+  // async function socketInitializer() {
+  //   await fetch('/api/socket')
+  //   socket = io()
+
+  //   socket.on('receive-message', (data: object) => {
+  //     console.log('socket:', data)
+  //   })
+  // }
   const onSubmit = (e: any) => {
     e.preventDefault()
-    console.log('prevented?', message)
-    socket.emit('send-message', message)
-    console.log(socket)
+    socket.on(message)
+    // console.log('prevented?', message)
+    // socket.emit('send-message', message)
+    // console.log(socket)
+
     // axios.post('/api/messages', {
     //   message,
     //   conversationId: conversationId,
@@ -125,6 +119,11 @@ const Form = () => {
       >
         <HiPaperAirplane size={18} className='text-white' />
       </button>
+      <div className=''>
+        <EmojiPicker
+          onChange={(emoji: string) => setMessage((prev) => prev + emoji)}
+        />
+      </div>
       {/* </form> */}
     </div>
   )

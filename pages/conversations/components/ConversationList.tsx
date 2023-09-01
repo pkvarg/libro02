@@ -10,7 +10,7 @@ import clsx from 'clsx'
 import { find, uniq } from 'lodash'
 import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
-
+import { ActiveStatus } from './ActiveStatus'
 import useConversation from '@/hooks/useConversation'
 import { pusherClient } from '@/libs/pusher'
 import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
@@ -123,9 +123,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
           <div className='flex gap-4 mb-4 pt-4'>
             <div
               onClick={() => router.push('/conversations')}
-              className='cursor-pointer lg:text-2xl font-bold text-[#ffffff]'
+              className='cursor-pointer lg:text-2xl font-bold text-[#ffffff] flex flex-col lg:flex-row gap-2'
             >
-              Správy
+              <p>Správy</p>
+              <ActiveStatus />
             </div>
             {/* Open Group Chat */}
             {/* <div

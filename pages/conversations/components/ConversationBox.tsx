@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Conversation, Message, User } from '@prisma/client'
 import { format } from 'date-fns'
@@ -11,6 +11,7 @@ import AvatarChat from '@/components/AvatarChat'
 import useOtherUser from '@/hooks/useOtherUser'
 import AvatarGroup from '@/components/AvatarGroup'
 import { FullConversationType } from '@/types'
+import { useSocket } from '../../../components/providers/SocketProvider'
 
 interface ConversationBoxProps {
   data: FullConversationType
@@ -24,6 +25,13 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   const otherUser = useOtherUser(data)
   const session = useSession()
   const router = useRouter()
+  const { socket } = useSocket()
+
+  useEffect(() => {
+    if (!socket) {
+      return
+    }
+  }, [])
 
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`)

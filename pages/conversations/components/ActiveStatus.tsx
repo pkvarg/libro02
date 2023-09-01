@@ -1,11 +1,11 @@
 'use client'
 
-import useActiveChannel from '@/hooks/useActiveChannel'
+import { SocketIndicator } from '@/components/SocketIndicator'
 
-const ActiveStatus = () => {
-  useActiveChannel()
-
-  return null
+export const ActiveStatus = () => {
+  return (
+    <div className='ml-auto flex items-center'>
+      <SocketIndicator />
+    </div>
+  )
 }
-
-export default ActiveStatus
