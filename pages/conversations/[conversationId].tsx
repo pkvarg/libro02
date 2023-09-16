@@ -11,6 +11,7 @@ import axios from 'axios'
 import Sidebar from '@/components/layout/Sidebar'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import LoadingModal from './components/LoadingModal'
+import { socketHttp } from '@/lib/socketHttp'
 
 // interface IParams {
 //   conversationId: string
@@ -18,19 +19,41 @@ import LoadingModal from './components/LoadingModal'
 
 const ChatId = () => {
   const [conversation, setConversation] = useState()
-  const [messages, setMessages] = useState([])
+  // const [messages, setMessages] = useState([])
+  const [message, setMessage] = useState('')
 
   const { isOpen } = useConversation()
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
   const [usersInConversation, setUsersInConversation] = useState([])
+  const [msgSent, setMsgSent] = useState(false)
+  const [msgReceived, setMsgReceived] = useState(false)
 
   const router = useRouter()
   const { conversationId } = router.query
 
   const [isLoading, setIsloading] = useState(false)
 
-  const [message, setMessage] = useState('')
+  console.log('CC')
+
+  // useEffect(() => {
+  //   const getMessages = async () => {
+  //     const { data } = await axios.get(`/api/messages/${conversationId}`)
+  //       setMessages(data)
+  //   }
+
+  //   //getMessages()
+  //   socketHttp.on('receiveMessage', (msg, convId) => {
+  //     if (conversationId === convId) {
+  //       getMessages()
+  //     }
+  //   })
+  //   socketHttp.on('sendMessage', (msg, convId) => {
+  //     if (conversationId === convId) {
+  //       getMessages()
+  //     }
+  //   })
+  // }, [conversationId, socketHttp])
 
   // Sidebar
 
@@ -45,8 +68,14 @@ const ChatId = () => {
       setConversations(data.conversations)
       setIsloading(false)
     }
+    socketHttp.on('receiveMessage', (msg, convId) => {
+      getActions()
+    })
+    socketHttp.on('sendMessage', (msg, convId) => {
+      getActions()
+    })
     getActions()
-  }, [conversationId, messages, message])
+  }, [conversationId, message, socketHttp])
 
   // getConversationById
 
@@ -57,15 +86,15 @@ const ChatId = () => {
       const getConversationById = async () => {
         const { data } = await axios.get(`/api/conversations/${conversationId}`)
         setConversation(data)
-        setUsersInConversation(data?.users?.map((user) => user.id))
-        console.log(data)
+        // setUsersInConversation(data?.users?.map((user) => user.id))
+        // console.log(data)
         setIsloading(false)
       }
       getConversationById()
     }
-  }, [conversationId, message])
+  }, [conversationId])
 
-  console.log(usersInConversation)
+  // console.log(usersInConversation)
 
   // useEffect(() => {
 
@@ -95,8 +124,8 @@ const ChatId = () => {
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
             <Body
-              messages={messages}
-              setMessages={setMessages}
+              // messages={messages}
+              // setMessages={setMessages}
               message={message}
             />
             <Form message={message} setMessage={setMessage} />

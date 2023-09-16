@@ -9,44 +9,16 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import EmojiPicker from './EmojiPicker'
 import { useSocket } from '../../../components/providers/SocketProvider'
+import { socketHttp } from '@/lib/socketHttp'
 
 const Form = ({ message, setMessage }) => {
   const router = useRouter()
   const { conversationId } = router.query
   const { isConnected } = useSocket()
-  const { socket } = useSocket()
 
-  // useEffect(() => {
-  //   if (!socket) {
-  //     return
-  //   }
-  //   socket.on('chat message', (msg) => {
-  //     // setMessages((prevMessages) => [...prevMessages, msg]);
-  //   })
-  //   //socket.on('sent', message)
-  // }, [socket])
-
-  // useEffect(() => {
-  //   // socketInitializer()
-  //   socket.on('receive-message', (data: object) => {
-  //     console.log('socket:', data)
-  //   })
-  // }, [])
-
-  // async function socketInitializer() {
-  //   await fetch('/api/socket')
-  //   socket = io()
-
-  //   socket.on('receive-message', (data: object) => {
-  //     console.log('socket:', data)
-  //   })
-  // }
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    //socket.on(message)
-    // console.log('prevented?', message)
-    // socket.emit('chat message', message)
-    // console.log(socket)
+    socketHttp.emit('sendMessage', message, conversationId)
 
     const res = await axios.post('/api/messages', {
       message,
@@ -118,9 +90,9 @@ const Form = ({ message, setMessage }) => {
         <HiPaperAirplane size={18} className='text-white' />
       </button>
       <div className=''>
-        <EmojiPicker
+        {/* <EmojiPicker
           onChange={(emoji: string) => setMessage((prev) => prev + emoji)}
-        />
+        /> */}
       </div>
       {/* </form> */}
     </div>
