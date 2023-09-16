@@ -6,7 +6,7 @@ import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-
+import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import Sidebar from '@/components/layout/Sidebar'
 import EmptyState from '@/pages/conversations/components/EmptyState'
@@ -28,13 +28,13 @@ const ChatId = () => {
   const [usersInConversation, setUsersInConversation] = useState([])
   const [msgSent, setMsgSent] = useState(false)
   const [msgReceived, setMsgReceived] = useState(false)
+  const session = useSession()
+  const currentUserEmail = session.data?.user?.email
 
   const router = useRouter()
   const { conversationId } = router.query
 
   const [isLoading, setIsloading] = useState(false)
-
-  console.log('CC')
 
   // useEffect(() => {
   //   const getMessages = async () => {

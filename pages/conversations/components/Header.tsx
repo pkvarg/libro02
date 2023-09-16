@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
 
 import useOtherUser from '@/hooks/useOtherUser'
+import { useSession } from 'next-auth/react'
 import useActiveList from '@/hooks/useActiveList'
 
 import AvatarChat from '@/components/AvatarChat'
@@ -17,6 +18,8 @@ import ProfileDrawer from './ProfileDrawer'
 import { useRouter } from 'next/router'
 import { FullConversationType } from '@/types'
 
+import { socketHttp } from '@/lib/socketHttp'
+
 interface HeaderProps {
   conversation: Conversation & {
     users: User[]
@@ -25,19 +28,45 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const otherUser = useOtherUser(conversation)
-
+  const session = useSession()
+  const currentUserEmail = session.data?.user?.email
+  const [usersOnline, setUsersOnline] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   const { members } = useActiveList()
+
   const isActive = members.indexOf(otherUser?.email!) !== -1
+
+  useEffect(() => {
+    socketHttp.emit('addUser', currentUserEmail)
+    socketHttp.on('getUsers', (activeUsers) => {
+      console.log(activeUsers)
+
+      setUsersOnline(
+        activeUsers.find((user) => user.userEmail !== currentUserEmail)
+      )
+      //localStorage.setItem('online', JSON.stringify(users))
+    })
+  }, [socketHttp])
+
+  // let online = usersOnline.find((user) => user.userEmail === currentUserEmail)
+  console.log(usersOnline)
 
   const statusText = useMemo(() => {
     if (conversation?.isGroup === true) {
       return `${conversation.users.length} členovia`
     }
-    //return 'Aktívny'
-    return isActive ? 'Aktívny' : 'Offline'
+
+    return usersOnline ? 'Aktívny' : 'Offline'
+    // return usersOnline.includes(currentUserEmail) ? 'Aktívny' : 'Offline'
+    //return isActive ? 'Aktívny' : 'Offline'
   }, [conversation, isActive])
+
+  useEffect(() => {
+    socketHttp.on('getUsers', (activeUsers) => {
+      console.log(activeUsers)
+    })
+  }, [socketHttp])
 
   return (
     <>
