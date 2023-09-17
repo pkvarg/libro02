@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "email": "email dev --dir pages/emails "
+    "email": "email dev --dir pages/emails ",
+    "socket": "npm start --prefix socket"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
