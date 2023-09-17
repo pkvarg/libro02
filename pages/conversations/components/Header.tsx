@@ -1,5 +1,4 @@
 'use client'
-import axios from 'axios'
 
 import { HiChevronLeft } from 'react-icons/hi'
 import { HiEllipsisHorizontal } from 'react-icons/hi2'
@@ -8,17 +7,15 @@ import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
 
 import useOtherUser from '@/hooks/useOtherUser'
+import useSocket from '@/hooks/useSocket'
 import { useSession } from 'next-auth/react'
-import useActiveList from '@/hooks/useActiveList'
 
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
 import ProfileDrawer from './ProfileDrawer'
 
-import { useRouter } from 'next/router'
-import { FullConversationType } from '@/types'
-
 import { socketHttp } from '@/lib/socketHttp'
+import { useRouter } from 'next/router'
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -27,46 +24,28 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
+  const router = useRouter()
+  const { conversationId } = router.query
+  const { socketUsers } = useSocket()
+
+  console.log(conversationId)
+
   const otherUser = useOtherUser(conversation)
+  const otherUserEmail = otherUser?.email
   const session = useSession()
   const currentUserEmail = session.data?.user?.email
   const [usersOnline, setUsersOnline] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [status, setStatus] = useState('Offline')
 
-  const { members } = useActiveList()
-
-  const isActive = members.indexOf(otherUser?.email!) !== -1
-
+  console.log('HEADEER', socketUsers, otherUserEmail)
   useEffect(() => {
-    socketHttp.emit('addUser', currentUserEmail)
-    socketHttp.on('getUsers', (activeUsers) => {
-      console.log(activeUsers)
+    if (socketUsers.includes(otherUserEmail)) {
+      setStatus('Active')
+    } else setStatus('Offline')
+  }, [otherUserEmail, socketUsers, conversationId])
 
-      setUsersOnline(
-        activeUsers.find((user) => user.userEmail !== currentUserEmail)
-      )
-      //localStorage.setItem('online', JSON.stringify(users))
-    })
-  }, [socketHttp])
-
-  // let online = usersOnline.find((user) => user.userEmail === currentUserEmail)
-  console.log(usersOnline)
-
-  const statusText = useMemo(() => {
-    if (conversation?.isGroup === true) {
-      return `${conversation.users.length} členovia`
-    }
-
-    return usersOnline ? 'Aktívny' : 'Offline'
-    // return usersOnline.includes(currentUserEmail) ? 'Aktívny' : 'Offline'
-    //return isActive ? 'Aktívny' : 'Offline'
-  }, [conversation, isActive])
-
-  useEffect(() => {
-    socketHttp.on('getUsers', (activeUsers) => {
-      console.log(activeUsers)
-    })
-  }, [socketHttp])
+  console.log(otherUser.name, conversation)
 
   return (
     <>
@@ -110,9 +89,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           )}
           <div className='flex flex-col'>
             <div>{conversation?.name || otherUser?.name}</div>
-            <div className='text-sm font-light text-neutral-500'>
-              {statusText}
-            </div>
+            <div className='text-sm font-light text-neutral-500'>{status}</div>
           </div>
         </div>
         <HiEllipsisHorizontal

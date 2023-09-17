@@ -11,7 +11,6 @@ const ResetPasswordModal = () => {
   const router = useRouter()
   const route = router.route
   const resetPasswordPathname = route.includes('resetPassword')
-  console.log('rPM:', resetPasswordPathname)
   const slug = router.query.slug
   const resetPasswordModal = useResetPasswordModal()
   const forgotPasswordModal = useForgotPasswordModal()

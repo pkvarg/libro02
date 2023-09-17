@@ -13,7 +13,6 @@ const RegistrationLinkModal = () => {
   const slug = router.query.slug
   const route = router.route
   const registerLinkPathname = route.includes('registerLink')
-  console.log('rLM:', registerLinkPathname)
   const registrationLinkModal = useRegistrationLinkModal()
   const registerModal = useRegisterModal()
   const loginModal = useLoginModal()

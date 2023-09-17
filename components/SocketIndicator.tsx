@@ -1,11 +1,12 @@
 'use client'
 
-import { useSocket } from '@/components/providers/SocketProvider'
+// import { useSocket } from '@/components/providers/SocketProvider'
+import useSocket from '@/hooks/useSocket'
 
 export const SocketIndicator = () => {
-  const { isConnected } = useSocket()
+  const { socketConnected } = useSocket()
 
-  if (!isConnected) {
+  if (!socketConnected) {
     return <p className='bg-yellow-600 text-white border-none px-2'>Offline </p>
   }
 
