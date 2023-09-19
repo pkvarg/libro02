@@ -9,16 +9,15 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import EmojiPicker from './EmojiPicker'
 import { useSocket } from '../../../components/providers/SocketProvider'
-import { socketHttp } from '@/lib/socketHttp'
 
 const Form = ({ message, setMessage }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { isConnected } = useSocket()
+  const { socket, isConnected } = useSocket()
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    socketHttp.emit('sendMessage', message, conversationId)
+    socket.emit('sendMessage', message, conversationId)
 
     const res = await axios.post('/api/messages', {
       message,

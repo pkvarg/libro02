@@ -1,6 +1,5 @@
 'use client'
 
-import { Conversation } from '@prisma/client'
 import { User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
@@ -10,11 +9,11 @@ import clsx from 'clsx'
 import { find, uniq } from 'lodash'
 import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
-import ActiveStatus from './ActiveStatus'
 import useConversation from '@/hooks/useConversation'
 import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
 import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
+import { useSocket } from '@/components/providers/SocketProvider'
 
 interface ConversationListProps {
   initialItems: FullConversationType[]
@@ -29,11 +28,21 @@ const ConversationList: React.FC<ConversationListProps> = ({
 }) => {
   const [items, setItems] = useState(initialItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [status, setStatus] = useState('Offline')
 
   const router = useRouter()
   const session = useSession()
+  const { isConnected } = useSocket()
 
   const { conversationId, isOpen } = useConversation()
+
+  useEffect(() => {
+    if (isConnected) {
+      setStatus('Live')
+    } else {
+      setStatus('Offline')
+    }
+  }, [isConnected])
 
   useEffect(() => {
     const updateHandler = (conversation: FullConversationType) => {
@@ -103,7 +112,16 @@ const ConversationList: React.FC<ConversationListProps> = ({
               className='cursor-pointer lg:text-2xl font-bold text-[#ffffff] flex flex-col lg:flex-row gap-2'
             >
               <p>Správy</p>
-              <ActiveStatus />
+              <p
+                className={
+                  status === 'Offline'
+                    ? `bg-yellow-600 text-white border-none px-2`
+                    : `bg-emerald-600 text-white border-none px-2 `
+                }
+              >
+                {status}
+              </p>
+              {/* <ActiveStatus /> */}
             </div>
             {/* Open Group Chat */}
             {/* <div

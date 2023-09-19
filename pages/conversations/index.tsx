@@ -6,16 +6,15 @@ import useConversation from '@/hooks/useConversation'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import useSocket from '@/hooks/useSocket'
+import { useSocket } from '@/components/providers/SocketProvider'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { socketHttp } from '@/lib/socketHttp'
 
 const Home = () => {
   const { isOpen } = useConversation()
   const session = useSession()
   const router = useRouter()
-  const { socketUsers, setSocketUsers, addUsers } = useSocket()
+  const { socket, socketUsers, setSocketUsers, addUsers } = useSocket()
 
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
@@ -29,7 +28,7 @@ const Home = () => {
     addUsers(currentUserEmail)
     //socketHttp.emit('addUser', currentUserEmail)
     // setSocketUsers(currentUserEmail)
-  }, [socketHttp, currentUserEmail])
+  }, [socket, currentUserEmail])
 
   useEffect(() => {
     const getActions = async () => {

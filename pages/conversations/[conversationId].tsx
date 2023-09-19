@@ -11,7 +11,7 @@ import axios from 'axios'
 import Sidebar from '@/components/layout/Sidebar'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import LoadingModal from './components/LoadingModal'
-import { socketHttp } from '@/lib/socketHttp'
+import { useSocket } from '@/components/providers/SocketProvider'
 
 // interface IParams {
 //   conversationId: string
@@ -19,10 +19,11 @@ import { socketHttp } from '@/lib/socketHttp'
 
 const ChatId = () => {
   const [conversation, setConversation] = useState()
-  // const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([])
   const [message, setMessage] = useState('')
 
   const { isOpen } = useConversation()
+  const { socket } = useSocket()
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
   const [usersInConversation, setUsersInConversation] = useState([])
@@ -36,24 +37,24 @@ const ChatId = () => {
 
   const [isLoading, setIsloading] = useState(false)
 
-  // useEffect(() => {
-  //   const getMessages = async () => {
-  //     const { data } = await axios.get(`/api/messages/${conversationId}`)
-  //       setMessages(data)
-  //   }
+  useEffect(() => {
+    const getMessages = async () => {
+      const { data } = await axios.get(`/api/messages/${conversationId}`)
+      setMessages(data)
+    }
 
-  //   //getMessages()
-  //   socketHttp.on('receiveMessage', (msg, convId) => {
-  //     if (conversationId === convId) {
-  //       getMessages()
-  //     }
-  //   })
-  //   socketHttp.on('sendMessage', (msg, convId) => {
-  //     if (conversationId === convId) {
-  //       getMessages()
-  //     }
-  //   })
-  // }, [conversationId, socketHttp])
+    //getMessages()
+    socket.on('receiveMessage', (msg, convId) => {
+      if (conversationId === convId) {
+        getMessages()
+      }
+    })
+    socket.on('sendMessage', (msg, convId) => {
+      if (conversationId === convId) {
+        getMessages()
+      }
+    })
+  }, [conversationId, socket])
 
   // Sidebar
 
@@ -68,14 +69,14 @@ const ChatId = () => {
       setConversations(data.conversations)
       setIsloading(false)
     }
-    socketHttp.on('receiveMessage', (msg, convId) => {
+    socket.on('receiveMessage', (msg, convId) => {
       getActions()
     })
-    socketHttp.on('sendMessage', (msg, convId) => {
+    socket.on('sendMessage', (msg, convId) => {
       getActions()
     })
     getActions()
-  }, [conversationId, message, socketHttp])
+  }, [conversationId, message, socket])
 
   // getConversationById
 

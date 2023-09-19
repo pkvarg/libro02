@@ -1,17 +1,23 @@
 'use client'
-
+import { io } from 'socket.io-client'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { io as ClientIO } from 'socket.io-client'
-//import { socketHttp } from '@/lib/socketHttp'
+
+//const socketHttp = io('ws://localhost:3001')
 
 type SocketContextType = {
   socket: any | null
   isConnected: boolean
+  socketUsers: any
+  addUsers: (value: any) => void
+  setSocketUsers: (value: any) => void
 }
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
+  socketUsers: [],
+  addUsers: null,
+  setSocketUsers: null,
 })
 
 export const useSocket = () => {
@@ -21,39 +27,41 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
+  const [socketUsers, setSocketUsers] = useState([])
 
-  // useEffect(() => {
-  //   if (socketHttp.connected) {
-  //     setIsConnected(true)
-  //   }
-  // }, [socketHttp])
+  const usersOnline = []
 
-  // useEffect(() => {
-  //   const socketInstance = new (ClientIO as any)(
-  //     process.env.NEXT_PUBLIC_SITE_URL!,
-  //     {
-  //       path: '/api/socket/io',
-  //       addTrailingSlash: false,
-  //     }
-  //   )
+  const addUsers = () => {
+    console.log('add')
+  }
 
-  //   socketInstance.on('connect', () => {
-  //     setIsConnected(true)
-  //   })
+  useEffect(() => {
+    const socketInstance = io('ws://localhost:3001')
 
-  //   socketInstance.on('disconnect', () => {
-  //     setIsConnected(false)
-  //   })
+    socketInstance.on('connect', () => {
+      setIsConnected(true)
+    })
 
-  //   setSocket(socketInstance)
+    socketInstance.on('disconnect', () => {
+      setIsConnected(false)
+    })
 
-  //   return () => {
-  //     socketInstance.disconnect()
-  //   }
-  // }, [])
+    setSocket(socketInstance)
+
+    socketInstance.on('getUsers', (activeUsers) => {
+      activeUsers.map((user) => usersOnline.push(user.userEmail))
+      setSocketUsers(usersOnline)
+    })
+
+    return () => {
+      socketInstance.disconnect()
+    }
+  }, [])
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected }}>
+    <SocketContext.Provider
+      value={{ socket, isConnected, socketUsers, addUsers, setSocketUsers }}
+    >
       {children}
     </SocketContext.Provider>
   )

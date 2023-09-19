@@ -5,11 +5,12 @@ import { useRouter } from 'next/router'
 import MessageBox from './MessageBox'
 import { FullMessageType } from '@/types'
 import { find } from 'lodash'
-import { socketHttp } from '@/lib/socketHttp'
+import { useSocket } from '@/components/providers/SocketProvider'
 
 const Body = ({ message }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const { socket } = useSocket()
   const { conversationId } = router.query
   const [connected, isConnected] = useState(false)
   const [messages, setMessages] = useState([])
@@ -20,13 +21,13 @@ const Body = ({ message }) => {
       setMessages(data)
     }
     getMessages()
-    socketHttp.on('receiveMessage', (msg, convId) => {
+    socket.on('receiveMessage', (msg, convId) => {
       getMessages()
     })
-    socketHttp.on('sendMessage', (msg, convId) => {
+    socket.on('sendMessage', (msg, convId) => {
       getMessages()
     })
-  }, [conversationId, socketHttp, message])
+  }, [conversationId, socket, message])
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`)

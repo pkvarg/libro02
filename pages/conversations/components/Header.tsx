@@ -7,14 +7,13 @@ import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
 
 import useOtherUser from '@/hooks/useOtherUser'
-import useSocket from '@/hooks/useSocket'
+import { useSocket } from '@/components/providers/SocketProvider'
 import { useSession } from 'next-auth/react'
 
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
 import ProfileDrawer from './ProfileDrawer'
 
-import { socketHttp } from '@/lib/socketHttp'
 import { useRouter } from 'next/router'
 
 interface HeaderProps {
@@ -26,9 +25,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socketUsers } = useSocket()
-
-  console.log(conversationId)
+  const { socket, isConnected, socketUsers } = useSocket()
 
   const otherUser = useOtherUser(conversation)
   const otherUserEmail = otherUser?.email
@@ -38,22 +35,23 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [status, setStatus] = useState('Offline')
 
-  console.log('HEADEER', socketUsers, otherUserEmail)
+  console.log('HEADEER', socket, socketUsers, otherUserEmail)
+  //let usersOnline = []
   useEffect(() => {
     if (socketUsers.includes(otherUserEmail)) {
       setStatus('Active')
-    } else setStatus('Offline')
-  }, [otherUserEmail, socketUsers, conversationId])
-
-  console.log(otherUser.name, conversation)
+    } else {
+      setStatus('Offline')
+    }
+  }, [otherUserEmail, socketUsers, conversationId, socket])
 
   return (
     <>
-      <ProfileDrawer
+      {/* <ProfileDrawer
         data={conversation}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-      />
+      /> */}
       <div
         className='
         w-full

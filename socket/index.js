@@ -1,6 +1,6 @@
 import { Server } from 'socket.io'
 
-const io = new Server(8990, {
+const io = new Server(3001, {
   cors: {
     origin: ['http://localhost:3000', 'https://librosophia.sk'],
   },

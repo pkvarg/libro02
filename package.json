@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "notbuilt": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "email": "email dev --dir pages/emails ",
-    "socket": "npm start --prefix socket"
+    "socket": "npm start --prefix socket",
+    "start": "concurrently \"npm run dev\" \"npm run socket\""
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
@@ -30,6 +31,7 @@
     "bcrypt": "^5.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "concurrently": "^8.2.1",
     "date-fns": "^2.30.0",
     "emoji-mart": "^5.5.2",
     "eslint": "8.35.0",
