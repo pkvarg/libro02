@@ -7,17 +7,17 @@ import { createContext, useContext, useEffect, useState } from 'react'
 type SocketContextType = {
   socket: any | null
   isConnected: boolean
-  socketUsers: any
+  usersOnline: any
   addUsers: (value: any) => void
-  setSocketUsers: (value: any) => void
+  getUsers: (value: any) => void
 }
 
 const SocketContext = createContext<SocketContextType>({
   socket: null,
   isConnected: false,
-  socketUsers: [],
+  usersOnline: [],
   addUsers: null,
-  setSocketUsers: null,
+  getUsers: null,
 })
 
 export const useSocket = () => {
@@ -27,17 +27,27 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocket] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
-  const [socketUsers, setSocketUsers] = useState([])
+  const [usersOnline, setUsersOnline] = useState([])
 
-  const usersOnline = []
+  const socketInstance = io('ws://localhost:3001')
+  //const usersOnline = ['me']
 
-  const addUsers = () => {
-    console.log('add')
+  const addUsers = (userEmail) => {
+    socketInstance.emit('addUser', userEmail)
   }
 
-  useEffect(() => {
-    const socketInstance = io('ws://localhost:3001')
+  const getUsers = () => {
+    socketInstance.on('getUsers', (activeUsers) => {
+      console.log(activeUsers)
+      activeUsers.map(
+        (user) => !usersOnline.includes(user) && usersOnline.push(user)
+      )
+    })
+  }
 
+  console.log('uO', usersOnline)
+
+  useEffect(() => {
     socketInstance.on('connect', () => {
       setIsConnected(true)
     })
@@ -46,12 +56,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       setIsConnected(false)
     })
 
+    getUsers()
+
     setSocket(socketInstance)
 
-    socketInstance.on('getUsers', (activeUsers) => {
-      activeUsers.map((user) => usersOnline.push(user.userEmail))
-      setSocketUsers(usersOnline)
-    })
+    //socketInstance.on('addUser', (userEmail) => {})
 
     return () => {
       socketInstance.disconnect()
@@ -60,7 +69,13 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SocketContext.Provider
-      value={{ socket, isConnected, socketUsers, addUsers, setSocketUsers }}
+      value={{
+        socket,
+        isConnected,
+        usersOnline,
+        getUsers,
+        addUsers,
+      }}
     >
       {children}
     </SocketContext.Provider>

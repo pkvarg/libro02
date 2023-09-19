@@ -44,16 +44,16 @@ const ChatId = () => {
     }
 
     //getMessages()
-    socket.on('receiveMessage', (msg, convId) => {
-      if (conversationId === convId) {
-        getMessages()
-      }
-    })
-    socket.on('sendMessage', (msg, convId) => {
-      if (conversationId === convId) {
-        getMessages()
-      }
-    })
+    // socket.on('receiveMessage', (msg, convId) => {
+    //   if (conversationId === convId) {
+    //     getMessages()
+    //   }
+    // })
+    // socket.on('sendMessage', (msg, convId) => {
+    //   if (conversationId === convId) {
+    //     getMessages()
+    //   }
+    // })
   }, [conversationId, socket])
 
   // Sidebar
@@ -69,12 +69,12 @@ const ChatId = () => {
       setConversations(data.conversations)
       setIsloading(false)
     }
-    socket.on('receiveMessage', (msg, convId) => {
-      getActions()
-    })
-    socket.on('sendMessage', (msg, convId) => {
-      getActions()
-    })
+    // socket.on('receiveMessage', (msg, convId) => {
+    //   getActions()
+    // })
+    // socket.on('sendMessage', (msg, convId) => {
+    //   getActions()
+    // })
     getActions()
   }, [conversationId, message, socket])
 
@@ -95,12 +95,6 @@ const ChatId = () => {
     }
   }, [conversationId])
 
-  // console.log(usersInConversation)
-
-  // useEffect(() => {
-
-  // }, [conversation])
-
   if (!conversation) {
     return (
       <div className='lg:pl-80 h-full'>
@@ -113,7 +107,6 @@ const ChatId = () => {
 
   return (
     <>
-      {/* <div className={clsx('h-full lg:block', isOpen ? 'block' : 'hidden')}> */}
       {isLoading && <LoadingModal />}
       <div className={clsx('h-full lg:block')}>
         <ConversationList

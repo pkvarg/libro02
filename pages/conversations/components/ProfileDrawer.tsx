@@ -43,14 +43,6 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   }
 
   const { members } = useActiveList()
-  const isActive = members.indexOf(otherUser?.email!) !== -1
-
-  const statusText = useMemo(() => {
-    if (data?.isGroup === true) {
-      return `${data.users.length} členovia`
-    }
-    return isActive ? 'Active' : 'Offline'
-  }, [data, isActive])
 
   return (
     <>
@@ -110,9 +102,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             )}
                           </div>
                           <div>{title}</div>
-                          <div className='text-sm text-gray-500'>
-                            {statusText}
-                          </div>
+
                           <div className='flex gap-10 my-8'>
                             <div
                               onClick={() => setConfirmOpen(true)}

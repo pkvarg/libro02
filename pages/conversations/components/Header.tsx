@@ -25,33 +25,33 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socket, isConnected, socketUsers } = useSocket()
+  const { socket, isConnected, getUsers, usersOnline } = useSocket()
 
   const otherUser = useOtherUser(conversation)
   const otherUserEmail = otherUser?.email
   const session = useSession()
   const currentUserEmail = session.data?.user?.email
-  const [usersOnline, setUsersOnline] = useState([])
+  // const [usersOnline, setUsersOnline] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [status, setStatus] = useState('Offline')
 
-  console.log('HEADEER', socket, socketUsers, otherUserEmail)
+  console.log('HEADEER', usersOnline)
   //let usersOnline = []
   useEffect(() => {
-    if (socketUsers.includes(otherUserEmail)) {
+    if (usersOnline.includes(otherUserEmail)) {
       setStatus('Active')
     } else {
       setStatus('Offline')
     }
-  }, [otherUserEmail, socketUsers, conversationId, socket])
+  }, [otherUserEmail, usersOnline, conversationId, socket])
 
   return (
     <>
-      {/* <ProfileDrawer
+      <ProfileDrawer
         data={conversation}
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-      /> */}
+      />
       <div
         className='
         w-full

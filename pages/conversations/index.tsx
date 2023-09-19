@@ -14,11 +14,10 @@ const Home = () => {
   const { isOpen } = useConversation()
   const session = useSession()
   const router = useRouter()
-  const { socket, socketUsers, setSocketUsers, addUsers } = useSocket()
+  const { socket, usersOnline, addUsers } = useSocket()
 
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
-  const [usersOnline, setUsersOnline] = useState([])
 
   const currentUserEmail = session.data?.user?.email
 
@@ -26,9 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     addUsers(currentUserEmail)
-    //socketHttp.emit('addUser', currentUserEmail)
-    // setSocketUsers(currentUserEmail)
-  }, [socket, currentUserEmail])
+  }, [currentUserEmail, socket])
 
   useEffect(() => {
     const getActions = async () => {

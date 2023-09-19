@@ -9,9 +9,10 @@ const io = new Server(3001, {
 const activeUsers = []
 
 const addUser = (userEmail, socketId) => {
-  console.log('addU', userEmail)
   !activeUsers.some((email) => email === userEmail) &&
-    activeUsers.push({ userEmail, socketId })
+    //activeUsers.push({ userEmail, socketId })
+    activeUsers.push(userEmail)
+
   console.log('UsersArray', activeUsers)
 }
 
