@@ -14,7 +14,7 @@ const Home = () => {
   const { isOpen } = useConversation()
   const session = useSession()
   const router = useRouter()
-  const { socket, usersOnline, addUsers } = useSocket()
+  const { socket, usersOnline } = useSocket()
 
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
@@ -23,9 +23,9 @@ const Home = () => {
 
   const routeIsConversations = router.route.includes('conversations')
 
-  useEffect(() => {
-    addUsers(currentUserEmail)
-  }, [currentUserEmail, socket])
+  // useEffect(() => {
+  //   addUsers(currentUserEmail)
+  // }, [currentUserEmail, socket])
 
   useEffect(() => {
     const getActions = async () => {

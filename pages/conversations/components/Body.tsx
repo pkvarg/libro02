@@ -10,7 +10,7 @@ import { useSocket } from '@/components/providers/SocketProvider'
 const Body = ({ message }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-  const { socket, sendMessages, receiveMessage } = useSocket()
+  const { socket } = useSocket()
   const { conversationId } = router.query
   const [connected, isConnected] = useState(false)
   const [messages, setMessages] = useState([])

@@ -12,13 +12,15 @@ import { useSocket } from '../../../components/providers/SocketProvider'
 const Form = ({ message, setMessage }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { receiveMessage, addUsers, sendMessages } = useSocket()
-
-  console.log(message)
+  const { socketInstance } = useSocket()
 
   useEffect(() => {
-    receiveMessage()
-  }, [sendMessages, message])
+    socketInstance?.emit('receiveMessage', (data) => {
+      console.log(data, 'received')
+    })
+  }, [message])
+
+  console.log(socketInstance)
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
@@ -27,7 +29,8 @@ const Form = ({ message, setMessage }) => {
     //   message,
     //   conversationId: conversationId,
     // })
-    sendMessages(message)
+    socketInstance.emit('sendMessage', message)
+    // sendMessages(message)
     //receiveMessage()
     //addUsers('qe')
     setMessage('')

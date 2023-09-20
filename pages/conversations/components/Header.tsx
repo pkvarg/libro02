@@ -25,7 +25,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socket, isConnected, getUsers, usersOnline } = useSocket()
+  const { socket, isConnected, usersOnline } = useSocket()
 
   const otherUser = useOtherUser(conversation)
   const otherUserEmail = otherUser?.email

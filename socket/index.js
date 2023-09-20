@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     // send and get message
 
     socket.on('sendMessage', (data) => {
-      console.log('data:', data)
+      console.log('dataSM:', data)
       io.emit('receiveMessage', data)
       // io.to(UserId).emit('receiveMessage', data)
     })

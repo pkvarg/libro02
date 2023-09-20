@@ -13,10 +13,6 @@ import EmptyState from '@/pages/conversations/components/EmptyState'
 import LoadingModal from './components/LoadingModal'
 import { useSocket } from '@/components/providers/SocketProvider'
 
-// interface IParams {
-//   conversationId: string
-// }
-
 const ChatId = () => {
   const [conversation, setConversation] = useState()
   const [messages, setMessages] = useState([])
@@ -49,7 +45,7 @@ const ChatId = () => {
     //     getMessages()
     //   }
     // })
-    socketInstance.on('sendMessage', (message) => {
+    socketInstance?.on('sendMessage', (message) => {
       // if (conversationId === convId) {
       //   getMessages()
       // }
@@ -104,8 +100,6 @@ const ChatId = () => {
       </div>
     )
   }
-
-  console.log('cid', message)
 
   return (
     <>
