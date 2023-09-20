@@ -34,8 +34,8 @@ const ChatId = () => {
 
   const router = useRouter()
   const { conversationId } = router.query
-
   const [isLoading, setIsloading] = useState(false)
+  const { socketInstance } = useSocket()
 
   useEffect(() => {
     const getMessages = async () => {
@@ -49,12 +49,12 @@ const ChatId = () => {
     //     getMessages()
     //   }
     // })
-    // socket.on('sendMessage', (msg, convId) => {
-    //   if (conversationId === convId) {
-    //     getMessages()
-    //   }
-    // })
-  }, [conversationId, socket])
+    socketInstance.on('sendMessage', (message) => {
+      // if (conversationId === convId) {
+      //   getMessages()
+      // }
+    })
+  }, [conversationId, socketInstance, message])
 
   // Sidebar
 
@@ -104,6 +104,8 @@ const ChatId = () => {
       </div>
     )
   }
+
+  console.log('cid', message)
 
   return (
     <>

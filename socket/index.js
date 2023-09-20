@@ -34,16 +34,20 @@ io.on('connection', (socket) => {
     if (userEmail) {
       addUser(userEmail, socket.id)
       io.emit('getUsers', activeUsers)
-      console.log('added', activeUsers)
+      console.log('added3001', activeUsers)
     }
     // })
 
     // send and get message
 
-    socket.on('sendMessage', (data, convId) => {
-      console.log('data:', data, convId)
-      io.emit('receiveMessage', data, convId)
+    socket.on('sendMessage', (data) => {
+      console.log('data:', data)
+      io.emit('receiveMessage', data)
       // io.to(UserId).emit('receiveMessage', data)
+    })
+
+    socket.on('alpha', (data) => {
+      console.log(data)
     })
 
     // when disconnect

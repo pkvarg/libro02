@@ -12,16 +12,24 @@ import { useSocket } from '../../../components/providers/SocketProvider'
 const Form = ({ message, setMessage }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socket, isConnected } = useSocket()
+  const { receiveMessage, addUsers, sendMessages } = useSocket()
+
+  console.log(message)
+
+  useEffect(() => {
+    receiveMessage()
+  }, [sendMessages, message])
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    socket.emit('sendMessage', message, conversationId)
-
-    const res = await axios.post('/api/messages', {
-      message,
-      conversationId: conversationId,
-    })
+    //socketInstance.emit('sendMessage', message, conversationId)
+    // const res = await axios.post('/api/messages', {
+    //   message,
+    //   conversationId: conversationId,
+    // })
+    sendMessages(message)
+    //receiveMessage()
+    //addUsers('qe')
     setMessage('')
   }
 
