@@ -36,6 +36,7 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
           fill
           src={user?.profileImage || '/images/placeholder.png'}
           alt='Avatar'
+          sizes='150'
         />
       </div>
       {isActive ? (

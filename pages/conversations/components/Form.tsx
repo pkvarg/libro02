@@ -12,27 +12,25 @@ import { useSocket } from '../../../components/providers/SocketProvider'
 const Form = ({ message, setMessage }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socketInstance } = useSocket()
+  const { sendMessages, socketInstance } = useSocket()
 
-  useEffect(() => {
-    socketInstance?.emit('receiveMessage', (data) => {
-      console.log(data, 'received')
-    })
-  }, [message])
+  // useEffect(() => {
+  //   socketInstance?.emit('receiveMessage', (data) => {
+  //     console.log(data, 'received')
+  //   })
+  // }, [message])
 
-  console.log(socketInstance)
+  // console.log(socketInstance)
 
   const onSubmit = async (e: any) => {
     e.preventDefault()
-    //socketInstance.emit('sendMessage', message, conversationId)
-    // const res = await axios.post('/api/messages', {
-    //   message,
-    //   conversationId: conversationId,
-    // })
-    socketInstance.emit('sendMessage', message)
-    // sendMessages(message)
-    //receiveMessage()
-    //addUsers('qe')
+    const res = await axios.post('/api/messages', {
+      message,
+      conversationId: conversationId,
+    })
+    //socketInstance.on('update-input', message)
+    socketInstance.emit('input-change', message)
+
     setMessage('')
   }
 

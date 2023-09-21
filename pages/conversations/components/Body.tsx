@@ -10,7 +10,7 @@ import { useSocket } from '@/components/providers/SocketProvider'
 const Body = ({ message }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-  const { socket } = useSocket()
+  const { socket, received } = useSocket()
   const { conversationId } = router.query
   const [connected, isConnected] = useState(false)
   const [messages, setMessages] = useState([])
@@ -21,13 +21,7 @@ const Body = ({ message }) => {
       setMessages(data)
     }
     getMessages()
-    // socket.on('receiveMessage', (msg, convId) => {
-    //   getMessages()
-    // })
-    // socket.on('sendMessage', (msg, convId) => {
-    //   getMessages()
-    // })
-  }, [conversationId, socket, message])
+  }, [conversationId, socket, message, received])
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`)

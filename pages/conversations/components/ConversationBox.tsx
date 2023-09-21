@@ -92,7 +92,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         transition
         cursor-pointer
         `,
-          selected ? 'bg-neutral-100' : ''
+          selected ? 'border border-neutral-100' : ''
         )}
       >
         {data?.isGroup ? (

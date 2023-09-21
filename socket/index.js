@@ -24,38 +24,45 @@ const removeUser = (socketId) => {
 //   return users.find((user) => user.username === username)
 // }
 
+// io.on('connection', (socket) => {
+//   // when connect
+//   //activeUsers.push(socket.id)
+//   console.log(`User Connected: ${socket.id}`)
+
+//   // Take userEmail
+//   socket.on('addUser', (userEmail) => {
+//     if (userEmail) {
+//       addUser(userEmail, socket.id)
+//       io.emit('getUsers', activeUsers)
+//       console.log('added3001', activeUsers)
+//     }
+//     // })
+
+//     // send and get message
+
+//     socket.on('sendMessage', (data) => {
+//       console.log('dataSM:', data)
+//       io.emit('receiveMessage', data)
+//       // io.to(UserId).emit('receiveMessage', data)
+//     })
+
+//     socket.on('alpha', (data) => {
+//       console.log(data)
+//     })
+
+//     // when disconnect
+//     socket.on('disconnect', () => {
+//       console.log('User Disconnected', socket.id)
+//       removeUser(socket.id)
+//       io.emit('getUsers', activeUsers)
+//       console.log('afterDisconnect:', activeUsers)
+//     })
+//   })
+// })
+
 io.on('connection', (socket) => {
-  // when connect
-  //activeUsers.push(socket.id)
-  console.log(`User Connected: ${socket.id}`)
-
-  // Take userEmail
-  socket.on('addUser', (userEmail) => {
-    if (userEmail) {
-      addUser(userEmail, socket.id)
-      io.emit('getUsers', activeUsers)
-      console.log('added3001', activeUsers)
-    }
-    // })
-
-    // send and get message
-
-    socket.on('sendMessage', (data) => {
-      console.log('dataSM:', data)
-      io.emit('receiveMessage', data)
-      // io.to(UserId).emit('receiveMessage', data)
-    })
-
-    socket.on('alpha', (data) => {
-      console.log(data)
-    })
-
-    // when disconnect
-    socket.on('disconnect', () => {
-      console.log('User Disconnected', socket.id)
-      removeUser(socket.id)
-      io.emit('getUsers', activeUsers)
-      console.log('afterDisconnect:', activeUsers)
-    })
+  socket.on('input-change', (msg) => {
+    console.log('server', msg)
+    socket.broadcast.emit('update-input', msg)
   })
 })

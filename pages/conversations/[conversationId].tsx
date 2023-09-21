@@ -39,16 +39,10 @@ const ChatId = () => {
       setMessages(data)
     }
 
-    //getMessages()
-    // socket.on('receiveMessage', (msg, convId) => {
-    //   if (conversationId === convId) {
-    //     getMessages()
-    //   }
-    // })
-    socketInstance?.on('sendMessage', (message) => {
-      // if (conversationId === convId) {
-      //   getMessages()
-      // }
+    getMessages()
+    socketInstance.on('update-input', (msg) => {
+      console.log('cid', msg)
+      getMessages()
     })
   }, [conversationId, socketInstance, message])
 
