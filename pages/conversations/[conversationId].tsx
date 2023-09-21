@@ -34,17 +34,35 @@ const ChatId = () => {
   const { socketInstance } = useSocket()
 
   useEffect(() => {
-    const getMessages = async () => {
-      const { data } = await axios.get(`/api/messages/${conversationId}`)
-      setMessages(data)
-    }
+    console.log('cid', conversationId)
+    if (conversationId) {
+      const getMessages = async () => {
+        const { data } = await axios.get(`/api/messages/${conversationId}`)
+        setMessages(data)
+        if (data) {
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth',
+          })
+        }
+      }
 
-    getMessages()
-    socketInstance.on('update-input', (msg) => {
-      console.log('cid', msg)
       getMessages()
-    })
+      socketInstance.on('update-input', (msg) => {
+        console.log('cid', msg)
+        getMessages()
+      })
+    }
   }, [conversationId, socketInstance, message])
+
+  useEffect(() => {
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth',
+      })
+    }, 1110) // Adjust the delay as needed
+  }, [conversationId, message])
 
   // Sidebar
 
@@ -108,8 +126,8 @@ const ChatId = () => {
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
             <Body
-              // messages={messages}
-              // setMessages={setMessages}
+              messages={messages}
+              setMessages={setMessages}
               message={message}
             />
             <Form message={message} setMessage={setMessage} />

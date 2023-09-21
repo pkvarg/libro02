@@ -23,7 +23,7 @@ const Form = ({ message, setMessage }) => {
   // console.log(socketInstance)
 
   const onSubmit = async (e: any) => {
-    e.preventDefault()
+    // e.preventDefault()
     const res = await axios.post('/api/messages', {
       message,
       conversationId: conversationId,
@@ -80,6 +80,7 @@ const Form = ({ message, setMessage }) => {
         onChange={(e) => setMessage(e.target.value)}
         //errors={errors}
         required
+        onFocus={null}
         placeholder='Napíšte správu'
       />
       <button
@@ -96,11 +97,11 @@ const Form = ({ message, setMessage }) => {
       >
         <HiPaperAirplane size={18} className='text-white' />
       </button>
-      <div className=''>
-        {/* <EmojiPicker
+      {/* <div className=''>
+        <EmojiPicker
           onChange={(emoji: string) => setMessage((prev) => prev + emoji)}
-        /> */}
-      </div>
+        />
+      </div> */}
       {/* </form> */}
     </div>
   )
