@@ -2,18 +2,14 @@
 
 import { HiChevronLeft } from 'react-icons/hi'
 import { HiEllipsisHorizontal } from 'react-icons/hi2'
-import { useMemo, useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
-
 import useOtherUser from '@/hooks/useOtherUser'
-import { useSocket } from '@/components/providers/SocketProvider'
 import { useSession } from 'next-auth/react'
-
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
 import ProfileDrawer from './ProfileDrawer'
-
 import { useRouter } from 'next/router'
 
 interface HeaderProps {
@@ -25,25 +21,12 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socket, isConnected, usersOnline } = useSocket()
-
   const otherUser = useOtherUser(conversation)
   const otherUserEmail = otherUser?.email
   const session = useSession()
   const currentUserEmail = session.data?.user?.email
-  // const [usersOnline, setUsersOnline] = useState([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [status, setStatus] = useState('Offline')
-
-  console.log('HEADEER', usersOnline)
-  //let usersOnline = []
-  useEffect(() => {
-    if (usersOnline.includes(otherUserEmail)) {
-      setStatus('Active')
-    } else {
-      setStatus('Offline')
-    }
-  }, [otherUserEmail, usersOnline, conversationId, socket])
 
   return (
     <>
@@ -87,7 +70,6 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           )}
           <div className='flex flex-col'>
             <div>{conversation?.name || otherUser?.name}</div>
-            <div className='text-sm font-light text-neutral-500'>{status}</div>
           </div>
         </div>
         <HiEllipsisHorizontal

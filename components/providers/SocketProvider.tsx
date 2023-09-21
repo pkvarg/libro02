@@ -10,6 +10,7 @@ type SocketContextType = {
   getUsers: (value: any) => void
   sendMessages: (value: any) => void
   receiveMessage: () => void
+  whoIsOtherUser: (value: any) => void
   received: string
   socketInstance: any
 }
@@ -22,6 +23,7 @@ const SocketContext = createContext<SocketContextType>({
   getUsers: null,
   sendMessages: null,
   receiveMessage: null,
+  whoIsOtherUser: null,
   received: null,
   socketInstance: null,
 })
@@ -53,6 +55,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         (user) => !usersOnline.includes(user) && usersOnline.push(user)
       )
     })
+  }
+
+  const whoIsOtherUser = (email: string) => {
+    console.log(email)
   }
 
   // const sendMessages = (message) => {
@@ -94,21 +100,15 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       })
     }
 
-    // socketInstance.on('connect', () => {
-    //   setIsConnected(true)
-    // })
+    socketInstance?.on('disconnect', () => {
+      setIsConnected(false)
+    })
 
-    // socketInstance?.on('disconnect', () => {
-    //   setIsConnected(false)
-    // })
-
-    // getUsers()
-    // receiveMessage()
+    getUsers()
 
     setSocket(socketInstance)
 
     console.log(isConnected)
-    //socketInstance.on('addUser', (userEmail) => {})
 
     socketInitializer()
 
@@ -116,49 +116,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       socketInstance.disconnect()
     }
   }, [])
-
-  // useEffect(() => {
-  //   const socketInitializer = async () => {
-  //     console.log('volame front')
-  //     await fetch('/api/socket')
-
-  //     socketInstance?.on('connect', () => {
-  //       console.log('connected')
-  //       setIsConnected(true)
-  //     })
-
-  //     socketInstance.on('update-input', (msg) => {
-  //       console.log('effect', msg)
-  //       setReceived(msg)
-  //     })
-
-  //     socketInstance?.on('disconnect', () => {
-  //       setIsConnected(false)
-  //     })
-  //   }
-
-  //   // socketInstance.on('connect', () => {
-  //   //   setIsConnected(true)
-  //   // })
-
-  //   // socketInstance?.on('disconnect', () => {
-  //   //   setIsConnected(false)
-  //   // })
-
-  //   // getUsers()
-  //   // receiveMessage()
-
-  //   setSocket(socketInstance)
-
-  //   console.log(isConnected)
-  //   //socketInstance.on('addUser', (userEmail) => {})
-
-  //   socketInitializer()
-
-  //   return () => {
-  //     socketInstance.disconnect()
-  //   }
-  // }, [])
 
   return (
     <SocketContext.Provider
@@ -170,6 +127,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         addUsers,
         sendMessages,
         receiveMessage,
+        whoIsOtherUser,
         received,
         socketInstance,
       }}

@@ -14,14 +14,6 @@ const Form = ({ message, setMessage }) => {
   const { conversationId } = router.query
   const { sendMessages, socketInstance } = useSocket()
 
-  // useEffect(() => {
-  //   socketInstance?.emit('receiveMessage', (data) => {
-  //     console.log(data, 'received')
-  //   })
-  // }, [message])
-
-  // console.log(socketInstance)
-
   const onSubmit = async (e: any) => {
     // e.preventDefault()
     const res = await axios.post('/api/messages', {

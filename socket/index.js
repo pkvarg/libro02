@@ -65,4 +65,18 @@ io.on('connection', (socket) => {
     console.log('server', msg)
     socket.broadcast.emit('update-input', msg)
   })
+  socket.on('addUser', (userEmail) => {
+    if (userEmail) {
+      addUser(userEmail, socket.id)
+      io.emit('getUsers', activeUsers)
+      console.log('added3001', activeUsers)
+    }
+  })
+
+  socket.on('disconnect', () => {
+    console.log('User Disconnected', socket.id)
+    removeUser(socket.id)
+    io.emit('getUsers', activeUsers)
+    console.log('afterDisconnect:', activeUsers)
+  })
 })

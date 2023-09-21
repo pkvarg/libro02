@@ -34,7 +34,6 @@ const ChatId = () => {
   const { socketInstance } = useSocket()
 
   useEffect(() => {
-    console.log('cid', conversationId)
     if (conversationId) {
       const getMessages = async () => {
         const { data } = await axios.get(`/api/messages/${conversationId}`)
@@ -49,7 +48,6 @@ const ChatId = () => {
 
       getMessages()
       socketInstance.on('update-input', (msg) => {
-        console.log('cid', msg)
         getMessages()
       })
     }
@@ -59,7 +57,7 @@ const ChatId = () => {
     setTimeout(() => {
       window.scrollTo({
         top: document.body.scrollHeight,
-        behavior: 'smooth',
+        // behavior: 'smooth',
       })
     }, 1110) // Adjust the delay as needed
   }, [conversationId, message])
@@ -77,12 +75,9 @@ const ChatId = () => {
       setConversations(data.conversations)
       setIsloading(false)
     }
-    // socket.on('receiveMessage', (msg, convId) => {
-    //   getActions()
-    // })
-    // socket.on('sendMessage', (msg, convId) => {
-    //   getActions()
-    // })
+    socketInstance.on('update-input', (msg) => {
+      getActions()
+    })
     getActions()
   }, [conversationId, message, socket])
 

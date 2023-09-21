@@ -1,27 +1,12 @@
 'use client'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import MessageBox from './MessageBox'
-import { useSocket } from '@/components/providers/SocketProvider'
 
 const Body = ({ message, messages, setMessages }) => {
   const router = useRouter()
-  const { socket, received } = useSocket()
   const { conversationId } = router.query
-  const [connected, isConnected] = useState(false)
-  // const [messages, setMessages] = useState([])
-
-  // useEffect(() => {
-  //   if (conversationId !== undefined) {
-  //     const getMessages = async () => {
-  //       const { data } = await axios.get(`/api/messages/${conversationId}`)
-  //       setMessages(data)
-  //     }
-
-  //     getMessages()
-  //   }
-  // }, [conversationId, socket, message, received])
 
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`)

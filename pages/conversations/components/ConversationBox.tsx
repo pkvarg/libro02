@@ -1,12 +1,10 @@
 'use client'
 
-import { useCallback, useMemo, useEffect } from 'react'
+import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Conversation, Message, User } from '@prisma/client'
 import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
 import clsx from 'clsx'
-
 import AvatarChat from '@/components/AvatarChat'
 import useOtherUser from '@/hooks/useOtherUser'
 import AvatarGroup from '@/components/AvatarGroup'
@@ -25,13 +23,18 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   const otherUser = useOtherUser(data)
   const session = useSession()
   const router = useRouter()
-  const { socket } = useSocket()
+  const { socket, usersOnline, isConnected } = useSocket()
+  const [isOnline, setIsOnline] = useState(false)
+
+  console.log('cbox', data)
 
   useEffect(() => {
-    if (!socket) {
-      return
+    if (usersOnline.includes(otherUser?.email)) {
+      setIsOnline(true)
+    } else {
+      setIsOnline(false)
     }
-  }, [])
+  }, [usersOnline, otherUser, socket, isConnected])
 
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`)
@@ -98,7 +101,16 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         {data?.isGroup ? (
           <AvatarGroup users={data?.users} />
         ) : (
-          <AvatarChat user={otherUser} />
+          <div className='flex flex-col'>
+            <AvatarChat user={otherUser} />
+            <div
+              className={
+                isOnline
+                  ? `block lg:hidden h-[2px] mt-1 bg-emerald-600`
+                  : `block lg:hidden h-[2px] mt-1 bg-red-800`
+              }
+            ></div>
+          </div>
         )}
         <div className='min-w-0 hidden lg:flex'>
           <div className='focus:outline-none'>
@@ -122,17 +134,26 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
                 )}
               </div>
             </div>
-            <p
-              className={clsx(
-                `
+            <div className='flex flex-row gap-2 items-center'>
+              <div
+                className={
+                  isOnline
+                    ? `bg-emerald-600 h-4 w-4 rounded-xl`
+                    : `bg-red-800 h-4 w-4 rounded-xl`
+                }
+              ></div>
+              <p
+                className={clsx(
+                  `
               truncate 
               text-sm
               `,
-                hasSeen ? 'text-gray-500' : 'text-white font-medium'
-              )}
-            >
-              {lastMessageText}
-            </p>
+                  hasSeen ? 'text-gray-500' : 'text-white font-medium'
+                )}
+              >
+                {lastMessageText}
+              </p>
+            </div>
           </div>
         </div>
       </div>

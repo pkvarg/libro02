@@ -121,7 +121,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
               >
                 {status}
               </p>
-              {/* <ActiveStatus /> */}
             </div>
             {/* Open Group Chat */}
             {/* <div
