@@ -6,18 +6,30 @@ const io = new Server(3001, {
   },
 })
 
+let allClients = new Set()
+
+// io.sockets.on('connection', function(socket) {
+//   allClients.add(socket.id);
+
+//   socket.on('disconnect', function() {
+//     console.log('Got disconnect!');
+
+//     allClients.delete(socket.id);
+//   });
+// });
+
 const activeUsers = []
 
 const addUser = (userEmail, socketId) => {
-  !activeUsers.some((email) => email === userEmail) &&
-    //activeUsers.push({ userEmail, socketId })
-    activeUsers.push(userEmail)
-
-  console.log('UsersArray', activeUsers)
+  !activeUsers.some((user) => user.socketId === socketId) &&
+    !activeUsers.some((user) => user.userEmail === userEmail) &&
+    activeUsers.push({ userEmail, socketId })
 }
 
-const removeUser = (socketId) => {
-  activeUsers.filter((user) => user.socketId !== socketId)
+const removeUser = (email) => {
+  console.log('removing', email)
+  activeUsers.map((user) => console.log('logged', user))
+  //activeUsers.filter((user) => user.userEmail !== email)
 }
 
 // const getUser = (username) => {
@@ -73,10 +85,16 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on('disconnect', () => {
-    console.log('User Disconnected', socket.id)
-    removeUser(socket.id)
-    io.emit('getUsers', activeUsers)
-    console.log('afterDisconnect:', activeUsers)
+  socket.on('dis', (email) => {
+    removeUser(email)
+    // io.emit('getUsers', activeUsers)
+    // console.log('afterDisconnect:', activeUsers)
   })
+
+  // socket.on('disconnect', () => {
+  //   console.log('User Disconnected',)
+  //   removeUser(userEmail)
+  //   io.emit('getUsers', activeUsers)
+  //   console.log('afterDisconnect:', activeUsers)
+  // })
 })

@@ -8,6 +8,7 @@ type SocketContextType = {
   usersOnline: any
   addUsers: (value: any) => void
   getUsers: (value: any) => void
+  disconnectUser: (value: any) => void
   sendMessages: (value: any) => void
   receiveMessage: () => void
   whoIsOtherUser: (value: any) => void
@@ -21,6 +22,7 @@ const SocketContext = createContext<SocketContextType>({
   usersOnline: [],
   addUsers: null,
   getUsers: null,
+  disconnectUser: null,
   sendMessages: null,
   receiveMessage: null,
   whoIsOtherUser: null,
@@ -51,10 +53,23 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const getUsers = () => {
     socketInstance.on('getUsers', (activeUsers) => {
       console.log(activeUsers)
-      activeUsers.map(
-        (user) => !usersOnline.includes(user) && usersOnline.push(user)
-      )
+      for (const obj of activeUsers) {
+        const { userEmail, socketId } = obj
+
+        const alreadyExists = usersOnline.some(
+          (item) => item.userEmail === userEmail
+        )
+
+        if (!alreadyExists) {
+          usersOnline.push({ userEmail, socketId })
+        }
+      }
     })
+  }
+
+  const disconnectUser = (email) => {
+    console.log('discon', email)
+    socketInstance.emit('dis', email)
   }
 
   const whoIsOtherUser = (email: string) => {
@@ -96,13 +111,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
       })
 
       socketInstance?.on('disconnect', () => {
-        setIsConnected(false)
+        console.log('inst', 'dison')
+        //setIsConnected(false)
       })
     }
-
-    socketInstance?.on('disconnect', () => {
-      setIsConnected(false)
-    })
 
     getUsers()
 
@@ -114,6 +126,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => {
       socketInstance.disconnect()
+      console.log('ret disc')
     }
   }, [])
 
@@ -125,6 +138,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         usersOnline,
         getUsers,
         addUsers,
+        disconnectUser,
         sendMessages,
         receiveMessage,
         whoIsOtherUser,

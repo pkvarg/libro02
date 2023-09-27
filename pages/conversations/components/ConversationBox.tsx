@@ -26,13 +26,15 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   const { socket, usersOnline, isConnected } = useSocket()
   const [isOnline, setIsOnline] = useState(false)
 
-  console.log('cbox', data)
-
   useEffect(() => {
-    if (usersOnline.includes(otherUser?.email)) {
-      setIsOnline(true)
-    } else {
+    const containsOtherEmail = usersOnline.some(
+      (item) => item.userEmail === otherUser?.email
+    )
+
+    if (!containsOtherEmail) {
       setIsOnline(false)
+    } else {
+      setIsOnline(true)
     }
   }, [usersOnline, otherUser, socket, isConnected])
 
