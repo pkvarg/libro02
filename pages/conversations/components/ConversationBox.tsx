@@ -26,6 +26,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   const { socket, usersOnline, isConnected } = useSocket()
   const [isOnline, setIsOnline] = useState(false)
 
+  console.log(usersOnline)
+
   useEffect(() => {
     const containsOtherEmail = usersOnline.some(
       (item) => item.userEmail === otherUser?.email

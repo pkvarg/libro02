@@ -72,6 +72,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const disconnectUser = (email) => {
     console.log('discon', email)
     socketInstance.emit('dis', email)
+    const remaining = usersOnline.filter((user) => user.userEmail !== email)
+    console.log('rem', remaining)
+    setUsersOnline(remaining)
+    console.log('uO', usersOnline)
   }
 
   const whoIsOtherUser = (email: string) => {

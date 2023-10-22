@@ -1,20 +1,16 @@
 'use client'
 import Header from '@/pages/conversations/components/Header'
-import Body from '@/pages/conversations/components/Body'
 import Form from '@/pages/conversations/components/Form'
-import ConversationList from './components/ConversationList'
 import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import LoadingModal from './components/LoadingModal'
 import MessageBox from './components/MessageBox'
 import { useSocket } from '@/components/providers/SocketProvider'
-import { FullConversationType } from '@/types'
 import ConversationBox from './../conversations/components/ConversationBox'
-import { find, uniq } from 'lodash'
 import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
 
@@ -31,8 +27,6 @@ const ChatId = () => {
   const [isLoading, setIsloading] = useState(false)
   //from Convlist
   const [status, setStatus] = useState('Offline')
-  const [items, setItems] = useState(conversations)
-  const [lastM, setLastM] = useState([])
 
   useEffect(() => {
     if (isConnected) {
@@ -48,12 +42,6 @@ const ChatId = () => {
       const getMessages = async () => {
         const { data } = await axios.get(`/api/messages/${conversationId}`)
         setMessages(data)
-        // if (data) {
-        //   window.scrollTo({
-        //     top: document.body.scrollHeight,
-        //     behavior: 'smooth',
-        //   })
-        // }
       }
 
       getMessages()
@@ -69,13 +57,13 @@ const ChatId = () => {
     }
   }, [conversationId])
 
-  // scroll up on message
+  //scroll up on message
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo({
         top: document.body.scrollHeight,
       })
-    }, 1110)
+    }, 2110)
   }, [conversationId, socketInstance])
 
   // Sidebar
@@ -124,15 +112,9 @@ const ChatId = () => {
     <>
       {isLoading && <LoadingModal />}
       <div className={clsx('h-full lg:block')}>
-        {/* <ConversationList
-          initialItems={conversations}
-          users={users}
-          title='Messages'
-        /> */}
-        <>
-          <aside
-            className={clsx(
-              `
+        <aside
+          className={clsx(
+            `
         fixed
         inset-y-0
         pb-20
@@ -144,58 +126,60 @@ const ChatId = () => {
         overflow-y-auto
         border-gray-200
       `,
-              isOpen ? 'hidden' : 'block w-[25%] lg:w-[25%] left-0'
-            )}
-          >
-            <div className='px-5'>
-              <div className='flex gap-4 mb-4 pt-4'>
-                <div
-                  onClick={() => router.push('/conversations')}
-                  className='cursor-pointer lg:text-2xl font-bold text-[#ffffff] flex flex-col lg:flex-row gap-2'
+            isOpen ? 'hidden' : 'block w-[25%] lg:w-[25%] left-0'
+          )}
+        >
+          <div className='px-5'>
+            <div className='flex gap-4 mb-4 pt-4'>
+              <div
+                onClick={() => router.push('/conversations')}
+                className='cursor-pointer lg:text-2xl font-bold text-[#ffffff] flex flex-col lg:flex-row gap-2'
+              >
+                <p>Správy</p>
+                <p
+                  className={
+                    status === 'Offline'
+                      ? `bg-yellow-600 text-white border-none px-2`
+                      : `bg-emerald-600 text-white border-none px-2 `
+                  }
                 >
-                  <p>Správy</p>
-                  <p
-                    className={
-                      status === 'Offline'
-                        ? `bg-yellow-600 text-white border-none px-2`
-                        : `bg-emerald-600 text-white border-none px-2 `
-                    }
-                  >
-                    {status}
-                  </p>
-                </div>
+                  {status}
+                </p>
               </div>
+            </div>
 
-              {conversations?.map((item) => (
-                <ConversationBox
-                  key={item.id}
-                  data={item}
-                  selected={conversationId === item.id}
-                />
-              ))}
-            </div>
-            <div className='ml-6'>
-              <SidebarItem
-                onClick={() => router.push('/')}
-                icon={BsHouseFill}
-                label='Domov'
+            {conversations?.map((item) => (
+              <ConversationBox
+                key={item.id}
+                data={item}
+                selected={conversationId === item.id}
               />
-            </div>
-          </aside>
-        </>
+            ))}
+          </div>
+          <div className='ml-6'>
+            <SidebarItem
+              onClick={() => router.push('/')}
+              icon={BsHouseFill}
+              label='Domov'
+            />
+          </div>
+        </aside>
 
         <div className='h-full mt-2'>
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
 
             <div className='flex-1 overflow-y-auto'>
-              {messages?.map((message, i) => (
-                <MessageBox
-                  isLast={i === messages.length - 1}
-                  key={message.id}
-                  data={message}
-                />
-              ))}
+              {messages?.map(
+                (message, i) =>
+                  message.conversationId === conversationId && (
+                    <MessageBox
+                      isLast={i === messages.length - 1}
+                      key={message.id}
+                      data={message}
+                    />
+                  )
+              )}
             </div>
             <Form />
           </div>

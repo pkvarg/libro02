@@ -27,7 +27,7 @@ const Home = () => {
   useEffect(() => {
     addUsers(currentUserEmail)
     return () => {
-      //disconnectUser(currentUserEmail)
+      disconnectUser(currentUserEmail)
       //socketInstance.disconnect()
     }
     //return () => socketInstance.disconnect()
