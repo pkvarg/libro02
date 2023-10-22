@@ -2,6 +2,8 @@
 import { io } from 'socket.io-client'
 import { createContext, useContext, useEffect, useState } from 'react'
 
+//export const exportedSocket = io('ws://localhost:3001')
+
 type SocketContextType = {
   socket: any | null
   isConnected: boolean
@@ -40,11 +42,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [usersOnline, setUsersOnline] = useState([])
   const [received, setReceived] = useState('')
 
-  //const socketInstance = io()
   //const socketInstance = new (ClientIO as any)('ws://localhost:3001')
 
   const socketInstance = io('ws://localhost:3001')
-  //const usersOnline = ['me']
+  // for online version just io()
+  //const socketInstance = io()
 
   const addUsers = (userEmail) => {
     socketInstance.emit('addUser', userEmail)
@@ -76,20 +78,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     console.log(email)
   }
 
-  // const sendMessages = (message) => {
-  //   socketInstance?.emit('sendMessage', message)
-  // }
-
   const sendMessages = (message) => {
     console.log('front', message)
     socketInstance.emit('input-change', message)
   }
-
-  // const receiveMessage = () => {
-  //   socketInstance?.on('receiveMessage', (data) => {
-  //     console.log('rcv', data)
-  //   })
-  // }
 
   const receiveMessage = () => {
     console.log(received)
@@ -112,7 +104,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
       socketInstance?.on('disconnect', () => {
         console.log('inst', 'dison')
-        //setIsConnected(false)
       })
     }
 

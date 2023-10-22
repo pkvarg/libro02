@@ -2,7 +2,7 @@
 
 import clsx from 'clsx'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
 import { FullMessageType } from '@/types'

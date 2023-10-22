@@ -28,7 +28,7 @@ const Home = () => {
     addUsers(currentUserEmail)
     return () => {
       //disconnectUser(currentUserEmail)
-      socketInstance.disconnect()
+      //socketInstance.disconnect()
     }
     //return () => socketInstance.disconnect()
   }, [currentUserEmail])

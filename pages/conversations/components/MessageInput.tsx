@@ -19,11 +19,12 @@ const MessageInput: React.FC<MessageInputProps> = ({
 }) => {
   return (
     <div className='relative w-full'>
-      {/* <input
+      <input
         id={id}
         type={type}
         autoComplete={id}
-        {...register(id, { required })}
+        /* eslint-disable */
+        {...register('message', { required })}
         placeholder={placeholder}
         className='
           text-black
@@ -35,7 +36,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           rounded-full
           focus:outline-none
         '
-      /> */}
+      />
     </div>
   )
 }

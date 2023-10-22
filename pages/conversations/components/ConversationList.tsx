@@ -122,21 +122,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
                 {status}
               </p>
             </div>
-            {/* Open Group Chat */}
-            {/* <div
-              onClick={() => setIsModalOpen(true)}
-              className='
-                rounded-full 
-                p-2 
-                bg-gray-100 
-                text-gray-600 
-                cursor-pointer 
-                hover:opacity-75 
-                transition
-              '
-            >
-              <MdOutlineGroupAdd size={20} />
-            </div> */}
           </div>
 
           {initialItems?.map((item) => (

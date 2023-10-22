@@ -11,7 +11,8 @@ export default async function handler(
     try {
       const { currentUser } = await serverAuth(req, res)
       const body = req.body
-      const { message, image, conversationId } = body
+      const { formData, image, conversationId } = body
+      const message = formData
 
       if (!currentUser?.id || !currentUser?.email) {
         return res.status(401).json('Unauthorised')

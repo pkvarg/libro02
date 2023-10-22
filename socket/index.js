@@ -74,8 +74,12 @@ const removeUser = (email) => {
 
 io.on('connection', (socket) => {
   socket.on('input-change', (msg) => {
-    console.log('server', msg)
+    console.log('server', msg.body)
     socket.broadcast.emit('update-input', msg)
+  })
+  socket.on('send-message', (msg) => {
+    console.log('obg-server', msg.body)
+    socket.broadcast.emit('receive-message', msg)
   })
   socket.on('addUser', (userEmail) => {
     if (userEmail) {
