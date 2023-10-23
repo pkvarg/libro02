@@ -124,14 +124,14 @@ const ConversationList: React.FC<ConversationListProps> = ({
           </div>
 
           {!items
-            ? items.map((item) => (
+            ? items?.map((item) => (
                 <ConversationBox
                   key={item.id}
                   data={item}
                   selected={conversationId === item.id}
                 />
               ))
-            : initialItems.map((item) => (
+            : initialItems?.map((item) => (
                 <ConversationBox
                   key={item.id}
                   data={item}

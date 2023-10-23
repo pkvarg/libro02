@@ -61,13 +61,6 @@ const Form = ({ message, setMessage }) => {
         onSubmit={handleSubmit}
         className='flex items-center gap-2 lg:gap-4 w-full'
       >
-        {/* <MessageInput
-          id='message'
-          register={register}
-          errors={errors}
-          required
-          placeholder='Napíšte správu'
-        /> */}
         <input
           className='text-black px-2 rounded-xl w-full h-8'
           id='message'
