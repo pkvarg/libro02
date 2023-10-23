@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useEffect, useMemo, useState } from 'react'
 import { MdOutlineGroupAdd } from 'react-icons/md'
+import { pusherClient } from '@/libs/pusher'
 import clsx from 'clsx'
 import { find, uniq } from 'lodash'
 import SidebarItem from '@/components/layout/SidebarItem'
@@ -13,11 +14,9 @@ import useConversation from '@/hooks/useConversation'
 import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
 import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
-import { useSocket } from '@/components/providers/SocketProvider'
 
 interface ConversationListProps {
   initialItems: FullConversationType[]
-
   users: User[]
   title?: string
 }
@@ -32,19 +31,20 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   const router = useRouter()
   const session = useSession()
-  const { isConnected } = useSocket()
 
   const { conversationId, isOpen } = useConversation()
 
-  useEffect(() => {
-    if (isConnected) {
-      setStatus('Live')
-    } else {
-      setStatus('Offline')
-    }
-  }, [isConnected])
+  const pusherKey = useMemo(() => {
+    return session.data?.user?.email
+  }, [session.data?.user?.email])
 
   useEffect(() => {
+    if (!pusherKey) {
+      return
+    }
+
+    pusherClient.subscribe(pusherKey)
+
     const updateHandler = (conversation: FullConversationType) => {
       setItems((current) =>
         current.map((currentConversation) => {
@@ -79,7 +79,16 @@ const ConversationList: React.FC<ConversationListProps> = ({
         router.push('/conversations')
       }
     }
-  }, [router, conversationId])
+
+    pusherClient.bind('conversation:update', updateHandler)
+    pusherClient.bind('conversation:new', newHandler)
+    pusherClient.bind('conversation:remove', removeHandler)
+
+    return () => {
+      pusherClient.unsubscribe(pusherKey)
+      pusherClient.unbind('conversation:new', newHandler)
+    }
+  }, [pusherKey, router])
 
   return (
     <>
@@ -124,13 +133,29 @@ const ConversationList: React.FC<ConversationListProps> = ({
             </div>
           </div>
 
-          {initialItems?.map((item) => (
+          {!items
+            ? items.map((item) => (
+                <ConversationBox
+                  key={item.id}
+                  data={item}
+                  selected={conversationId === item.id}
+                />
+              ))
+            : initialItems.map((item) => (
+                <ConversationBox
+                  key={item.id}
+                  data={item}
+                  selected={conversationId === item.id}
+                />
+              ))}
+
+          {/* {items.map((item) => (
             <ConversationBox
               key={item.id}
               data={item}
               selected={conversationId === item.id}
             />
-          ))}
+          ))} */}
         </div>
         <div className='ml-6'>
           <SidebarItem

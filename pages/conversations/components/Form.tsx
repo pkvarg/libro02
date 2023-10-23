@@ -5,12 +5,10 @@ import axios from 'axios'
 import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import { useSocket } from '../../../components/providers/SocketProvider'
 
-const Form = () => {
+const Form = ({ message, setMessage }) => {
   const router = useRouter()
   const { conversationId } = router.query
-  const { socketInstance } = useSocket()
 
   const handleUpload = (result: any) => {
     axios.post('/api/messages', {
@@ -27,12 +25,12 @@ const Form = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const res = await axios.post('/api/messages', {
+    await axios.post('/api/messages', {
       formData,
       conversationId: conversationId,
     })
-    console.log('res', res.data)
-    socketInstance.emit('input-change', res.data)
+    // just to trigges conversations in cId
+    setMessage(formData)
 
     setFormData('')
   }

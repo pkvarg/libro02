@@ -6,7 +6,6 @@ import useConversation from '@/hooks/useConversation'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useSocket } from '@/components/providers/SocketProvider'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
@@ -14,8 +13,6 @@ const Home = () => {
   const { isOpen } = useConversation()
   const session = useSession()
   const router = useRouter()
-  const { socket, socketInstance, usersOnline, addUsers, disconnectUser } =
-    useSocket()
 
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
@@ -23,17 +20,6 @@ const Home = () => {
   const currentUserEmail = session.data?.user?.email
 
   const routeIsConversations = router.route.includes('conversations')
-
-  useEffect(() => {
-    addUsers(currentUserEmail)
-    return () => {
-      disconnectUser(currentUserEmail)
-      //socketInstance.disconnect()
-    }
-    //return () => socketInstance.disconnect()
-  }, [currentUserEmail])
-
-  console.log('current', currentUserEmail)
 
   useEffect(() => {
     const getActions = async () => {
@@ -45,6 +31,8 @@ const Home = () => {
     }
     getActions()
   }, [])
+
+  console.log('ind', conversations)
 
   return (
     <div className={clsx('h-full  lg:block')}>

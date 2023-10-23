@@ -9,7 +9,6 @@ import AvatarChat from '@/components/AvatarChat'
 import useOtherUser from '@/hooks/useOtherUser'
 import AvatarGroup from '@/components/AvatarGroup'
 import { FullConversationType } from '@/types'
-import { useSocket } from '../../../components/providers/SocketProvider'
 
 interface ConversationBoxProps {
   data: FullConversationType
@@ -23,22 +22,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   const otherUser = useOtherUser(data)
   const session = useSession()
   const router = useRouter()
-  const { socket, usersOnline, isConnected } = useSocket()
   const [isOnline, setIsOnline] = useState(false)
-
-  console.log(usersOnline)
-
-  useEffect(() => {
-    const containsOtherEmail = usersOnline.some(
-      (item) => item.userEmail === otherUser?.email
-    )
-
-    if (!containsOtherEmail) {
-      setIsOnline(false)
-    } else {
-      setIsOnline(true)
-    }
-  }, [usersOnline, otherUser, socket, isConnected])
 
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`)

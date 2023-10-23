@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-
 import serverAuth from '@/libs/serverAuth'
 import prisma from '@/libs/prismadb'
+import { pusherServer } from '@/libs/pusher'
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
@@ -61,11 +61,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    //Update all connections with new seen
-    // await pusherServer.trigger(currentUser.email, 'conversation:update', {
-    //   id: conversationId,
-    //   messages: [updatedMessage],
-    // })
+    // Update all connections with new seen
+    await pusherServer.trigger(currentUser.email, 'conversation:update', {
+      id: conversationId,
+      messages: [updatedMessage],
+    })
 
     // If user has already seen the message, no need to go further
     if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
@@ -73,11 +73,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
 
     //Update last message seen
-    // await pusherServer.trigger(
-    //   conversationId!,
-    //   'message:update',
-    //   updatedMessage
-    // )
+    await pusherServer.trigger(
+      conversationId!,
+      'message:update',
+      updatedMessage
+    )
 
     return res.json('Success')
   } catch (error) {

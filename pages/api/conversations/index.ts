@@ -1,12 +1,13 @@
 import serverAuth from '@/libs/serverAuth'
 import { NextApiRequest, NextApiResponse } from 'next'
-
+import { pusherServer } from '@/libs/pusher'
 import prisma from '@/libs/prismadb'
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { currentUser } = await serverAuth(req, res)
     const { userId, isGroup, members, name } = req.body
+
     if (!currentUser?.id || !currentUser?.email) {
       throw new Error('Unauthorized')
     }
@@ -37,11 +38,12 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       })
 
       //Update all connections with new conversation
-      // newConversation.users.forEach((user) => {
-      //   if (user.email) {
-      //     pusherServer.trigger(user.email, 'conversation:new', newConversation)
-      //   }
-      // })
+      newConversation.users.forEach((user) => {
+        console.log('server1', user)
+        if (user.email) {
+          pusherServer.trigger(user.email, 'conversation:new', newConversation)
+        }
+      })
 
       return res.json(newConversation)
     }
@@ -82,17 +84,30 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           ],
         },
       },
+      // include: {
+      //   users: true,
+      // },
       include: {
-        users: true,
+        users: {
+          select: {
+            id: true,
+            name: true,
+            profileImage: true,
+            email: true, // Include the 'email' field
+          },
+        },
       },
     })
 
+    console.log('nC', newConversation)
+
     //Update all connections with new conversation
-    // newConversation.users.map((user) => {
-    //   if (user.email) {
-    //     pusherServer.trigger(user.email, 'conversation:new', newConversation)
-    //   }
-    // })
+    newConversation.users.map((user) => {
+      console.log('server2', user.email)
+      if (user.email) {
+        pusherServer.trigger(user.email, 'conversation:new', newConversation)
+      }
+    })
 
     return res.json(newConversation)
   } catch (error: any) {
