@@ -29,7 +29,7 @@ const Form = ({ message, setMessage }) => {
       formData,
       conversationId: conversationId,
     })
-    // just to trigges conversations in cId
+    // just to trigger conversations in cId
     setMessage(formData)
 
     setFormData('')
