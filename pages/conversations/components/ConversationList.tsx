@@ -27,7 +27,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
 }) => {
   const [items, setItems] = useState(initialItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [status, setStatus] = useState('Offline')
 
   const router = useRouter()
   const session = useSession()
@@ -121,15 +120,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
               className='cursor-pointer lg:text-2xl font-bold text-[#ffffff] flex flex-col lg:flex-row gap-2'
             >
               <p>Správy</p>
-              <p
-                className={
-                  status === 'Offline'
-                    ? `bg-yellow-600 text-white border-none px-2`
-                    : `bg-emerald-600 text-white border-none px-2 `
-                }
-              >
-                {status}
-              </p>
             </div>
           </div>
 

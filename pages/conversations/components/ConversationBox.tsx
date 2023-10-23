@@ -91,13 +91,13 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         ) : (
           <div className='flex flex-col'>
             <AvatarChat user={otherUser} />
-            <div
+            {/* <div
               className={
                 isOnline
                   ? `block lg:hidden h-[2px] mt-1 bg-emerald-600`
                   : `block lg:hidden h-[2px] mt-1 bg-red-800`
               }
-            ></div>
+            ></div> */}
           </div>
         )}
         <div className='min-w-0 hidden lg:flex'>
@@ -123,13 +123,13 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
               </div>
             </div>
             <div className='flex flex-row gap-2 items-center'>
-              <div
+              {/* <div
                 className={
                   isOnline
                     ? `bg-emerald-600 h-4 w-4 rounded-xl`
                     : `bg-red-800 h-4 w-4 rounded-xl`
                 }
-              ></div>
+              ></div> */}
               <p
                 className={clsx(
                   `

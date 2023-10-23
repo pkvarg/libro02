@@ -32,8 +32,6 @@ const Home = () => {
     getActions()
   }, [])
 
-  console.log('ind', conversations)
-
   return (
     <div className={clsx('h-full  lg:block')}>
       <ConversationList

@@ -12,7 +12,6 @@ interface AvatarProps {
 const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
   const { members } = useActiveList()
   const isActive = members.indexOf(user?.email!) !== -1
-  //const isActive = true
 
   return (
     <div className='relative'>
@@ -46,7 +45,7 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
             block 
             rounded-full 
             bg-green-500 
-            ring-2 
+            ring-1
             ring-white 
             top-0 
             right-0
