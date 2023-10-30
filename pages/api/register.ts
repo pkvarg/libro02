@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import EmailViaNodemailer from '@/libs/emailViaNodemailer'
 import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 import createRegisterToken from '@/libs/createRegisterToken'
+import checkUserExists from '@/libs/checkUserExists'
 import prisma from '@/libs/prismadb'
 
 export default async function handler(
@@ -21,39 +22,51 @@ export default async function handler(
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        username,
-        name,
-        hashedPassword,
-        isRegistered: false,
-        registerToken,
-        registerTokenExpires,
-      },
-    })
+    const existingUser = await checkUserExists(email)
+    if (existingUser && existingUser.isRegistered) {
+      return res.status(200).json(existingUser)
+    } else if (existingUser && existingUser.isRegistered === false) {
+      await prisma.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          username,
+          name,
+          hashedPassword,
+          registerToken,
+          registerTokenExpires,
+        },
+      })
+      await EmailViaResend(registerURL, email, name, 'reg-link-resend')
+      return res.status(200).json('OK')
+    } else {
+      const user = await prisma.user.create({
+        data: {
+          email,
+          username,
+          name,
+          hashedPassword,
+          isRegistered: false,
+          registerToken,
+          registerTokenExpires,
+        },
+      })
 
-    /* old registration*/
-    // if (type === 'register-nodemailer') {
-    //   await new EmailViaNodemailer(email, username, name, type, url).send()
-    // } else if (type === 'register-resend') {
-    //   await EmailViaResend(url, email, name, type)
-    // }
-
-    /* nodemailer not implemented */
-    if (type === 'reg-link-nodemailer') {
-      await new EmailViaNodemailer(
-        email,
-        username,
-        name,
-        type,
-        registerURL
-      ).send()
-    } else if (type === 'reg-link-resend') {
-      await EmailViaResend(registerURL, email, name, type)
+      /* nodemailer not implemented */
+      if (type === 'reg-link-nodemailer') {
+        await new EmailViaNodemailer(
+          email,
+          username,
+          name,
+          type,
+          registerURL
+        ).send()
+      } else if (type === 'reg-link-resend') {
+        await EmailViaResend(registerURL, email, name, type)
+      }
+      return res.status(200).json('OK')
     }
-
-    return res.status(200).json('OK')
   } catch (error) {
     console.log(error)
     return res.status(400).end()

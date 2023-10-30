@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useCallback, useState, useEffect } from 'react'
-
 import useLoginModal from '@/hooks/useLoginModal'
 import useRegisterModal from '@/hooks/useRegisterModal'
 
@@ -56,18 +55,16 @@ const RegisterModal = () => {
           },
         }
 
-        const { data } = await axios.post(
-          '/api/checkUser',
-          {
-            email,
-          },
-          config
-        )
+        // const { data } = await axios.post(
+        //   '/api/checkUser',
+        //   {
+        //     email,
+        //   },
+        //   config
+        // )
 
-        if (data && data.isRegistered) {
-          toast.error(`Užívateľ s emailom ${email} už existuje`)
-        } else {
-          await axios.post(
+        try {
+          const res = await axios.post(
             '/api/register',
             {
               email,
@@ -80,7 +77,17 @@ const RegisterModal = () => {
             },
             config
           )
-          toast.success('Registračný link bol poslaný na Váš email.')
+
+          console.log(res)
+
+          if (res && res.data.isRegistered) {
+            toast.error(`Užívateľ s emailom ${email} už existuje`)
+          }
+
+          // toast.success('Registračný link bol poslaný na Váš email.')
+        } catch (error) {
+          toast.error(error.message)
+          console.log(error)
         }
 
         setIsLoading(false)
