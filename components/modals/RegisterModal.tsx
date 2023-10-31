@@ -82,9 +82,9 @@ const RegisterModal = () => {
 
           if (res && res.data.isRegistered) {
             toast.error(`Užívateľ s emailom ${email} už existuje`)
+          } else {
+            toast.success('Registračný link bol poslaný na Váš email.')
           }
-
-          // toast.success('Registračný link bol poslaný na Váš email.')
         } catch (error) {
           toast.error(error.message)
           console.log(error)

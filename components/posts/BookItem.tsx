@@ -88,17 +88,21 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
 
   const goToChat = useCallback(
     (ownerId: string) => {
-      setIsLoading(true)
-      axios
-        .post('/api/conversations', {
-          userId: ownerId,
-        })
-        .then((data) => {
-          router.push(`/conversations/${data.data.id}`)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
+      if (whoIsCurrentUser === undefined) {
+        toast.error('Musíte sa prihlásiť')
+      } else {
+        setIsLoading(true)
+        axios
+          .post('/api/conversations', {
+            userId: ownerId,
+          })
+          .then((data) => {
+            router.push(`/conversations/${data.data.id}`)
+          })
+          .finally(() => {
+            setIsLoading(false)
+          })
+      }
     },
     [currentUser, router]
   )
@@ -106,7 +110,7 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
   return (
     <>
       <div
-        //onClick={goToBook}
+        // onClick={goToBook}
         className='
         border-b-[1px] 
         border-neutral-800 
