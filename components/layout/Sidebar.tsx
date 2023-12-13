@@ -70,6 +70,11 @@ const Sidebar = () => {
                   label='Chat'
                 />
                 <SidebarItem
+                  onClick={() => router.push('/newconversations')}
+                  icon={BsChatDots}
+                  label='NewChat'
+                />
+                <SidebarItem
                   onClick={() => signOut()}
                   icon={BiLogOut}
                   label='Odhlásiť'
