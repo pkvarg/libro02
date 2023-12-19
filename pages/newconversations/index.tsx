@@ -9,6 +9,7 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { ably } from '@/libs/ably'
+//import Ably from 'ably/promises'
 
 const Home = () => {
   const { isOpen } = useConversation()
@@ -34,12 +35,21 @@ const Home = () => {
     getActions()
   }, [])
 
-  // useEffect(() => {
-  //   const channel = ably.channels.get('presenting')
-  //   channel.presence.subscribe('enter', (member) => {
-  //     console.log('member entered', member)
-  //   })
-  // }, [])
+  // realtime presence
+  useEffect(() => {
+    // const ably = new ably.Realtime.Promise({
+    //   key: process.env.NEXT_PUBLIC_ABLY_API_KEY,
+    //   clientId: currentUserEmail,
+    // })
+    const doPresence = async () => {
+      await ably.connection.once('connected')
+      console.log('Connected to Ably!')
+      const channel = ably.channels.get('chatroom')
+      await channel.attach()
+      await channel.presence.enter()
+    }
+    doPresence()
+  }, [])
 
   return (
     <div className={clsx('h-full  lg:block')}>

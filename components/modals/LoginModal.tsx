@@ -60,7 +60,8 @@ const LoginModal = () => {
               password,
             })
             toast.success('Úspešné prihlásenie')
-
+            // save email to Local storage for Ably
+            localStorage.setItem('loggedInEmail', email)
             loginModal.onClose()
           } catch (error) {
             console.log(error)

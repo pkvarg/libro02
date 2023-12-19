@@ -4,6 +4,8 @@ import { User } from '@prisma/client'
 
 import useActiveList from '@/hooks/useActiveList'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
+import { ably } from '@/libs/ably'
 
 interface AvatarProps {
   user?: User
@@ -11,7 +13,32 @@ interface AvatarProps {
 
 const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
   const { members } = useActiveList()
+  //let members = []
+  //let isActive
   const isActive = members.indexOf(user?.email!) !== -1
+  console.log(members, isActive)
+  //let isActive = members.includes(user?.email)
+  const channel = ably.channels.get('chatroom')
+  // useEffect(() => {
+  //   const subscribeToPresence = async () => {
+  //     await channel.presence.subscribe((presenceMessage) => {
+  //       const { action, clientId } = presenceMessage
+  //       console.log('Presence update:', action, 'from:', clientId)
+  //     })
+  //     // Update the list of channel members when the presence set changes
+  //     const channelMembers = await channel.presence.get()
+  //     console.log(channelMembers)
+  //     channelMembers.map((member) => {
+  //       members.push(member.clientId)
+  //       isActive = members.includes(user?.email)
+
+  //       console.log('members', members, isActive, user?.email)
+  //       //console.log('uim', user?.email, member.clientId)
+  //     })
+  //   }
+
+  //   subscribeToPresence()
+  // }, [channel, members])
 
   return (
     <div className='relative'>
