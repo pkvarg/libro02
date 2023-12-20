@@ -37,10 +37,6 @@ const Home = () => {
 
   // realtime presence
   useEffect(() => {
-    // const ably = new ably.Realtime.Promise({
-    //   key: process.env.NEXT_PUBLIC_ABLY_API_KEY,
-    //   clientId: currentUserEmail,
-    // })
     const doPresence = async () => {
       await ably.connection.once('connected')
       console.log('Connected to Ably!')

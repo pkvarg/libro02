@@ -1,10 +1,14 @@
+'use client'
 import Ably from 'ably/promises'
 
 const randomId = Math.random().toString(36).slice(-10)
-const savedEmail = localStorage.getItem('loggedInEmail')
-console.log('savedemail', savedEmail)
+let savedEmail: string
+if (typeof localStorage !== 'undefined') {
+  savedEmail = localStorage.getItem('loggedInEmail')
+  console.log('ablyreadsavedemail', savedEmail)
+}
 
 export const ably = new Ably.Realtime.Promise({
   key: process.env.NEXT_PUBLIC_ABLY_API_KEY,
-  clientId: savedEmail,
+  clientId: savedEmail || null,
 })

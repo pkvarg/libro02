@@ -12,33 +12,45 @@ interface AvatarProps {
 }
 
 const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
-  const { members } = useActiveList()
-  //let members = []
-  //let isActive
-  const isActive = members.indexOf(user?.email!) !== -1
-  console.log(members, isActive)
-  //let isActive = members.includes(user?.email)
+  // const { members } = useActiveList()
+  let members = []
+  const [isActive, setIsActive] = useState<boolean>(false)
+  //const isActive = members.indexOf(user?.email!) !== -1
+
+  //const isActive = members?.indexOf(user?.email!) !== -1
+  // let isActive = members.includes('pkvarg@yahoo.se')
+  //const [isActive, setIsActive] = useState(false)
   const channel = ably.channels.get('chatroom')
-  // useEffect(() => {
-  //   const subscribeToPresence = async () => {
-  //     await channel.presence.subscribe((presenceMessage) => {
-  //       const { action, clientId } = presenceMessage
-  //       console.log('Presence update:', action, 'from:', clientId)
-  //     })
-  //     // Update the list of channel members when the presence set changes
-  //     const channelMembers = await channel.presence.get()
-  //     console.log(channelMembers)
-  //     channelMembers.map((member) => {
-  //       members.push(member.clientId)
-  //       isActive = members.includes(user?.email)
+  useEffect(() => {
+    const subscribeToPresence = async () => {
+      await channel.presence.subscribe((presenceMessage) => {
+        const { action, clientId } = presenceMessage
+        console.log('Presence update:', action, 'from:', clientId)
+        if (action === 'leave') {
+          console.log(clientId, 'left')
+          members.filter((member) => member.clientId === clientId)
+          console.log('newDelmem', members, members.indexOf(user?.email!))
+          setIsActive(members.indexOf(user?.email!) !== 1)
+        }
+        if (action === 'enter') {
+          console.log(clientId, 'entered')
+          members.push(clientId)
+          console.log('newEntmem', members)
+          setIsActive(members.indexOf(user?.email!) !== -1)
+        }
+      })
+      // Update the list of channel members when the presence set changes
+      const channelMembers = await channel.presence.get()
+      console.log(channelMembers)
+      channelMembers.map((member) => {
+        members.push(member.clientId)
+        //console.log('members', members, 'isA', isActive)
+        setIsActive(members.indexOf(user?.email!) !== -1)
+      })
+    }
 
-  //       console.log('members', members, isActive, user?.email)
-  //       //console.log('uim', user?.email, member.clientId)
-  //     })
-  //   }
-
-  //   subscribeToPresence()
-  // }, [channel, members])
+    subscribeToPresence()
+  }, [channel, members, user?.email])
 
   return (
     <div className='relative'>

@@ -99,8 +99,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    console.log('nC', newConversation)
-
     //Update all connections with new conversation
     newConversation.users.map((user) => {
       console.log('server2', user.email)
