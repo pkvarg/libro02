@@ -19,8 +19,6 @@ export default async function handler(
 
       const newMessage = await prisma.message.create({
         include: {
-          //seen: true,
-          // sender: true,
           sender: {
             select: {
               // Specify the keys you want to include in the 'sender' object
@@ -40,12 +38,6 @@ export default async function handler(
           sender: {
             connect: { id: currentUser.id },
           },
-
-          // seen: {
-          //   connect: {
-          //     id: currentUser.id,
-          //   },
-          // },
         },
       })
 

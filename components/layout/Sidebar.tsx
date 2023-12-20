@@ -69,11 +69,7 @@ const Sidebar = () => {
                   icon={BsChatDots}
                   label='Chat'
                 />
-                <SidebarItem
-                  onClick={() => router.push('/newconversations')}
-                  icon={BsChatDots}
-                  label='NewChat'
-                />
+
                 <SidebarItem
                   onClick={() => signOut()}
                   icon={BiLogOut}

@@ -18,33 +18,13 @@ export default async function GetMessages(
       },
       include: {
         sender: true,
-        // sender: {
-        //   select: {
-        //     // Specify the keys you want to include in the 'sender' object
-        //     id: true,
-        //     name: true,
-        //     email: true,
-        //     profileImage: true,
-        //   },
-        // },
-        seen: true,
-        // seen: {
-        //   select: {
-        //     // Specify the keys you want to include in the 'sender' object
-        //     id: true,
 
-        //     // Exclude other keys you don't want
-        //     // excludedKey1: false,
-        //     // excludedKey2: false,
-        //   },
-        // },
+        seen: true,
       },
       orderBy: {
         createdAt: 'asc',
       },
     })
-
-    //console.log('msgs', messages)
 
     return res.status(200).json(messages)
   } catch (error: any) {

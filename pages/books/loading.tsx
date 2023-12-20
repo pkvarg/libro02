@@ -1,4 +1,4 @@
-import LoadingModal from '@/pages/conversations/components/LoadingModal'
+import LoadingModal from '../conversations/components/LoadingModal'
 
 const Loading = () => {
   return <LoadingModal />

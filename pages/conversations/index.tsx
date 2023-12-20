@@ -1,6 +1,6 @@
 'use client'
 
-import ConversationList from './components/ConversationList'
+import ConversationList from '@/pages/conversations/components/ConversationList'
 import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
 import EmptyState from '@/pages/conversations/components/EmptyState'
@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { ably } from '@/libs/ably'
 
 const Home = () => {
   const { isOpen } = useConversation()
@@ -29,7 +30,20 @@ const Home = () => {
         setConversations(data?.conversations)
       }
     }
+
     getActions()
+  }, [])
+
+  // realtime presence
+  useEffect(() => {
+    const doPresence = async () => {
+      await ably.connection.once('connected')
+      console.log('Connected to Ably!')
+      const channel = ably.channels.get('chatroom')
+      await channel.attach()
+      await channel.presence.enter()
+    }
+    doPresence()
   }, [])
 
   return (

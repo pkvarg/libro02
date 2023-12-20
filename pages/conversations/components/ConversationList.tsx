@@ -3,13 +3,11 @@
 import { User } from '@prisma/client'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
-import { MdOutlineGroupAdd } from 'react-icons/md'
+import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import SidebarItem from '@/components/layout/SidebarItem'
 import { BsHouseFill } from 'react-icons/bs'
 import useConversation from '@/hooks/useConversation'
-import GroupChatModal from '@/pages/conversations/components/GroupChatModal'
 import ConversationBox from './ConversationBox'
 import { FullConversationType } from '@/types'
 
@@ -23,6 +21,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   initialItems,
   users,
 }) => {
+  const [items, setItems] = useState(initialItems)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const router = useRouter()
@@ -32,11 +31,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   return (
     <>
-      <GroupChatModal
-        users={users}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
       <aside
         className={clsx(
           `
@@ -64,13 +58,21 @@ const ConversationList: React.FC<ConversationListProps> = ({
             </div>
           </div>
 
-          {initialItems?.map((item) => (
-            <ConversationBox
-              key={item.id}
-              data={item}
-              selected={conversationId === item.id}
-            />
-          ))}
+          {!items
+            ? items?.map((item) => (
+                <ConversationBox
+                  key={item.id}
+                  data={item}
+                  selected={conversationId === item.id}
+                />
+              ))
+            : initialItems?.map((item) => (
+                <ConversationBox
+                  key={item.id}
+                  data={item}
+                  selected={conversationId === item.id}
+                />
+              ))}
         </div>
         <div className='ml-6'>
           <SidebarItem

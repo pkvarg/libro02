@@ -2,7 +2,7 @@
 import Header from '@/pages/conversations/components/Header'
 import Body from '@/pages/conversations/components/Body'
 import Form from '@/pages/conversations/components/Form'
-import ConversationList from './components/ConversationList'
+import ConversationList from '@/pages/conversations/components/ConversationList'
 import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
 import { useEffect, useState } from 'react'
@@ -10,7 +10,8 @@ import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import EmptyState from '@/pages/conversations/components/EmptyState'
-import LoadingModal from './components/LoadingModal'
+import LoadingModal from '@/pages/conversations/components/LoadingModal'
+import { ably } from '@/libs/ably'
 
 const ChatId = () => {
   const router = useRouter()
@@ -33,6 +34,9 @@ const ChatId = () => {
         setMessages(data)
       }
 
+      const channel = ably.channels.get(conversationId.toString())
+      channel.subscribe('your-event', getMessages)
+
       getMessages()
     }
   }, [conversationId])
@@ -49,6 +53,8 @@ const ChatId = () => {
       setConversations(data.conversations)
       setIsloading(false)
     }
+    const channel = ably.channels.get(conversationId?.toString())
+    channel.subscribe('your-event', getActions)
 
     getActions()
   }, [conversationId, message])

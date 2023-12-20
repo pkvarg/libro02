@@ -22,13 +22,11 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
         if (action === 'leave') {
           console.log(clientId, 'left')
           members.filter((member) => member.clientId === clientId)
-          console.log('newDelmem', members, members.indexOf(user?.email!))
           setIsActive(members.indexOf(user?.email!) !== 1)
         }
         if (action === 'enter') {
           console.log(clientId, 'entered')
           members.push(clientId)
-          console.log('newEntmem', members)
           setIsActive(members.indexOf(user?.email!) !== -1)
         }
       })

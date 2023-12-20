@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useEffect, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { useSession } from 'next-auth/react'
@@ -22,7 +22,6 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   const otherUser = useOtherUser(data)
   const session = useSession()
   const router = useRouter()
-  const [isOnline, setIsOnline] = useState(false)
 
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`)
@@ -91,13 +90,6 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         ) : (
           <div className='flex flex-col'>
             <AvatarChat user={otherUser} />
-            {/* <div
-              className={
-                isOnline
-                  ? `block lg:hidden h-[2px] mt-1 bg-emerald-600`
-                  : `block lg:hidden h-[2px] mt-1 bg-red-800`
-              }
-            ></div> */}
           </div>
         )}
         <div className='min-w-0 hidden lg:flex'>
@@ -123,13 +115,6 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
               </div>
             </div>
             <div className='flex flex-row gap-2 items-center'>
-              {/* <div
-                className={
-                  isOnline
-                    ? `bg-emerald-600 h-4 w-4 rounded-xl`
-                    : `bg-red-800 h-4 w-4 rounded-xl`
-                }
-              ></div> */}
               <p
                 className={clsx(
                   `

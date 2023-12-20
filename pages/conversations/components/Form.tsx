@@ -1,10 +1,10 @@
 'use client'
 
-import { HiPaperAirplane, HiPhoto } from 'react-icons/hi2'
+import { HiPaperAirplane } from 'react-icons/hi2'
 import axios from 'axios'
-import { CldUploadButton } from 'next-cloudinary'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { ably } from '@/libs/ably'
 
 const Form = ({ message, setMessage }) => {
   const router = useRouter()
@@ -29,8 +29,9 @@ const Form = ({ message, setMessage }) => {
       formData,
       conversationId: conversationId,
     })
-    // just to trigges conversations in cId
     setMessage(formData)
+    const channel = ably.channels.get(conversationId.toString())
+    await channel.publish('your-event', message)
 
     setFormData('')
   }
@@ -49,15 +50,7 @@ const Form = ({ message, setMessage }) => {
         w-full
       '
     >
-      {/* <CldUploadButton
-        options={{ maxFiles: 1 }}
-        onUpload={handleUpload}
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-      >
-        <HiPhoto size={30} className='text-sky-500' />
-      </CldUploadButton> */}
       <form
-        // onSubmit={handleSubmit(onSubmit)}
         onSubmit={handleSubmit}
         className='flex items-center gap-2 lg:gap-4 w-full'
       >
