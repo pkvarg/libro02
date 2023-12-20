@@ -5,7 +5,6 @@ import useCurrentUser from '@/hooks/useCurrentUser'
 //import { useRouter } from 'next/router'
 
 import { useEffect, useCallback } from 'react'
-import Image from 'next/image'
 import Avatar from './Avatar'
 
 const NotificationsFeed = () => {
