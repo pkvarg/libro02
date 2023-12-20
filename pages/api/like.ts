@@ -46,7 +46,9 @@ export default async function handler(
         if (post?.userId) {
           await prisma.notification.create({
             data: {
-              body: 'Niekto ti dal like!',
+              body: `${currentUser.name} ti dal like!`,
+              photo: `${currentUser.profileImage}`,
+              liker: `${currentUser.id}`,
               userId: post.userId,
             },
           })

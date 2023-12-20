@@ -18,21 +18,21 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
     const subscribeToPresence = async () => {
       await channel.presence.subscribe((presenceMessage) => {
         const { action, clientId } = presenceMessage
-        console.log('Presence update:', action, 'from:', clientId)
+        //  console.log('Presence update:', action, 'from:', clientId)
         if (action === 'leave') {
-          console.log(clientId, 'left')
+          //   console.log(clientId, 'left')
           members.filter((member) => member.clientId === clientId)
           setIsActive(members.indexOf(user?.email!) !== 1)
         }
         if (action === 'enter') {
-          console.log(clientId, 'entered')
+          //  console.log(clientId, 'entered')
           members.push(clientId)
           setIsActive(members.indexOf(user?.email!) !== -1)
         }
       })
       // Update the list of channel members when the presence set changes
       const channelMembers = await channel.presence.get()
-      console.log(channelMembers)
+      //  console.log(channelMembers)
       channelMembers.map((member) => {
         members.push(member.clientId)
         setIsActive(members.indexOf(user?.email!) !== -1)

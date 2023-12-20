@@ -12,6 +12,8 @@ const useLike = ({ postId, userId }: { postId: string; userId?: string }) => {
   const { data: fetchedPost, mutate: mutateFetchedPost } = usePost(postId)
   const { mutate: mutateFetchedPosts } = usePosts(userId)
 
+  console.log('useLike', currentUser)
+
   const loginModal = useLoginModal()
 
   const hasLiked = useMemo(() => {
