@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { pusherClient } from '@/libs/pusher'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import MessageBox from './MessageBox'
@@ -23,7 +22,6 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
   // }, [conversationId])
 
   useEffect(() => {
-    pusherClient.subscribe(conversationId.toString())
     bottomRef?.current?.scrollIntoView()
 
     const messageHandler = (message: FullMessageType) => {
@@ -50,15 +48,6 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
           return currentMessage
         })
       )
-    }
-
-    pusherClient.bind('messages:new', messageHandler)
-    pusherClient.bind('message:update', updateMessageHandler)
-
-    return () => {
-      pusherClient.unsubscribe(conversationId.toString())
-      pusherClient.unbind('messages:new', messageHandler)
-      pusherClient.unbind('message:update', updateMessageHandler)
     }
   }, [conversationId])
 

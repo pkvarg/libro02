@@ -41,16 +41,6 @@ export default async function GetConversationById(
         },
       })
 
-      // existingConversation.users.forEach((user) => {
-      //   if (user.email) {
-      //     pusherServer.trigger(
-      //       user.email,
-      //       'conversation:remove',
-      //       existingConversation
-      //     )
-      //   }
-      // })
-
       return res.json(deletedConversation)
     } catch (error) {
       return res.json(null)

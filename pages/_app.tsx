@@ -11,7 +11,6 @@ import ResetPasswordModal from '@/components/modals/ResetPasswordModal'
 import RegistrationLinkModal from '@/components/modals/RegistrationLinkModal'
 import BookModal from '@/components/modals/BookModal'
 import EditBookModal from '@/components/modals/EditBookModal'
-import ActiveStatus from './conversations/components/ActiveStatus'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -25,7 +24,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <BookModal />
       <EditBookModal />
       <Layout>
-        <ActiveStatus />
         <Component {...pageProps} />
       </Layout>
       <Toaster />

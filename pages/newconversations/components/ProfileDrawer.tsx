@@ -7,7 +7,6 @@ import { Conversation, User } from '@prisma/client'
 import { format } from 'date-fns'
 
 import useOtherUser from '@/hooks/useOtherUser'
-import useActiveList from '@/hooks/useActiveList'
 
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
@@ -41,8 +40,6 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
       return data.name || otherUser.name
     }, [data.name, otherUser.name])
   }
-
-  const { members } = useActiveList()
 
   return (
     <>

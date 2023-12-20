@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import serverAuth from '@/libs/serverAuth'
 import prisma from '@/libs/prismadb'
-import { pusherServer } from '@/libs/pusher'
 
 export default async function handler(
   req: NextApiRequest,
@@ -80,17 +79,8 @@ export default async function handler(
         },
       })
 
-      await pusherServer.trigger(conversationId, 'messages:new', newMessage)
-
       const lastMessage =
         updatedConversation.messages[updatedConversation.messages.length - 1]
-
-      updatedConversation.users.map((user) => {
-        pusherServer.trigger(user.email!, 'conversation:update', {
-          id: conversationId,
-          messages: [lastMessage],
-        })
-      })
 
       return res.json(newMessage)
     } catch (error) {

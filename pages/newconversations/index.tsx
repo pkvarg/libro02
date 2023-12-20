@@ -9,7 +9,6 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { ably } from '@/libs/ably'
-//import Ably from 'ably/promises'
 
 const Home = () => {
   const { isOpen } = useConversation()

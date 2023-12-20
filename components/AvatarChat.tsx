@@ -2,7 +2,6 @@
 
 import { User } from '@prisma/client'
 
-import useActiveList from '@/hooks/useActiveList'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { ably } from '@/libs/ably'
@@ -12,14 +11,8 @@ interface AvatarProps {
 }
 
 const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
-  // const { members } = useActiveList()
   let members = []
   const [isActive, setIsActive] = useState<boolean>(false)
-  //const isActive = members.indexOf(user?.email!) !== -1
-
-  //const isActive = members?.indexOf(user?.email!) !== -1
-  // let isActive = members.includes('pkvarg@yahoo.se')
-  //const [isActive, setIsActive] = useState(false)
   const channel = ably.channels.get('chatroom')
   useEffect(() => {
     const subscribeToPresence = async () => {
@@ -44,7 +37,6 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
       console.log(channelMembers)
       channelMembers.map((member) => {
         members.push(member.clientId)
-        //console.log('members', members, 'isA', isActive)
         setIsActive(members.indexOf(user?.email!) !== -1)
       })
     }
