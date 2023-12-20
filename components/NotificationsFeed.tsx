@@ -2,22 +2,22 @@ import { FaBookReader } from 'react-icons/fa'
 
 import useNotifications from '@/hooks/useNotifications'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import { useRouter } from 'next/router'
+//import { useRouter } from 'next/router'
 
 import { useEffect, useCallback } from 'react'
 import Image from 'next/image'
 import Avatar from './Avatar'
 
 const NotificationsFeed = () => {
-  const router = useRouter()
+  // const router = useRouter()
 
-  const goToUser = useCallback(
-    (ev: any, user: string) => {
-      ev.stopPropagation()
-      router.push(`/users/${user}`)
-    },
-    [router]
-  )
+  // const goToUser = useCallback(
+  //   (ev: any, user: string) => {
+  //     ev.stopPropagation()
+  //     router.push(`/users/${user}`)
+  //   },
+  //   [router]
+  // )
 
   const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser()
   const { data: fetchedNotifications = [] } = useNotifications(currentUser?.id)
@@ -38,7 +38,7 @@ const NotificationsFeed = () => {
     <div className='flex flex-col'>
       {fetchedNotifications.map((notification: Record<string, any>) => (
         <div
-          onClick={(ev) => goToUser(ev, notification?.liker)}
+          //onClick={(ev) => goToUser(ev, notification?.liker)}
           key={notification?.id}
           className='flex flex-row items-center px-6 py-2 gap-4 border-b-[1px] border-neutral-800 cursor-pointer'
         >
