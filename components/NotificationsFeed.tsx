@@ -39,15 +39,15 @@ const NotificationsFeed = () => {
       {fetchedNotifications.map((notification: Record<string, any>) => (
         <div
           onClick={(ev) => goToUser(ev, notification?.liker)}
-          key={notification.id}
+          key={notification?.id}
           className='flex flex-row items-center px-6 py-2 gap-4 border-b-[1px] border-neutral-800 cursor-pointer'
         >
           {/* <FaBookReader color='white' size={32} /> */}
           <div className='w-10 h-auto'>
-            <Avatar userId={notification.liker} hasBorder={true} />
+            <Avatar userId={notification?.liker} hasBorder={true} />
           </div>
 
-          <p className='text-white'>{notification.body}</p>
+          <p className='text-white'>{notification?.body}</p>
         </div>
       ))}
     </div>
