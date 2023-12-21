@@ -149,10 +149,8 @@ const UsersPanel = () => {
               </p> */}
                 <p>
                   {
-                    messages.filter(
-                      (message) =>
-                        message.senderId === '64a3e98b5343db0e444ee0fa'
-                    ).length
+                    messages?.filter((message) => user.id === message.senderId)
+                      .length
                   }{' '}
                   Odoslaných správ
                 </p>
@@ -213,10 +211,8 @@ const UsersPanel = () => {
               </p> */}
                 <p>
                   {
-                    messages.filter(
-                      (message) =>
-                        message.senderId === '64a3e98b5343db0e444ee0fa'
-                    ).length
+                    messages.filter((message) => message.senderId === user.id)
+                      .length
                   }{' '}
                   Odoslaných správ
                 </p>

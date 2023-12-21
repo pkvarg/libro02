@@ -77,7 +77,7 @@ const Sidebar = () => {
                 />
                 {currentUser.isAdmin && (
                   <SidebarItem
-                    onClick={() => router.push('admin')}
+                    href='/admin'
                     icon={MdAdminPanelSettings}
                     label='Admin'
                   />

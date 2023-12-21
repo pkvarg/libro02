@@ -19,11 +19,11 @@ const Form = ({ message, setMessage }) => {
 
   const [formData, setFormData] = useState('')
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData(e.target.value)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault()
     await axios.post('/api/messages', {
       formData,

@@ -70,17 +70,17 @@ const AdminPage = () => {
           >
             Tweety
           </h2>
-          <h2
+          {/* <h2
             className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
             onClick={() => setShowChats(true)}
           >
             Chaty
-          </h2>
+          </h2> */}
         </div>
         {showUsers && <UsersPanel />}
         {showBooks && <BooksPanel />}
         {showTweets && <TweetsPanel />}
-        {showChats && <ChatsPanel />}
+        {/* {showChats && <ChatsPanel />} */}
       </div>
     )
   )

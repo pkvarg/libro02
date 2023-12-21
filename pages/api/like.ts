@@ -50,6 +50,8 @@ export default async function handler(
               photo: `${currentUser.profileImage}`,
               liker: `${currentUser.id}`,
               userId: post.userId,
+              postId,
+              postBody: post?.body,
             },
           })
 
