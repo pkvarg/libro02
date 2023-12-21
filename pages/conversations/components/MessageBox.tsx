@@ -9,15 +9,22 @@ import { FullMessageType } from '@/types'
 
 import AvatarChat from '@/components/AvatarChat'
 import ImageModal from './ImageModal'
+import { BsTrash } from 'react-icons/bs'
+import axios from 'axios'
+import DeleteAlert from '@/components/alerts/DeleteAlert'
+import { toast } from 'react-hot-toast'
 
 interface MessageBoxProps {
   data: FullMessageType
   isLast?: boolean
+  rerender: () => void
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
+const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast, rerender }) => {
   const session = useSession()
   const [imageModalOpen, setImageModalOpen] = useState(false)
+  const [showDeleteOption, setShowDeleteOption] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
 
   const isOwn = session.data?.user?.email === data?.sender?.email
   const seenList = (data?.seen || [])
@@ -33,6 +40,27 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
     isOwn ? 'bg-sky-500 text-white' : 'bg-gray-100 text-black',
     data?.image ? 'rounded-md p-0' : 'rounded-full py-2 px-3'
   )
+
+  const handleDeleteMessage = async (messageId: string) => {
+    try {
+      const res = await axios.delete(`/api/messages/deleteOne/${messageId}`)
+      if (res.data === 'OK') {
+        setShowDeleteOption(false)
+        setShowAlert(false)
+        // Update the key to trigger a re-render
+        toast.success('Správa vymazaná')
+        rerender()
+      }
+    } catch (error) {
+      console.log(error)
+      if (error.message === 'Request failed with status code 400')
+        toast.error('Už vymazané')
+    }
+  }
+
+  const handleCancel = () => {
+    setShowAlert(false)
+  }
 
   return (
     <div className={container}>
@@ -68,7 +96,23 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
               '
             />
           ) : (
-            <div>{data?.body}</div>
+            <div
+              onClick={() => setShowDeleteOption((prev) => !prev)}
+              className={isOwn.toString() === 'true' && 'cursor-pointer'}
+            >
+              {data?.body}
+            </div>
+          )}
+          {isOwn && showDeleteOption && (
+            <p onClick={() => setShowAlert(true)} className='cursor-pointer'>
+              <BsTrash className='text-red-600' />
+            </p>
+          )}
+          {showAlert && (
+            <DeleteAlert
+              onDelete={() => handleDeleteMessage(data.id)}
+              onCancel={handleCancel}
+            />
           )}
         </div>
         {isLast && isOwn && seenList.length > 0 && (

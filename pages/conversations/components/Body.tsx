@@ -6,9 +6,10 @@ import { FullMessageType } from './../../../types'
 
 interface BodyProps {
   initialMessages: FullMessageType[]
+  rerender: () => void
 }
 
-const Body: React.FC<BodyProps> = ({ initialMessages }) => {
+const Body: React.FC<BodyProps> = ({ initialMessages, rerender }) => {
   const bottomRef = useRef<HTMLDivElement>(null)
   const [messages, setMessages] = useState(initialMessages)
 
@@ -26,6 +27,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages }) => {
           isLast={i === messages.length - 1}
           key={message.id}
           data={message}
+          rerender={rerender}
         />
       ))}
       <div className='pt-24' ref={bottomRef} />

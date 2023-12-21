@@ -27,6 +27,13 @@ const ChatId = () => {
 
   const [isLoading, setIsloading] = useState(false)
 
+  const [key, setKey] = useState(0)
+
+  const rerender = () => {
+    setKey((prevKey) => prevKey + 1)
+    console.log('set', key)
+  }
+
   useEffect(() => {
     if (conversationId) {
       const getMessages = async () => {
@@ -39,7 +46,7 @@ const ChatId = () => {
 
       getMessages()
     }
-  }, [conversationId])
+  }, [conversationId, key])
 
   // Sidebar
   // if messages and conversations change, update conversations in Sidebar
@@ -57,7 +64,7 @@ const ChatId = () => {
     channel.subscribe('your-event', getActions)
 
     getActions()
-  }, [conversationId, message])
+  }, [conversationId, message, key])
 
   // getConversationById
 
@@ -97,7 +104,7 @@ const ChatId = () => {
           <div className='h-full flex flex-col'>
             <Header conversation={conversation} />
 
-            <Body initialMessages={messages} />
+            <Body initialMessages={messages} rerender={rerender} />
             <Form message={message} setMessage={setMessage} />
           </div>
         </div>
