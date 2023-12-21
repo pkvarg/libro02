@@ -14,4 +14,16 @@ const useNotifications = (userId?: string) => {
   }
 }
 
-export default useNotifications
+const useFollowingNotifications = (userId?: string) => {
+  const url = userId ? `/api/followingNotifications/${userId}` : null
+  const { data, error, isLoading, mutate } = useSWR(url, fetcher)
+
+  return {
+    data,
+    error,
+    isLoading,
+    mutate,
+  }
+}
+
+export { useNotifications, useFollowingNotifications }

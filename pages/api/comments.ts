@@ -39,8 +39,12 @@ export default async function handler(
       if (post?.userId) {
         await prisma.notification.create({
           data: {
-            body: 'Niekto odpovedal na tvoj príspevok!',
+            body: `${currentUser.name} komentoval/a tvoj tweet.`,
+            photo: `${currentUser.profileImage}`,
+            liker: `${currentUser.id}`,
             userId: post.userId,
+            postId,
+            postBody: post?.body,
           },
         })
 

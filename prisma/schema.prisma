@@ -48,6 +48,8 @@ model User {
 
   //accounts Account[]
   messages Message[]
+  FollowingNotifications FollowingNotification[]
+
 
   
 }
@@ -99,6 +101,22 @@ model Notification {
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
 }
+
+model FollowingNotification {
+  id                 String @id @default(auto()) @map("_id") @db.ObjectId
+  body               String
+  photo              String? 
+  follower             String?
+  userId             String @db.ObjectId
+  createdAt          DateTime @default(now())
+
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+}
+
+
+
 
 model Book {
   id                 String @id @default(auto()) @map("_id") @db.ObjectId

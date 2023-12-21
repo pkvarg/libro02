@@ -36,11 +36,14 @@ export default async function handler(
       updatedFollowingIds.push(userId)
 
       // NOTIFICATION PART START
+
       try {
-        await prisma.notification.create({
+        await prisma.followingNotification.create({
           data: {
-            body: 'Máš nového sledovateľa!',
-            userId,
+            body: `${currentUser.name} ťa sleduje.`,
+            photo: `${currentUser.profileImage}`,
+            follower: `${currentUser.id}`,
+            userId: user.id,
           },
         })
 
