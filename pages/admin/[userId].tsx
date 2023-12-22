@@ -5,7 +5,6 @@ import axios from 'axios'
 import Avatar from '@/components/Avatar'
 import { BiArrowBack } from 'react-icons/bi'
 import { BsTrash } from 'react-icons/bs'
-import { set } from 'lodash'
 
 const Page = () => {
   const { data } = getCurrentUser()
@@ -30,7 +29,6 @@ const Page = () => {
   useEffect(() => {
     const getUserById = async () => {
       const { data } = await axios.get(`/api/users/${userId}`)
-      console.log('dt', data)
       setUser(data)
     }
     getUserById()
@@ -45,7 +43,14 @@ const Page = () => {
       `/api/users/delConversationIds/${conversationId}`,
       { userId: userId }
     )
-    console.log('dcv', data)
+    setRerender((prev) => prev + 1)
+  }
+
+  const deleteAllSeenIds = async () => {
+    const { data } = await axios.post(`/api/users/delSeenIds`, {
+      userId: userId,
+    })
+    console.log(data)
     setRerender((prev) => prev + 1)
   }
 
@@ -85,12 +90,19 @@ const Page = () => {
               ))}
           </div>
           <div className='flex flex-col'>
-            <p
-              onClick={() => setShowSeenIds((prev) => !prev)}
-              className='text-gray-500 text-[20px] cursor-pointer'
-            >
-              SeenMessagesIds
-            </p>
+            <div className='flex flex-row items-center gap-2'>
+              <p
+                onClick={() => setShowSeenIds((prev) => !prev)}
+                className='text-gray-500 text-[20px] cursor-pointer'
+              >
+                SeenMessagesIds
+              </p>
+              <BsTrash
+                onClick={deleteAllSeenIds}
+                className='text-red-500 cursor-pointer'
+              />
+            </div>
+
             {showSeenIds &&
               user.seenMessageIds.map((seenId) => <p>{seenId}</p>)}
           </div>
