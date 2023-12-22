@@ -17,6 +17,7 @@ const AdminPage = () => {
   const [showBooks, setShowBooks] = useState(false)
   const [showTweets, setShowTweets] = useState(false)
   const [showChats, setShowChats] = useState(false)
+  const [showUsersItems, setShowUsersItems] = useState(false)
 
   useEffect(() => {
     if (!isAdmin) {

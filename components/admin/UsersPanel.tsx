@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Avatar from '../Avatar'
 import { BsSearch } from 'react-icons/bs'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 const UsersPanel = () => {
+  const router = useRouter()
+
   const [users, setUsers] = useState([])
   const [books, setBooks] = useState([])
   const [conversations, setConversations] = useState([])
@@ -80,6 +83,11 @@ const UsersPanel = () => {
     }
   }
 
+  const handleUserItems = (userId: string) => {
+    console.log(userId)
+    router.push(`/admin/${userId}`)
+  }
+
   return (
     <>
       <h1 className='text-center text-[30px] my-8 '>Užívatelia</h1>
@@ -103,7 +111,12 @@ const UsersPanel = () => {
             <div key={user.id} className='flex flex-col lg:flex-row gap-4'>
               <Avatar userId={user.id} />
               <div className='flex flex-col'>
-                <p className='text-white font-semibold text-sm'>{user.name}</p>
+                <p
+                  onClick={() => handleUserItems(user.id)}
+                  className='text-white font-semibold text-sm cursor-pointer'
+                >
+                  {user.name}
+                </p>
                 <p className='text-neutral-400 text-sm'>@{user.username}</p>
                 <p className='text-neutral-400 text-sm'>{user.email}</p>
               </div>
