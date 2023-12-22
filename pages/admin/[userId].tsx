@@ -47,10 +47,7 @@ const Page = () => {
   }
 
   const deleteAllSeenIds = async () => {
-    const { data } = await axios.post(`/api/users/delSeenIds`, {
-      userId: userId,
-    })
-    console.log(data)
+    await axios.delete(`/api/users/delSeenIds/${userId}`)
     setRerender((prev) => prev + 1)
   }
 

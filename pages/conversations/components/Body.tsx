@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import MessageBox from './MessageBox'
 import { FullMessageType } from './../../../types'
+import axios from 'axios'
 
 interface BodyProps {
   initialMessages: FullMessageType[]
@@ -15,6 +16,10 @@ const Body: React.FC<BodyProps> = ({ initialMessages, rerender }) => {
 
   const router = useRouter()
   const { conversationId } = router.query
+
+  useEffect(() => {
+    axios.post(`/api/conversations/${conversationId}/seen`)
+  }, [conversationId])
 
   useEffect(() => {
     bottomRef?.current?.scrollIntoView()

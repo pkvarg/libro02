@@ -7,9 +7,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === 'POST') {
+  if (req.method === 'DELETE') {
     try {
-      const { userId } = req.body
+      const { userId } = req.query
+
+      if (!userId || typeof userId !== 'string') {
+        throw new Error('Neplatné ID')
+      }
+
       const updatedUser = await prisma.user.update({
         where: {
           id: userId,
