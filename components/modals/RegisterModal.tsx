@@ -75,8 +75,8 @@ const RegisterModal = () => {
               username,
               name,
               url,
-              //type: 'reg-link-nodemailer', // sends reg link email via Nodemailer
-              type: 'reg-link-resend', // send reg link email via Resend
+              type: 'reg-link-nodemailer', // sends reg link email via Nodemailer
+              // type: 'reg-link-resend',
             },
             config
           )

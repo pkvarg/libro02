@@ -4,6 +4,7 @@ import EmailViaNodemailer from '@/libs/emailViaNodemailer'
 import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 import createRegisterToken from '@/libs/createRegisterToken'
 import prisma from '@/libs/prismadb'
+import axios from 'axios'
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,22 +34,29 @@ export default async function handler(
       },
     })
 
-    /* old registration*/
-    // if (type === 'register-nodemailer') {
-    //   await new EmailViaNodemailer(email, username, name, type, url).send()
-    // } else if (type === 'register-resend') {
-    //   await EmailViaResend(url, email, name, type)
-    // }
-
     /* nodemailer not implemented */
     if (type === 'reg-link-nodemailer') {
-      await new EmailViaNodemailer(
-        email,
-        username,
-        name,
-        type,
-        registerURL
-      ).send()
+      const res = await axios.put(
+        'https://tss.pictusweb.com/email/libro/mailer',
+        // 'http://localhost:3010/email/libro/mailer',
+        {
+          email,
+          username,
+          name,
+          type,
+          url: registerURL,
+        }
+      )
+
+      console.log('res', res)
+
+      // await new EmailViaNodemailer(
+      //   email,
+      //   username,
+      //   name,
+      //   type,
+      //   registerURL
+      // ).send()
     } else if (type === 'reg-link-resend') {
       await EmailViaResend(registerURL, email, name, type)
     }

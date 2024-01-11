@@ -38,8 +38,8 @@ const ForgotPasswordModal = () => {
           {
             email,
             url,
-            // type: 'reset-password-nodemailer', // send reset link via Nodemailer
-            type: 'reset-password-resend', // send reset link via Resend
+            type: 'reset-password-nodemailer', // send reset link via Nodemailer
+            // type: 'reset-password-resend', // send reset link via Resend
           },
           config
         )
