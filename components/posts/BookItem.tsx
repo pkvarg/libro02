@@ -29,7 +29,7 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
       ev.stopPropagation()
       router.push(`/users/${data.userId}`)
     },
-    [router, data.userId]
+    [router, data.userId],
   )
 
   const goToBook = useCallback(() => {
@@ -46,7 +46,7 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
 
       toggleLike()
     },
-    [loginModal, currentUser, toggleLike]
+    [loginModal, currentUser, toggleLike],
   )
 
   const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
@@ -88,6 +88,12 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
 
   const goToChat = useCallback(
     (ownerId: string) => {
+      console.log('currentUser', currentUser)
+      if (!currentUser) {
+        loginModal.onOpen()
+        return
+      }
+
       setIsLoading(true)
       axios
         .post('/api/conversations', {
@@ -100,14 +106,14 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
           setIsLoading(false)
         })
     },
-    [currentUser, router]
+    [currentUser, router],
   )
 
   return (
     <>
       <div
         //onClick={goToBook}
-        className='
+        className="
         border-b-[1px] 
         border-neutral-800 
         p-5 
@@ -115,56 +121,46 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
         hover:bg-neutral-900 
         transition
         
-      '
+      "
       >
-        <div className='flex flex-col lg:flex-row gap-3 relative'>
-          <img
-            className='lg:w-[50%] lg:h-[50%]'
-            src={data.bookImage}
-            alt={data.bookTitle}
-          />
+        <div className="flex flex-col lg:flex-row gap-3 relative">
+          <img className="lg:w-[50%] lg:h-[50%]" src={data.bookImage} alt={data.bookTitle} />
 
           <div
-            className='flex flex-col text-white
-                '
+            className="flex flex-col text-white
+                "
           >
             <p
-              className='
+              className="
                 text-[25px]
-            '
+            "
             >
               {data.bookTitle}
             </p>
             <p
-              className='
+              className="
                 text-[22.5px]
-            '
+            "
             >
               {data.bookAuthor}
             </p>
-            <p className='text-[22.5px]'>
-              <span
-                className={
-                  data.bookAvailable ? 'text-[#4bb543]' : 'text-[#ff781f]'
-                }
-              >
+            <p className="text-[22.5px]">
+              <span className={data.bookAvailable ? 'text-[#4bb543]' : 'text-[#ff781f]'}>
                 {data.bookAvailable ? 'Dostupná' : 'Požičaná'}
               </span>{' '}
             </p>
-            <p className='text-[20px]'>
+            <p className="text-[20px]">
               Výpožičná doba: {data.bookLendingDuration}{' '}
               {data.bookLendingDuration !== '1' ? 'mesiace' : 'mesiac'}
             </p>
-            <p className='text-[20px] mb-8 lg:mb-0'>
-              Popis : {data.bookReview}
-            </p>
+            <p className="text-[20px] mb-8 lg:mb-0">Popis : {data.bookReview}</p>
             {/* do not start chat with myself */}
             {whoIsCurrentUser !== whosBook && (
               <div
                 onClick={() => goToChat(data.userId)}
-                className='text-white mt-auto cursor-pointer'
+                className="text-white mt-auto cursor-pointer"
               >
-                <div className='flex items-center gap-2 mb-2 text-[20px] w-fit p-2 rounded-[25px] bg-[#0da6e9]'>
+                <div className="flex items-center gap-2 mb-2 text-[20px] w-fit p-2 rounded-[25px] bg-[#0da6e9]">
                   <p>Kontakt</p>
                   <BsChatDots />
                 </div>
@@ -211,13 +207,13 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
             <div>
               <button
                 onClick={() => setShowAlert(true)}
-                className='cursor-pointer text-[#ff0000] absolute bottom-3 -right-1 lg:-right-1'
+                className="cursor-pointer text-[#ff0000] absolute bottom-3 -right-1 lg:-right-1"
               >
                 <BsTrash />
               </button>
               <button
                 onClick={goToBook}
-                className='border rounded-xl px-2 cursor-pointer absolute bottom-2 right-8 bg-black'
+                className="border rounded-xl px-2 cursor-pointer absolute bottom-2 right-8 bg-black"
               >
                 Upraviť
               </button>
@@ -225,10 +221,7 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
           )}
 
           {showAlert && (
-            <DeleteAlert
-              onDelete={() => handleDelete(data.id)}
-              onCancel={handleCancel}
-            />
+            <DeleteAlert onDelete={() => handleDelete(data.id)} onCancel={handleCancel} />
           )}
         </div>
       </div>

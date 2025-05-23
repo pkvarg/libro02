@@ -5,11 +5,11 @@ import BookFeed from '@/components/posts/BookFeed'
 
 export default function Home() {
   return (
-    <>
-      <Header label='Domov' />
-      <Form placeholder='Zdieľaj niečo' />
+    <div className="">
+      <Header label="Domov" />
+      <Form placeholder="Zdieľaj niečo" />
       {/* <PostFeed /> */}
       <BookFeed />
-    </>
+    </div>
   )
 }

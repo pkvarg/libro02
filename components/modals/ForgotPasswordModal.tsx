@@ -38,10 +38,8 @@ const ForgotPasswordModal = () => {
           {
             email,
             url,
-            type: 'reset-password-nodemailer', // send reset link via Nodemailer
-            // type: 'reset-password-resend', // send reset link via Resend
           },
-          config
+          config,
         )
 
         setIsLoading(false)
@@ -60,10 +58,10 @@ const ForgotPasswordModal = () => {
   }, [email])
 
   const bodyContent = (
-    <div className='flex flex-col gap-4'>
+    <div className="flex flex-col gap-4">
       <Input
         disabled={isLoading}
-        placeholder='Email'
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
@@ -74,8 +72,8 @@ const ForgotPasswordModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={forgotPasswordModal.isOpen}
-      title='Zabudnuté heslo'
-      actionLabel='Poslať link'
+      title="Zabudnuté heslo"
+      actionLabel="Poslať link"
       onClose={forgotPasswordModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}

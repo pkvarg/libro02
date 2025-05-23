@@ -8,7 +8,9 @@ const serverAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions)
 
   if (!session?.user?.email) {
-    throw new Error('Užívateľ neprihlásený 1')
+    console.log('Užívateľ neprihlásený 1')
+    return
+    //throw new Error('Užívateľ neprihlásený 1')
   }
 
   const currentUser = await prisma.user.findUnique({
@@ -20,7 +22,9 @@ const serverAuth = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log('current user is:', currentUser?.name)
 
   if (!currentUser) {
-    throw new Error('Užívateľ neprihlásený 2')
+    console.log('Užívateľ neprihlásený 2')
+    return
+    //throw new Error('Užívateľ neprihlásený 2')
   }
 
   return { currentUser }

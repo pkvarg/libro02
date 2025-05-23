@@ -1,19 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 import createResetToken from '@/libs/createResetToken'
-import EmailViaNodemailer from '@/libs/emailViaNodemailer'
-import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 import axios from 'axios'
 
-export default async function forgotPasswordHandler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function forgotPasswordHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
 
-  const { email, url, name, username, type } = req.body
+  const { email, url, username } = req.body
 
   const existingUser = await prisma.user.findUnique({
     where: {
@@ -23,23 +18,29 @@ export default async function forgotPasswordHandler(
 
   if (existingUser) {
     const { resetURL, resetToken } = await createResetToken(existingUser, url)
+
+    // hono api
+    const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/forgot'
+    //const apiUrl = 'http://localhost:3013/api/librosophia/forgot'
+
+    const origin = 'LIBROSOPHIA'
+
     try {
-      if (type === 'reset-password-nodemailer') {
-        await axios.put(
-          'https://tss.pictusweb.com/email/libro/mailer',
-          //'http://localhost:3010/email/libro/mailer',
-          {
-            email,
-            username,
-            name,
-            type,
-            url: resetURL,
-          }
-        )
-      } else if (type === 'reset-password-resend') {
-        console.log(type)
-        await EmailViaResend(url, email, name, type)
-      }
+      const apiResponse = await axios.put(
+        apiUrl,
+        {
+          name: username,
+          email,
+          resetUrl: resetURL,
+          origin,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      console.log('res', apiResponse)
 
       return res.status(200).json(resetToken)
     } catch (error) {

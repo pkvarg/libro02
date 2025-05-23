@@ -61,11 +61,17 @@ const RegisterModal = () => {
           {
             email,
           },
-          config
+          config,
         )
 
+        if (data && data.isRegistered === false) {
+          toast.error(
+            `Užívateľ s emailom ${email} už existuje, dokončite svoju regostráciu prosím. Info ste obdržali emailom pri prvej registrácii`,
+          )
+        }
+
         if (data && data.isRegistered) {
-          toast.error(`Užívateľ s emailom ${email} už existuje`)
+          toast.error(`Registrovaný užívateľ s emailom ${email} už existuje`)
         } else {
           await axios.post(
             '/api/register',
@@ -75,10 +81,8 @@ const RegisterModal = () => {
               username,
               name,
               url,
-              type: 'reg-link-nodemailer', // sends reg link email via Nodemailer
-              // type: 'reg-link-resend',
             },
-            config
+            config,
           )
           toast.success('Registračný link bol poslaný na Váš email.')
         }
@@ -98,45 +102,45 @@ const RegisterModal = () => {
   }, [email, password, registerModal, username, name, checkedBox])
 
   const bodyContent = (
-    <div className='flex flex-col gap-4'>
+    <div className="flex flex-col gap-4">
       <Input
         disabled={isLoading}
-        placeholder='Email'
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder='Meno'
+        placeholder="Meno"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder='Užívateľské meno'
+        placeholder="Užívateľské meno"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder='Heslo'
-        type='password'
+        placeholder="Heslo"
+        type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <div className='flex ml-2 mt-2 items-center'>
+      <div className="flex ml-2 mt-2 items-center">
         <input
-          className='w-[20px] h-[20px]'
+          className="w-[20px] h-[20px]"
           checked={checkedBox}
-          type='checkbox'
+          type="checkbox"
           onChange={() => setCheckedBox((prev) => !prev)}
         />
         <label
-          className='form-check-label text-[#9ca3af] lg:text-[30px] text-[20px] ml-[15px]'
-          htmlFor='flexCheckDefault'
+          className="form-check-label text-[#9ca3af] lg:text-[30px] text-[20px] ml-[15px]"
+          htmlFor="flexCheckDefault"
         >
           Súhlasím s{' '}
-          <a href='/rules' target='_blank' className='underline !text-sky-500'>
+          <a href="/rules" target="_blank" className="underline !text-sky-500">
             pravidlami siete
           </a>
         </label>
@@ -145,16 +149,16 @@ const RegisterModal = () => {
   )
 
   const footerContent = (
-    <div className='text-neutral-400 text-center mt-4'>
+    <div className="text-neutral-400 text-center mt-4">
       <p>
         Už máte svoj účet?
         <span
           onClick={onToggle}
-          className='
+          className="
             text-white 
             cursor-pointer 
             hover:underline
-            '
+            "
         >
           {' '}
           Prihlásiť sa
@@ -167,8 +171,8 @@ const RegisterModal = () => {
     <Modal
       disabled={isLoading}
       isOpen={registerModal.isOpen}
-      title='Vytvoriť účet'
-      actionLabel='Registrovať'
+      title="Vytvoriť účet"
+      actionLabel="Registrovať"
       onClose={registerModal.onClose}
       onSubmit={onSubmit}
       body={bodyContent}

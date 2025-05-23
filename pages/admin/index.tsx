@@ -5,6 +5,7 @@ import UsersPanel from '@/components/admin/UsersPanel'
 import BooksPanel from '@/components/admin/BooksPanel'
 import TweetsPanel from '@/components/admin/TweetsPanel'
 import ChatsPanel from '@/components/admin/ChatsPanel'
+import Counter from '@/components/admin/Counter'
 
 const AdminPage = () => {
   const { data } = getCurrentUser()
@@ -50,23 +51,23 @@ const AdminPage = () => {
 
   return (
     isAdmin && (
-      <div className='h-[100vh]'>
-        <h1 className='text-center text-[30px] mt-2'>Hello {name}</h1>
-        <div className='flex flex-col lg:flex-row justify-center gap-2 mt-2 mx-4 lg:mx-0'>
+      <div className="h-[100vh]">
+        <h1 className="text-center text-[30px] mt-2">Hello {name}</h1>
+        <div className="flex flex-col lg:flex-row justify-center gap-2 mt-2 mx-4 lg:mx-0">
           <h2
-            className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
+            className="bg-[#09a7e9] rounded-xl px-2 cursor-pointer"
             onClick={() => setShowUsers(true)}
           >
             Užívatelia
           </h2>
           <h2
-            className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
+            className="bg-[#09a7e9] rounded-xl px-2 cursor-pointer"
             onClick={() => setShowBooks(true)}
           >
             Knihy
           </h2>
           <h2
-            className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
+            className="bg-[#09a7e9] rounded-xl px-2 cursor-pointer"
             onClick={() => setShowTweets(true)}
           >
             Tweety
@@ -78,6 +79,7 @@ const AdminPage = () => {
             Chaty
           </h2> */}
         </div>
+        <Counter />
         {showUsers && <UsersPanel />}
         {showBooks && <BooksPanel />}
         {showTweets && <TweetsPanel />}

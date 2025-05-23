@@ -1,28 +1,25 @@
 import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
-import EmailViaNodemailer from '@/libs/emailViaNodemailer'
-import EmailViaResend from '@/libs/emailViaResend/emailViaResend'
 import createRegisterToken from '@/libs/createRegisterToken'
 import prisma from '@/libs/prismadb'
 import axios from 'axios'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
 
   try {
-    const { email, username, name, password, type, url } = req.body
+    const { email, username, name, password, url } = req.body
 
-    const { registerToken, registerTokenExpires, token, registerURL } =
-      await createRegisterToken(email, url)
+    const { registerToken, registerTokenExpires, token, registerURL } = await createRegisterToken(
+      email,
+      url,
+    )
 
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email,
         username,
@@ -34,34 +31,29 @@ export default async function handler(
       },
     })
 
-    /* nodemailer not implemented */
-    if (type === 'reg-link-nodemailer') {
-      const res = await axios.put(
-        'https://tss.pictusweb.com/email/libro/mailer',
-        // 'http://localhost:3010/email/libro/mailer',
+    // hono
+    //const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/register'
+    const apiUrl = 'http://localhost:3013/api/librosophia/register'
+
+    const origin = 'LIBROSOPHIA'
+
+    try {
+      const apiResponse = await axios.put(
+        apiUrl,
+        { name, email, username, registerUrl: registerURL, origin },
         {
-          email,
-          username,
-          name,
-          type,
-          url: registerURL,
-        }
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
       )
+      console.log('res', apiResponse)
 
-      console.log('res', res)
-
-      // await new EmailViaNodemailer(
-      //   email,
-      //   username,
-      //   name,
-      //   type,
-      //   registerURL
-      // ).send()
-    } else if (type === 'reg-link-resend') {
-      await EmailViaResend(registerURL, email, name, type)
+      return res.status(200).json('OK')
+    } catch (error) {
+      console.log(error)
+      return res.status(400).end()
     }
-
-    return res.status(200).json('OK')
   } catch (error) {
     console.log(error)
     return res.status(400).end()

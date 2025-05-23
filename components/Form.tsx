@@ -50,22 +50,21 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
   useEffect(() => {
     // save email to Local storage for Ably
     localStorage.setItem('loggedInEmail', currentUser?.email)
-    console.log('home saving LS', currentUser?.email)
   }, [currentUser])
 
   return (
-    <div className='border-b-[1px] border-neutral-800 px-5 py-2'>
+    <div className="border-b-[1px] border-neutral-800 px-5 py-2">
       {currentUser ? (
-        <div className='flex flex-row gap-4'>
+        <div className="flex flex-row gap-4">
           <div>
             <Avatar userId={currentUser?.id} />
           </div>
-          <div className='w-full'>
+          <div className="w-full">
             <textarea
               disabled={isLoading}
               onChange={(event) => setBody(event.target.value)}
               value={body}
-              className='
+              className="
                 disabled:opacity-80
                 peer
                 resize-none 
@@ -77,39 +76,29 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
                 text-[20px] 
                 placeholder-neutral-500 
                 text-white
-              '
+              "
               placeholder={placeholder}
             ></textarea>
             <hr
-              className='
+              className="
                 opacity-0 
                 peer-focus:opacity-100 
                 h-[1px] 
                 w-full 
                 border-neutral-800 
-                transition'
+                transition"
             />
-            <div className='mt-4 flex flex-row justify-end'>
-              <Button
-                disabled={isLoading || !body}
-                onClick={onSubmit}
-                label='Zdieľať'
-              />
+            <div className="mt-4 flex flex-row justify-end">
+              <Button disabled={isLoading || !body} onClick={onSubmit} label="Zdieľať" />
             </div>
           </div>
         </div>
       ) : (
-        <div className='py-8'>
-          <h1 className='text-white text-2xl text-center mb-4 font-bold'>
-            Vitaj na Librosophii
-          </h1>
-          <div className='flex flex-row items-center justify-center gap-4'>
-            <Button label='Prihlásenie' onClick={loginModal.onOpen} />
-            <Button
-              label='Registrácia'
-              onClick={registerModal.onOpen}
-              secondary
-            />
+        <div className="py-8">
+          <h1 className="text-white text-2xl text-center mb-4 font-bold">Vitaj na Librosophii</h1>
+          <div className="flex flex-row items-center justify-center gap-4">
+            <Button label="Prihlásenie" onClick={loginModal.onOpen} />
+            <Button label="Registrácia" onClick={registerModal.onOpen} secondary />
           </div>
         </div>
       )}
