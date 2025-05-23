@@ -32,8 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     // hono
-    //const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/register'
-    const apiUrl = 'http://localhost:3013/api/librosophia/register'
+    const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/register'
+    //const apiUrl = 'http://localhost:3013/api/librosophia/register'
 
     const origin = 'LIBROSOPHIA'
 
