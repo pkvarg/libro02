@@ -68,13 +68,19 @@ const Footer = () => {
         declineButtonText={'Nesúhlasím'}
         onAccept={() => {
           incrementCount()
+          // Load Umami script on consent
+          const script = document.createElement('script')
+          script.defer = true
+          script.src = 'https://umami-p00gs00gwcwo00s4k4c4kgg8.pictusweb.com/script.js'
+          script.setAttribute('data-website-id', '2ad99828-4e2f-4bcd-acbc-ed2e0ce40322')
+          document.head.appendChild(script)
         }}
         contentStyle={{
           flex: '1',
           margin: '0',
         }}
       >
-        {'Táto stránka používa len pre fungovanie webu nevyhnutné cookies.'}
+        {'Táto stránka používa nevyhnutné cookies pre fungovanie webu a anonymné analytické nástroje na zlepšenie užívateľského zážitku.'}
       </CookieConsent>
       <Link className="text-[15px]" href={'https://cestazivota.sk'} target="_blank">
         &copy; {Date().substring(11, 15)} cestazivota.sk
