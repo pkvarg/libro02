@@ -26,7 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const client = new Ably.Rest({ key })
     const tokenRequest = await client.auth.createTokenRequest({
-      clientId: currentUser.email,
+      // Presence is visible to every member, so it carries the user id, not the e-mail.
+      clientId: currentUser.id,
       capability: JSON.stringify(capability),
     })
     return res.status(200).json(tokenRequest)

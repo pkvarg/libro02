@@ -30,9 +30,13 @@ export default async function handler(
       throw new Error('Invalid ID')
     }
 
-    let updatedFollowingIds = [...(user.followingIds || [])]
+    // The list being changed is the current user's own, not the followed user's.
+    let updatedFollowingIds = [...(currentUser.followingIds || [])]
 
     if (req.method === 'POST') {
+      if (userId === currentUser.id || updatedFollowingIds.includes(userId)) {
+        return res.status(200).json(currentUser)
+      }
       updatedFollowingIds.push(userId)
 
       // NOTIFICATION PART START

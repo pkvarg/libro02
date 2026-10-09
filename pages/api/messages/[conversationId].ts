@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 import { requireUser } from '@/libs/requireUser'
+import { chatUserSelect } from '@/libs/userFields'
 
 export default async function GetMessages(
   req: NextApiRequest,
@@ -24,9 +25,9 @@ export default async function GetMessages(
         conversationId: conversationId,
       },
       include: {
-        sender: true,
+        sender: { select: chatUserSelect },
 
-        seen: true,
+        seen: { select: chatUserSelect },
       },
       orderBy: {
         createdAt: 'asc',

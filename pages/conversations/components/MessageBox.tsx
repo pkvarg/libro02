@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import { useState } from 'react'
 import { format } from 'date-fns'
-import { useSession } from 'next-auth/react'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import { FullMessageType } from '@/types'
 
 import AvatarChat from '@/components/AvatarChat'
@@ -21,14 +21,15 @@ interface MessageBoxProps {
 }
 
 const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast, rerender }) => {
-  const session = useSession()
+  const { data: currentUser } = useCurrentUser()
   const [imageModalOpen, setImageModalOpen] = useState(false)
   const [showDeleteOption, setShowDeleteOption] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
 
-  const isOwn = session.data?.user?.email === data?.sender?.email
+  // Chat data carries ids, not e-mails.
+  const isOwn = !!currentUser?.id && currentUser.id === data?.sender?.id
   const seenList = (data?.seen || [])
-    .filter((user) => user.email !== data?.sender?.email)
+    .filter((user) => user.id !== data?.sender?.id)
     .map((user) => user.name)
     .join(', ')
 

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import serverAuth from '@/libs/serverAuth'
+import { requireUser } from '@/libs/requireUser'
 import prisma from '@/libs/prismadb'
 
 export default async function handler(
@@ -11,17 +11,18 @@ export default async function handler(
     return res.status(405).end()
   }
 
-  const { currentUser } = await serverAuth(req, res)
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
   const { commentId } = req.query
 
   if (!commentId || typeof commentId !== 'string') {
-    throw new Error('Invalid ID')
+    return res.status(400).end()
   }
 
   try {
     // Only the author or an admin may delete a comment.
     const existing = await prisma.comment.findUnique({ where: { id: commentId } })
-    if (!currentUser || !existing || (existing.userId !== currentUser.id && !currentUser.isAdmin)) {
+    if (!existing || (existing.userId !== currentUser.id && !currentUser.isAdmin)) {
       return res.status(403).end()
     }
     const comment = await prisma.comment.delete({

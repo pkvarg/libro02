@@ -7,7 +7,6 @@ import useRegisterModal from '@/hooks/useRegisterModal'
 import useForgotPasswordModal from '@/hooks/useForgotPasswordModal'
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-hot-toast'
-import axios from 'axios'
 
 const LoginModal = () => {
   const loginModal = useLoginModal()
@@ -37,33 +36,21 @@ const LoginModal = () => {
         setIsLoading(true)
 
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+        // The server decides; wrong password, unknown or unconfirmed account all get the same answer.
+        const result = await signIn('credentials', {
+          email,
+          password,
+          redirect: false,
+        })
 
-        const { data } = await axios.post(
-          '/api/checkUser',
-          {
-            email,
-          },
-          config
-        )
-
-        if (data.isRegistered && data.active) {
-          try {
-            const data = await signIn('credentials', {
-              email,
-              password,
-            })
-            toast.success('Úspešné prihlásenie')
-            loginModal.onClose()
-          } catch (error) {
-            console.log(error)
-          }
+        if (result?.ok && !result.error) {
+          toast.success('Úspešné prihlásenie')
+          loginModal.onClose()
+          window.location.reload()
+        } else if (result?.error?.startsWith('Príliš veľa')) {
+          toast.error(result.error)
         } else {
-          toast.error('Užívateľ nie je registrovaný!')
+          toast.error('Nesprávny e-mail alebo heslo, alebo účet ešte nie je potvrdený')
         }
       } catch (error) {
         console.log(error, 'Nastala chyba')

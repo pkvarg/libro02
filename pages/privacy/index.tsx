@@ -16,7 +16,7 @@ const sections: LegalSection[] = [
     body: [
       'Údaje: e-mail, meno, používateľské meno, heslo (uložené len v zašifrovanej podobe), popis „O vás“, profilová a titulná fotografia, koho sledujete a kto sleduje vás.',
       'Librosophia je sieť na požičiavanie kresťanských kníh, preto už samotné členstvo a obsah, ktorý zdieľate, môžu prezrádzať vaše náboženské presvedčenie (osobitná kategória údajov podľa čl. 9 GDPR). Údaje preto spracúvame na základe vášho výslovného súhlasu, ktorý udeľujete pri registrácii (čl. 6 ods. 1 písm. a) a čl. 9 ods. 2 písm. a) GDPR). Registrovať sa môžu osoby od 16 rokov.',
-      'Váš profil, príspevky, knihy a komentáre vidia len prihlásení členovia siete. Vašu e-mailovú adresu ostatným členom nezobrazujeme; používa sa na prihlásenie a technicky aj na fungovanie chatu.',
+      'Názov, autor, obálka a dostupnosť ponúkaných kníh sú viditeľné aj bez prihlásenia, bez údajov o tom, kto knihu ponúka; profil, príspevky, popisy kníh a komentáre vidia len prihlásení členovia. Vašu e-mailovú adresu ostatným členom nezobrazujeme; používa sa na prihlásenie.',
       'Súhlas môžete kedykoľvek odvolať zrušením konta (Upraviť profil → Zrušiť konto) alebo e-mailom na info@librosophia.sk. Konto sa hneď zablokuje a váš obsah sa skryje; natrvalo ho vymažeme najneskôr do 30 dní. Odvolanie nemá vplyv na zákonnosť spracúvania pred ním.',
       'Doba uchovávania: do zrušenia konta, po žiadosti o zrušenie najviac 30 dní.',
     ],

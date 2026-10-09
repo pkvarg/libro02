@@ -51,50 +51,29 @@ const RegisterModal = () => {
         setIsLoading(true)
 
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-
-        const { data } = await axios.post(
-          '/api/checkUser',
+        await axios.post(
+          '/api/register',
           {
             email,
+            password,
+            username,
+            name,
+            url,
+            consent: true,
           },
-          config,
+          { headers: { 'Content-Type': 'application/json' } },
         )
-
-        if (data && data.isRegistered === false) {
-          toast.error(
-            `Užívateľ s emailom ${email} už existuje, dokončite svoju regostráciu prosím. Info ste obdržali emailom pri prvej registrácii`,
-          )
-        }
-
-        if (data && data.isRegistered) {
-          toast.error(`Registrovaný užívateľ s emailom ${email} už existuje`)
-        } else {
-          await axios.post(
-            '/api/register',
-            {
-              email,
-              password,
-              username,
-              name,
-              url,
-              consent: true,
-            },
-            config,
-          )
-          toast.success('Registračný link bol poslaný na Váš email.')
-        }
+        // Same message for new and already registered e-mails, so the form reveals nothing.
+        toast.success('Ak tento e-mail ešte nie je zaregistrovaný, poslali sme naň registračný link.', {
+          duration: 6000,
+        })
 
         setIsLoading(false)
 
         registerModal.onClose()
-      } catch (error) {
-        toast.error('Nastala chyba')
-        console.log(error)
+      } catch (error: any) {
+        const message = error?.response?.data
+        toast.error(typeof message === 'string' && message ? message : 'Nastala chyba')
       } finally {
         setIsLoading(false)
       }

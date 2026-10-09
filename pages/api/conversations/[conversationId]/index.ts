@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
-import serverAuth from '@/libs/serverAuth'
+import { requireUser } from '@/libs/requireUser'
+import { chatUserSelect } from '@/libs/userFields'
 
 export default async function GetConversationById(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { currentUser } = await serverAuth(req, res)
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
   const { conversationId } = req.query
 
   if (req.method === 'DELETE') {
@@ -22,9 +24,6 @@ export default async function GetConversationById(
       const existingConversation = await prisma.conversation.findUnique({
         where: {
           id: conversationId,
-        },
-        include: {
-          users: true,
         },
       })
 
@@ -60,7 +59,7 @@ export default async function GetConversationById(
           id: conversationId,
         },
         include: {
-          users: true,
+          users: { select: chatUserSelect },
         },
       })
 

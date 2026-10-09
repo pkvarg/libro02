@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '@/libs/prismadb'
 import { requireUser } from '@/libs/requireUser'
+import { publicUserSelect } from '@/libs/userFields'
 
 export default async function handler(
   req: NextApiRequest,
@@ -29,10 +30,10 @@ export default async function handler(
           id: postId,
         },
         include: {
-          user: true,
+          user: { select: publicUserSelect },
           comments: {
             include: {
-              user: true,
+              user: { select: publicUserSelect },
             },
             orderBy: {
               createdAt: 'desc',
@@ -40,6 +41,11 @@ export default async function handler(
           },
         },
       })
+
+      // A hidden post stays visible only to its author and admins.
+      if (!post || (post.active === false && post.userId !== currentUser.id && !currentUser.isAdmin)) {
+        return res.status(404).end()
+      }
 
       return res.status(200).json(post)
     } catch (error) {
@@ -51,8 +57,6 @@ export default async function handler(
   if (req.method === 'DELETE') {
     try {
       const { postId } = req.query
-
-      console.log('PO-DEL', postId)
 
       if (!postId || typeof postId !== 'string') {
         throw new Error('Neplatné ID')

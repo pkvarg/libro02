@@ -33,6 +33,10 @@ export default async function handler(
     let updatedLikedIds = [...(post.likedIds || [])]
 
     if (req.method === 'POST') {
+      // One like per member; repeated requests must not add likes or notifications.
+      if (updatedLikedIds.includes(currentUser.id)) {
+        return res.status(200).json(post)
+      }
       updatedLikedIds.push(currentUser.id)
 
       // NOTIFICATION PART START

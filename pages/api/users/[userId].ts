@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 import { requireAdmin, requireUser } from '@/libs/requireUser'
 import purgeUser from '@/libs/purgeUser'
+import { profileUserSelect } from '@/libs/userFields'
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,12 +17,17 @@ export default async function handler(
         return
         //throw new Error('Neplatné ID')
       }
-      let existingUser
-      existingUser = await prisma.user.findUnique({
+      // Own profile and admins get the full record; other members the public profile.
+      const fullRecord = userId === currentUser.id || !!currentUser.isAdmin
+      const existingUser = await prisma.user.findUnique({
         where: {
           id: userId,
         },
+        ...(fullRecord ? {} : { select: profileUserSelect }),
       })
+      if (!existingUser) {
+        return res.status(404).end()
+      }
 
       const followersCount = await prisma.user.count({
         where: {

@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import serverAuth from '@/libs/serverAuth'
 import prisma from '@/libs/prismadb'
+import { requireUser } from '@/libs/requireUser'
+import { publicUserSelect, visibleContent } from '@/libs/userFields'
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,9 +30,9 @@ export default async function handler(
     }
 
     if (req.method === 'GET') {
+      const currentUser = await requireUser(req, res)
+      if (!currentUser) return
       const { userId } = req.query
-
-      console.log({ userId })
 
       let posts
 
@@ -38,9 +40,10 @@ export default async function handler(
         posts = await prisma.post.findMany({
           where: {
             userId,
+            ...visibleContent(currentUser.isAdmin),
           },
           include: {
-            user: true,
+            user: { select: publicUserSelect },
             comments: true,
           },
           orderBy: {
@@ -49,8 +52,9 @@ export default async function handler(
         })
       } else {
         posts = await prisma.post.findMany({
+          where: visibleContent(currentUser.isAdmin),
           include: {
-            user: true,
+            user: { select: publicUserSelect },
             comments: true,
           },
           orderBy: {

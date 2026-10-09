@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { formatDistanceToNowStrict } from 'date-fns'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import Avatar from '../Avatar'
@@ -16,7 +16,6 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
   const router = useRouter()
   const { data: currentUser } = useCurrentUser()
   const [showAlert, setShowAlert] = useState<boolean>(false)
-  const [whosPost, setWhosPost] = useState<string>('')
 
   const goToUser = useCallback(
     (ev: any) => {
@@ -37,36 +36,19 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
 
   const whoIsCurrentUser = currentUser?.id
   const whosComment = data?.userId
-  const postIsCommented = router.query?.postId
+  // Same rule as the server: the comment's author or an admin.
+  const mayDelete = !!whoIsCurrentUser && (whoIsCurrentUser === whosComment || !!currentUser?.isAdmin)
 
-  useEffect(() => {
-    if (postIsCommented !== undefined) {
-      try {
-        const checkWhosPostIsCommented = async () => {
-          const { data } = await axios.get(`/api/posts/${postIsCommented}`)
-          setWhosPost(data?.userId)
-        }
-        checkWhosPostIsCommented()
-      } catch (error) {
-        console.log(error)
-      }
+  const handleDelete = async (commentId: String) => {
+    try {
+      await axios.delete(`/api/comments/${commentId}`)
+      toast.success('Komentár vymazaný')
+      router.reload()
+    } catch (error) {
+      toast.error('Komentár sa nepodarilo vymazať')
+    } finally {
+      setShowAlert(false)
     }
-  }, [postIsCommented])
-
-  const handleDelete = async (commentId: String, userId: String) => {
-    if (commentId !== undefined && whosComment === userId) {
-      setShowAlert(true)
-
-      try {
-        const response = await axios.delete(`/api/comments/${commentId}`)
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    toast.success('Príspevok vymazaný!')
-
-    router.reload()
-    setShowAlert(false)
   }
 
   const handleCancel = () => {
@@ -116,17 +98,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
           <div className='text-white mt-1'>{data.body}</div>
         </div>
       </div>
-      {whoIsCurrentUser === whosComment && (
-        <div className='relative'>
-          <button
-            onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-0'
-          >
-            <BsTrash />
-          </button>
-        </div>
-      )}
-      {whoIsCurrentUser === whosPost && (
+      {mayDelete && (
         <div className='relative'>
           <button
             onClick={() => setShowAlert(true)}
@@ -138,7 +110,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
       )}
       {showAlert && (
         <DeleteAlert
-          onDelete={() => handleDelete(data.id, data.user.id)}
+          onDelete={() => handleDelete(data.id)}
           onCancel={handleCancel}
         />
       )}

@@ -8,24 +8,18 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const { currentUser } = await serverAuth(req, res)
     const { conversationId } = req.query
 
-    console.log('seen', currentUser?.id, conversationId)
-
     if (!currentUser?.id || !currentUser?.email) {
       throw new Error('Neplatné ID')
     }
 
-    // Find existing conversation
     const conversation = await prisma.conversation.findUnique({
       where: {
         id: conversationId.toString(),
       },
       include: {
         messages: {
-          include: {
-            seen: true,
-          },
+          select: { id: true, seenIds: true },
         },
-        users: true,
       },
     })
 
@@ -33,21 +27,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       throw new Error('Neplatné ID')
     }
 
-    // Find last message
     const lastMessage = conversation.messages[conversation.messages.length - 1]
 
-    if (!lastMessage) {
-      return res.json(conversation)
+    // Nothing to mark; the response carries no conversation data.
+    if (!lastMessage || lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
+      return res.json('Success')
     }
 
-    // Update seen of last message
-    const updatedMessage = await prisma.message.update({
+    await prisma.message.update({
       where: {
         id: lastMessage.id,
-      },
-      include: {
-        sender: true,
-        seen: true,
       },
       data: {
         seen: {
@@ -57,20 +46,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         },
       },
     })
-
-    // Update all connections with new seen
-    // await pusherServer.trigger(currentUser.email, 'conversation:update', {
-    //   id: conversationId,
-    //   messages: [updatedMessage]
-    // });
-
-    // If user has already seen the message, no need to go further
-    if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
-      return res.json(conversation)
-    }
-
-    // Update last message seen
-    //await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
 
     return res.json('Success')
   } catch (error) {

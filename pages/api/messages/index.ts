@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import serverAuth from '@/libs/serverAuth'
+import { requireAdmin } from '@/libs/requireUser'
+import { chatUserSelect } from '@/libs/userFields'
 import prisma from '@/libs/prismadb'
 
 export default async function handler(
@@ -25,15 +27,7 @@ export default async function handler(
 
       const newMessage = await prisma.message.create({
         include: {
-          sender: {
-            select: {
-              // Specify the keys you want to include in the 'sender' object
-              id: true,
-              name: true,
-              email: true,
-              profileImage: true,
-            },
-          },
+          sender: { select: chatUserSelect },
         },
         data: {
           body: message,
@@ -60,18 +54,10 @@ export default async function handler(
           },
         },
         include: {
-          // users: true,
-          users: {
-            select: {
-              // Specify the keys you want to include in the 'sender' object
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
+          users: { select: chatUserSelect },
           messages: {
             include: {
-              seen: true,
+              seen: { select: chatUserSelect },
             },
           },
         },
@@ -86,8 +72,11 @@ export default async function handler(
       return res.status(500).json('Error')
     }
   } else if (req.method === 'GET') {
+    // Only the admin member list uses this, to count sent messages; never message contents.
+    const admin = await requireAdmin(req, res)
+    if (!admin) return
     try {
-      const messages = await prisma.message.findMany()
+      const messages = await prisma.message.findMany({ select: { id: true, senderId: true } })
       return res.json(messages)
     } catch (error) {
       return res.status(500).json('Error')

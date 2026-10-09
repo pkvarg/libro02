@@ -153,7 +153,8 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
               Výpožičná doba: {data.bookLendingDuration}{' '}
               {data.bookLendingDuration !== '1' ? 'mesiace' : 'mesiac'}
             </p>
-            <p className="text-[20px] mb-8 lg:mb-0">Popis : {data.bookReview}</p>
+            {/* Logged-out visitors get no description (members only). */}
+            {data.bookReview && <p className="text-[20px] mb-8 lg:mb-0">Popis : {data.bookReview}</p>}
             {/* do not start chat with myself */}
             {whoIsCurrentUser !== whosBook && (
               <div

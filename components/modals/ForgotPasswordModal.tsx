@@ -42,12 +42,12 @@ const ForgotPasswordModal = () => {
 
         setIsLoading(false)
 
-        toast.success('Link odoslaný na zadaný email.')
+        toast.success('Ak je e-mail zaregistrovaný, poslali sme naň odkaz na zmenu hesla.', { duration: 6000 })
         forgotPasswordModal.onClose()
-      } catch (error) {
-        toast.error('Nastala chyba')
-        console.log(error)
-        forgotPasswordModal.onClose()
+      } catch (error: any) {
+        const message = error?.response?.data
+        toast.error(typeof message === 'string' && message ? message : 'Nastala chyba')
+        setIsLoading(false)
       }
     } else {
       setIsLoading(false)

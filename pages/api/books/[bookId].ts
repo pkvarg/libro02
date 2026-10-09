@@ -62,6 +62,14 @@ export default async function handler(
         })
       }
 
+      // A hidden book stays visible only to its owner and admins.
+      if (
+        !book ||
+        (!Array.isArray(book) && book.active === false && book.userId !== currentUser.id && !currentUser.isAdmin)
+      ) {
+        return res.status(404).end()
+      }
+
       return res.status(200).json(book)
     } catch (error) {
       console.log(error)

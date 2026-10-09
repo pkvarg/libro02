@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { useSession } from 'next-auth/react'
+import useCurrentUser from '@/hooks/useCurrentUser'
 import clsx from 'clsx'
 import AvatarChat from '@/components/AvatarChat'
 import useOtherUser from '@/hooks/useOtherUser'
@@ -20,7 +20,6 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   selected,
 }) => {
   const otherUser = useOtherUser(data)
-  const session = useSession()
   const router = useRouter()
 
   const handleClick = useCallback(() => {
@@ -33,10 +32,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     return messages[messages.length - 1]
   }, [data?.messages])
 
-  const userEmail = useMemo(
-    () => session.data?.user?.email,
-    [session.data?.user?.email]
-  )
+  const { data: currentUser } = useCurrentUser()
+  const userId = currentUser?.id
 
   const hasSeen = useMemo(() => {
     if (!lastMessage) {
@@ -45,12 +42,12 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
 
     const seenArray = lastMessage.seen || []
 
-    if (!userEmail) {
+    if (!userId) {
       return false
     }
 
-    return seenArray.filter((user) => user.email === userEmail).length !== 0
-  }, [userEmail, lastMessage])
+    return seenArray.filter((user) => user.id === userId).length !== 0
+  }, [userId, lastMessage])
 
   const lastMessageText = useMemo(() => {
     if (lastMessage?.image) {

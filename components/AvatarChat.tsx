@@ -22,12 +22,12 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
         if (action === 'leave') {
           //   console.log(clientId, 'left')
           members.filter((member) => member.clientId === clientId)
-          setIsActive(members.indexOf(user?.email!) !== 1)
+          setIsActive(members.indexOf(user?.id!) !== 1)
         }
         if (action === 'enter') {
           //  console.log(clientId, 'entered')
           members.push(clientId)
-          setIsActive(members.indexOf(user?.email!) !== -1)
+          setIsActive(members.indexOf(user?.id!) !== -1)
         }
       })
       // Update the list of channel members when the presence set changes
@@ -35,12 +35,12 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
       //  console.log(channelMembers)
       channelMembers.map((member) => {
         members.push(member.clientId)
-        setIsActive(members.indexOf(user?.email!) !== -1)
+        setIsActive(members.indexOf(user?.id!) !== -1)
       })
     }
 
     subscribeToPresence()
-  }, [channel, members, user?.email])
+  }, [channel, members, user?.id])
 
   return (
     <div className='relative'>

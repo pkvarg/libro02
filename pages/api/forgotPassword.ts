@@ -3,34 +3,44 @@ import prisma from '@/libs/prismadb'
 import siteUrl from '@/libs/siteUrl'
 import createResetToken from '@/libs/createResetToken'
 import axios from 'axios'
+import isRateLimited, { clientIp } from '@/libs/rateLimit'
 
 export default async function forgotPasswordHandler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
 
-  const { email, url, username } = req.body
+  const { email, url } = req.body
 
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: email,
-    },
-  })
+  if (
+    isRateLimited(`forgot-ip:${clientIp(req)}`, 10, 60 * 60 * 1000) ||
+    (typeof email === 'string' && isRateLimited(`forgot:${email.toLowerCase()}`, 3, 60 * 60 * 1000))
+  ) {
+    return res.status(429).json('Príliš veľa pokusov, skúste to neskôr')
+  }
 
-  if (existingUser) {
-    const { resetURL } = await createResetToken(existingUser, siteUrl(url))
+  try {
+    const existingUser =
+      typeof email === 'string' && email
+        ? await prisma.user.findUnique({
+            where: {
+              email: email,
+            },
+          })
+        : null
 
-    // hono api
-    const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/forgot'
-    //const apiUrl = 'http://localhost:3013/api/librosophia/forgot'
+    // Only confirmed, active accounts get a link; every request gets the same answer.
+    if (existingUser && existingUser.isRegistered && existingUser.active !== false) {
+      const { resetURL } = await createResetToken(existingUser, siteUrl(url))
 
-    const origin = 'LIBROSOPHIA'
+      const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/forgot'
 
-    try {
-      const apiResponse = await axios.put(
+      const origin = 'LIBROSOPHIA'
+
+      await axios.put(
         apiUrl,
         {
-          name: username,
+          name: existingUser.name,
           email,
           resetUrl: resetURL,
           origin,
@@ -41,13 +51,10 @@ export default async function forgotPasswordHandler(req: NextApiRequest, res: Ne
           },
         },
       )
-      console.log('res', apiResponse)
-
-      // The token travels only in the e-mail; returning it here would let anyone reset any account.
-      return res.status(200).json('OK')
-    } catch (error) {
-      console.log(error)
-      return res.status(400).end()
     }
+  } catch (error) {
+    console.log(error)
   }
+
+  return res.status(200).json('OK')
 }

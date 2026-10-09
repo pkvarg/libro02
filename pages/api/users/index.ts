@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 import { requireUser } from '@/libs/requireUser'
+import { publicUserSelect } from '@/libs/userFields'
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,6 +24,8 @@ export default async function handler(
       orderBy: {
         createdAt: 'desc',
       },
+      // Admins manage accounts and need full records; members get public profiles only.
+      ...(currentUser.isAdmin ? {} : { select: publicUserSelect }),
     })
     return res.status(200).json(users)
   } catch (error) {

@@ -1,14 +1,19 @@
-import serverAuth from '@/libs/serverAuth'
+import { requireUser } from '@/libs/requireUser'
+import { chatUserSelect } from '@/libs/userFields'
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).end()
+  }
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
   try {
-    const { currentUser } = await serverAuth(req, res)
     const { userId, isGroup, members, name } = req.body
 
-    if (!currentUser?.id || !currentUser?.email) {
-      throw new Error('Unauthorized')
+    if (!isGroup && (typeof userId !== 'string' || !/^[a-f0-9]{24}$/i.test(userId) || userId === currentUser.id)) {
+      return res.status(400).json('Neplatné ID')
     }
 
     if (isGroup && (!members || members.length < 2 || !name)) {
@@ -32,7 +37,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
           },
         },
         include: {
-          users: true,
+          users: { select: chatUserSelect },
         },
       })
 
@@ -79,19 +84,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       //   users: true,
       // },
       include: {
-        users: {
-          select: {
-            id: true,
-            name: true,
-            profileImage: true,
-            email: true, // Include the 'email' field
-          },
-        },
+        users: { select: chatUserSelect },
       },
     })
 
     return res.json(newConversation)
   } catch (error: any) {
-    throw new Error('Internal error')
+    console.log(error)
+    return res.status(400).end()
   }
 }
