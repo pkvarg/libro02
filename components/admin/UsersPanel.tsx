@@ -3,6 +3,7 @@ import Avatar from '../Avatar'
 import Link from 'next/link'
 import { AdminSearch, StatusToggle } from './AdminUi'
 import axios from 'axios'
+import { mutate } from 'swr'
 import { useRouter } from 'next/router'
 
 const UsersPanel = () => {
@@ -76,6 +77,7 @@ const UsersPanel = () => {
     const { data } = await axios.delete(`/api/users/${user.id}`)
     if (data === 'OK') {
       getUsers()
+      mutate('/api/users')
     }
   }
 
@@ -120,8 +122,33 @@ const UsersPanel = () => {
 
   const list = showAllUsers ? users : showSearchResults ? searchResults : []
 
+  const pendingDeletions = users
+    .filter((user: Record<string, any>) => user.deletionRequestedAt)
+    .sort(
+      (a: Record<string, any>, b: Record<string, any>) =>
+        new Date(a.deletionRequestedAt).getTime() - new Date(b.deletionRequestedAt).getTime()
+    )
+
   return (
     <section className='flex flex-col gap-4'>
+      {pendingDeletions.length > 0 && (
+        <div className='card flex flex-col gap-3 border-2 border-brand p-4'>
+          <h2 className='font-display text-lg font-semibold text-ink'>
+            Žiadosti o zrušenie konta ({pendingDeletions.length})
+          </h2>
+          {pendingDeletions.map((user: Record<string, any>) => (
+            <div key={user.id} className='flex gap-3'>
+              <Avatar userId={user.id} src={user.profileImage ?? null} name={user.name} />
+              <div className='min-w-0'>
+                <p className='truncate font-semibold text-ink'>
+                  {user.name} <span className='font-normal text-ink-muted'>@{user.username}</span>
+                </p>
+                {deletionNotice(user)}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       <AdminSearch value={query} onChange={handleSearch} />
       <div className='card divide-y divide-line'>
         {list.map((user: Record<string, any>) => (

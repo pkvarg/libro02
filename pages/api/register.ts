@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import createRegisterToken from '@/libs/createRegisterToken'
 import { prismaAuth as prisma } from '@/libs/prismadb'
 import axios from 'axios'
+import { honoHeaders } from '@/libs/honoApi'
 import siteUrl from '@/libs/siteUrl'
 import isRateLimited, { clientIp } from '@/libs/rateLimit'
 
@@ -74,9 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         apiUrl,
         { name, email, username, registerUrl: registerURL, origin },
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: honoHeaders(),
         },
       )
 

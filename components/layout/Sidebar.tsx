@@ -7,6 +7,7 @@ import { HiArrowRightOnRectangle, HiOutlineShieldCheck, HiPlus } from 'react-ico
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useBookModal from '@/hooks/useBookModal'
 import useLoginModal from '@/hooks/useLoginModal'
+import usePendingDeletions from '@/hooks/usePendingDeletions'
 
 import Avatar from '../Avatar'
 import SidebarItem from './SidebarItem'
@@ -18,6 +19,7 @@ const Sidebar = () => {
   const router = useRouter()
   const bookModal = useBookModal()
   const loginModal = useLoginModal()
+  const pendingDeletions = usePendingDeletions().length
 
   const items = getNavItems(currentUser).filter((item) => !item.auth || currentUser)
 
@@ -40,7 +42,8 @@ const Sidebar = () => {
           <SidebarItem
             href="/admin"
             icon={HiOutlineShieldCheck}
-            label="Admin"
+            label={pendingDeletions ? `Admin (${pendingDeletions})` : 'Admin'}
+            alert={pendingDeletions > 0}
             active={isActivePath(router.asPath, '/admin')}
           />
         )}

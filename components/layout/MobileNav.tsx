@@ -16,6 +16,7 @@ import useBookModal from '@/hooks/useBookModal'
 
 import Avatar from '../Avatar'
 import { getNavItems, isActivePath } from './navItems'
+import usePendingDeletions from '@/hooks/usePendingDeletions'
 
 const tabClass = (active: boolean) =>
   clsx(
@@ -25,6 +26,7 @@ const tabClass = (active: boolean) =>
 
 const MobileNav = () => {
   const { data: currentUser } = useCurrentUser()
+  const pendingDeletions = usePendingDeletions().length
   const router = useRouter()
   const bookModal = useBookModal()
   const [moreOpen, setMoreOpen] = useState(false)
@@ -103,6 +105,11 @@ const MobileNav = () => {
             {currentUser.isAdmin && (
               <Link href="/admin" className="focus-ring flex items-center gap-3 rounded-xl p-3 text-ink hover:bg-sunken">
                 <HiOutlineShieldCheck size={22} className="text-ink-muted" /> Admin
+                {pendingDeletions > 0 && (
+                  <span className="ml-auto rounded-full bg-brand px-2 py-0.5 text-xs font-semibold text-white">
+                    {pendingDeletions} na vymazanie
+                  </span>
+                )}
               </Link>
             )}
             <Link href="/rules" className="focus-ring flex items-center gap-3 rounded-xl p-3 text-ink hover:bg-sunken">

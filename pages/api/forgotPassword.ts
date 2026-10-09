@@ -3,6 +3,7 @@ import prisma from '@/libs/prismadb'
 import siteUrl from '@/libs/siteUrl'
 import createResetToken from '@/libs/createResetToken'
 import axios from 'axios'
+import { honoHeaders } from '@/libs/honoApi'
 import isRateLimited, { clientIp } from '@/libs/rateLimit'
 
 export default async function forgotPasswordHandler(req: NextApiRequest, res: NextApiResponse) {
@@ -46,9 +47,7 @@ export default async function forgotPasswordHandler(req: NextApiRequest, res: Ne
           origin,
         },
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: honoHeaders(),
         },
       )
     }
