@@ -18,7 +18,12 @@ export default async function handler(
     //   console.log(existingUser)
     // }
 
-    return res.status(200).json(existingUser)
+    // Only what the login and registration forms need; never the user record itself.
+    return res.status(200).json(
+      existingUser
+        ? { isRegistered: !!existingUser.isRegistered, active: existingUser.active !== false }
+        : null
+    )
   } catch (error) {
     console.log(error)
     return res.status(400).end()

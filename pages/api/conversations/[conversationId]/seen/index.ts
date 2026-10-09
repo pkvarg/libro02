@@ -8,7 +8,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const { currentUser } = await serverAuth(req, res)
     const { conversationId } = req.query
 
-    console.log('seen', currentUser, conversationId)
+    console.log('seen', currentUser?.id, conversationId)
 
     if (!currentUser?.id || !currentUser?.email) {
       throw new Error('Neplatné ID')
@@ -29,7 +29,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     })
 
-    if (!conversation) {
+    if (!conversation || !conversation.userIds.includes(currentUser.id)) {
       throw new Error('Neplatné ID')
     }
 

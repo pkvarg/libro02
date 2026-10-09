@@ -21,7 +21,8 @@ const serverAuth = async (req: NextApiRequest, res: NextApiResponse) => {
 
   console.log('current user is:', currentUser?.name)
 
-  if (!currentUser) {
+  // A blocked account is treated as logged out everywhere.
+  if (!currentUser || currentUser.active === false) {
     console.log('Užívateľ neprihlásený 2')
     return
     //throw new Error('Užívateľ neprihlásený 2')

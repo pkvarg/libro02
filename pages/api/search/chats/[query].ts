@@ -1,7 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
+import { requireAdmin } from '@/libs/requireUser'
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+  // Reading other members' messages is limited to admins handling reports (see /privacy).
+  const admin = await requireAdmin(req, res)
+  if (!admin) return
   const { query } = req.query
   if (query) {
     try {

@@ -32,6 +32,8 @@ model User {
   isAdmin         Boolean? @default(false)
   passwordResetToken String? 
   passwordResetExpires DateTime? @default(now())
+  consentAt       DateTime?
+  deletionRequestedAt DateTime?
 
 
   posts         Post[]

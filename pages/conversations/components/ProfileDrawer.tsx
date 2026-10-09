@@ -127,7 +127,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   sm:flex-shrink-0
                                 '
                                   >
-                                    Emaily
+                                    Členovia
                                   </dt>
                                   <dd
                                     className='
@@ -139,7 +139,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 '
                                   >
                                     {data?.users
-                                      .map((user) => user.email)
+                                      .map((user) => user.name)
                                       .join(', ')}
                                   </dd>
                                 </div>
@@ -155,7 +155,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   sm:flex-shrink-0
                                 '
                                   >
-                                    Email
+                                    Užívateľ
                                   </dt>
                                   <dd
                                     className='
@@ -165,7 +165,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                   sm:col-span-2
                                 '
                                   >
-                                    {otherUser?.email}
+                                    {otherUser?.username ? `@${otherUser.username}` : otherUser?.name}
                                   </dd>
                                 </div>
                               )}

@@ -11,7 +11,7 @@ import { useSession } from 'next-auth/react'
 import axios from 'axios'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import LoadingModal from '@/pages/conversations/components/LoadingModal'
-import { ably } from '@/libs/ably'
+import { ably, refreshAblyToken } from '@/libs/ably'
 
 const ChatId = () => {
   const router = useRouter()
@@ -42,7 +42,7 @@ const ChatId = () => {
       }
 
       const channel = ably.channels.get(conversationId.toString())
-      channel.subscribe('your-event', getMessages)
+      refreshAblyToken().then(() => channel.subscribe('your-event', getMessages))
 
       getMessages()
     }
@@ -61,7 +61,7 @@ const ChatId = () => {
       setIsloading(false)
     }
     const channel = ably.channels.get(conversationId?.toString())
-    channel.subscribe('your-event', getActions)
+    refreshAblyToken().then(() => channel.subscribe('your-event', getActions))
 
     getActions()
   }, [conversationId, message, key])

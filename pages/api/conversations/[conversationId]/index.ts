@@ -64,6 +64,11 @@ export default async function GetConversationById(
         },
       })
 
+      // Only members of the conversation may read it.
+      if (!conversation || !conversation.userIds.includes(currentUser.id)) {
+        return res.status(403).end()
+      }
+
       return res.status(200).json(conversation)
     } catch (error: any) {
       console.log(error, 'SERVER_ERROR')

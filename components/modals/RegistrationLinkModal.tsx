@@ -23,12 +23,10 @@ const RegistrationLinkModal = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
   const config = {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${bearerToken}`,
     },
   }
 

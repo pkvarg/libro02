@@ -19,6 +19,11 @@ export default async function handler(
   }
 
   try {
+    // Only the author or an admin may delete a comment.
+    const existing = await prisma.comment.findUnique({ where: { id: commentId } })
+    if (!currentUser || !existing || (existing.userId !== currentUser.id && !currentUser.isAdmin)) {
+      return res.status(403).end()
+    }
     const comment = await prisma.comment.delete({
       where: {
         id: commentId,

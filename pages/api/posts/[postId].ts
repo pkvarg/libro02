@@ -1,11 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '@/libs/prismadb'
+import { requireUser } from '@/libs/requireUser'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
+
+  // Only the author or an admin may delete a post.
+  const mayEdit = async (postId: string) => {
+    const post = await prisma.post.findUnique({ where: { id: postId } })
+    return !!post && (post.userId === currentUser.id || !!currentUser.isAdmin)
+  }
+
   if (req.method === 'GET') {
     try {
       const { postId } = req.query
@@ -47,7 +57,9 @@ export default async function handler(
       if (!postId || typeof postId !== 'string') {
         throw new Error('Neplatné ID')
       }
-
+      if (!(await mayEdit(postId))) {
+        return res.status(403).end()
+      }
       const post = await prisma.post.delete({
         where: {
           id: postId,
@@ -67,6 +79,10 @@ export default async function handler(
 
       if (!postId || typeof postId !== 'string') {
         throw new Error('Neplatné ID')
+      }
+      // Hiding or restoring a post is a moderation action for admins.
+      if (!currentUser.isAdmin) {
+        return res.status(403).end()
       }
       const post = await prisma.post.update({
         where: {

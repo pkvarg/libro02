@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/libs/prismadb'
+import { prismaAuth as prisma } from '@/libs/prismadb'
 import bcrypt from 'bcrypt'
 
 export default async function passwordReset(

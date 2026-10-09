@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { toast } from 'react-hot-toast'
 
 import useLoginModal from '@/hooks/useLoginModal'
@@ -46,11 +46,6 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
       setIsLoading(false)
     }
   }, [body, mutatePosts, isComment, postId, mutatePost])
-
-  useEffect(() => {
-    // save email to Local storage for Ably
-    localStorage.setItem('loggedInEmail', currentUser?.email)
-  }, [currentUser])
 
   return (
     <div className="border-b-[1px] border-neutral-800 px-5 py-2">

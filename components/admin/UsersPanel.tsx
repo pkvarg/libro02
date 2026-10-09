@@ -66,6 +66,39 @@ const UsersPanel = () => {
     }
   }
 
+  // Members who used "Zrušiť konto" wait here; GDPR requires deletion within 30 days.
+  const permanentlyDelete = async (user: Record<string, any>) => {
+    const confirmed = window.confirm(
+      `Natrvalo vymazať konto ${user.name} (@${user.username}) so všetkými príspevkami, knihami a konverzáciami? Táto akcia sa nedá vrátiť.`
+    )
+    if (!confirmed) return
+    const { data } = await axios.delete(`/api/users/${user.id}`)
+    if (data === 'OK') {
+      getUsers()
+    }
+  }
+
+  const deletionNotice = (user: Record<string, any>) => {
+    if (!user.deletionRequestedAt) return null
+    const requested = new Date(user.deletionRequestedAt)
+    const deadline = new Date(requested.getTime() + 30 * 24 * 60 * 60 * 1000)
+    return (
+      <div className='flex flex-col gap-1 text-sm'>
+        <p className='text-[#FFAC1C] font-semibold'>
+          Žiadosť o zrušenie konta {requested.toLocaleDateString('sk-SK')} – vymazať do{' '}
+          {deadline.toLocaleDateString('sk-SK')}
+        </p>
+        <button
+          type='button'
+          onClick={() => permanentlyDelete(user)}
+          className='self-start text-[#D2042D] font-semibold underline'
+        >
+          Natrvalo vymazať
+        </button>
+      </div>
+    )
+  }
+
   const handleSearch = async (query) => {
     if (query === '') {
       setSearchResults([])
@@ -119,6 +152,7 @@ const UsersPanel = () => {
                 </p>
                 <p className='text-neutral-400 text-sm'>@{user.username}</p>
                 <p className='text-neutral-400 text-sm'>{user.email}</p>
+                {deletionNotice(user)}
               </div>
               <div className='ml-0 lg:ml-auto mr-4 flex flex-col lg:flex-row justify-center gap-2 lg:gap-4 '>
                 <p
@@ -181,6 +215,7 @@ const UsersPanel = () => {
                 <p className='text-white font-semibold text-sm'>{user.name}</p>
                 <p className='text-neutral-400 text-sm'>@{user.username}</p>
                 <p className='text-neutral-400 text-sm'>{user.email}</p>
+                {deletionNotice(user)}
               </div>
               <div className='ml-0 lg:ml-auto mr-4 flex flex-col lg:flex-row justify-center gap-2 lg:gap-4 '>
                 <p

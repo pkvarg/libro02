@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
 import createRegisterToken from '@/libs/createRegisterToken'
-import prisma from '@/libs/prismadb'
+import { prismaAuth as prisma } from '@/libs/prismadb'
 import axios from 'axios'
+import siteUrl from '@/libs/siteUrl'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -10,11 +11,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { email, username, name, password, url } = req.body
+    const { email, username, name, password, url, consent } = req.body
+
+    // Registration requires explicit consent (see /privacy); the time is kept as proof.
+    if (consent !== true) {
+      return res.status(400).json('Chýba súhlas so spracúvaním osobných údajov')
+    }
 
     const { registerToken, registerTokenExpires, token, registerURL } = await createRegisterToken(
       email,
-      url,
+      siteUrl(url),
     )
 
     const hashedPassword = await bcrypt.hash(password, 12)
@@ -28,6 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         isRegistered: false,
         registerToken,
         registerTokenExpires,
+        consentAt: new Date(),
       },
     })
 

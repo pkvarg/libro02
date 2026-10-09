@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
+import { requireUser } from '@/libs/requireUser'
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
   const { query } = req.query
   if (query) {
     try {

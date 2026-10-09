@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import prisma from '@/libs/prismadb'
+import { prismaAuth as prisma } from '@/libs/prismadb'
 
 export default async function checkUserExists(email: string) {
   let existingUser

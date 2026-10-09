@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '@/libs/prismadb'
+import { requireAdmin } from '@/libs/requireUser'
 import { userAgent } from 'next/server'
 
 export default async function handler(
@@ -8,6 +9,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'DELETE') {
+    const admin = await requireAdmin(req, res)
+    if (!admin) return
     try {
       const { userId } = req.query
 

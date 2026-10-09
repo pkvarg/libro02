@@ -17,6 +17,7 @@ const RegisterModal = () => {
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
   const [checkedBox, setCheckedBox] = useState(false)
+  const [consentBox, setConsentBox] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [url, setUrl] = useState('')
 
@@ -37,6 +38,8 @@ const RegisterModal = () => {
   const onSubmit = useCallback(async () => {
     if (checkedBox !== true) {
       return toast.error('Musíte potvrdiť súhlas s pravidlami siete')
+    } else if (consentBox !== true) {
+      return toast.error('Musíte potvrdiť súhlas so spracúvaním osobných údajov')
     } else if (
       checkedBox === true &&
       email !== '' &&
@@ -47,12 +50,10 @@ const RegisterModal = () => {
       try {
         setIsLoading(true)
 
-        const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
         const config = {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${bearerToken}`,
           },
         }
 
@@ -81,6 +82,7 @@ const RegisterModal = () => {
               username,
               name,
               url,
+              consent: true,
             },
             config,
           )
@@ -99,7 +101,7 @@ const RegisterModal = () => {
     } else {
       toast.error('Skontrolujte údaje')
     }
-  }, [email, password, registerModal, username, name, checkedBox])
+  }, [email, password, registerModal, username, name, checkedBox, consentBox])
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -143,6 +145,25 @@ const RegisterModal = () => {
           <a href="/rules" target="_blank" className="underline !text-sky-500">
             pravidlami siete
           </a>
+        </label>
+      </div>
+      {/* Explicit consent (čl. 9 ods. 2 písm. a) GDPR): membership and posts may reveal religious belief. */}
+      <div className="flex ml-2 items-start">
+        <input
+          id="consentBox"
+          className="w-[20px] h-[20px] mt-1 flex-shrink-0"
+          checked={consentBox}
+          type="checkbox"
+          onChange={() => setConsentBox((prev) => !prev)}
+        />
+        <label className="text-[#9ca3af] text-[15px] leading-snug ml-[15px]" htmlFor="consentBox">
+          Mám aspoň 16 rokov a výslovne súhlasím, aby prevádzkovateľ spracúval moje údaje vrátane
+          tých, z ktorých môže vyplývať moje náboženské presvedčenie, na účely členstva v sieti.
+          Súhlas môžem kedykoľvek odvolať zrušením konta. Viac v{' '}
+          <a href="/privacy" target="_blank" className="underline !text-sky-500">
+            zásadách ochrany osobných údajov
+          </a>
+          .
         </label>
       </div>
     </div>

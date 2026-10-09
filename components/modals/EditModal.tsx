@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { signOut } from 'next-auth/react'
 
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useEditModal from '@/hooks/useEditModal'
@@ -39,6 +40,25 @@ const EditModal = () => {
   ])
 
   const [isLoading, setIsLoading] = useState(false)
+
+  // Deletion request (GDPR art. 17): blocks the account now; the admin deletes it within 30 days.
+  const deleteAccount = useCallback(async () => {
+    const confirmed = window.confirm(
+      'Naozaj chcete zrušiť svoje konto? Konto sa hneď zablokuje a skryje a do 30 dní ho natrvalo vymažeme spolu s príspevkami, komentármi, knihami aj konverzáciami.'
+    )
+    if (!confirmed) return
+    try {
+      setIsLoading(true)
+      await axios.delete('/api/account')
+      toast.success('Žiadosť o zrušenie konta sme prijali')
+      editModal.onClose()
+      await signOut({ callbackUrl: '/' })
+    } catch (error) {
+      toast.error('Konto sa nepodarilo zrušiť, napíšte na info@librosophia.sk')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [editModal])
 
   const handleUploadProfileImage = (result: any) => {
     setProfileImage(result.info.secure_url)
@@ -129,6 +149,14 @@ const EditModal = () => {
         value={bio}
         disabled={isLoading}
       />
+      <button
+        type='button'
+        onClick={deleteAccount}
+        disabled={isLoading}
+        className='self-start text-sm text-red-400 underline hover:text-red-300 disabled:opacity-50'
+      >
+        Zrušiť konto
+      </button>
     </div>
   )
 

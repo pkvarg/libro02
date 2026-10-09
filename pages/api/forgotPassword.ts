@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/libs/prismadb'
+import siteUrl from '@/libs/siteUrl'
 import createResetToken from '@/libs/createResetToken'
 import axios from 'axios'
 
@@ -17,7 +18,7 @@ export default async function forgotPasswordHandler(req: NextApiRequest, res: Ne
   })
 
   if (existingUser) {
-    const { resetURL, resetToken } = await createResetToken(existingUser, url)
+    const { resetURL } = await createResetToken(existingUser, siteUrl(url))
 
     // hono api
     const apiUrl = 'https://hono-api.pictusweb.com/api/librosophia/forgot'
@@ -42,7 +43,8 @@ export default async function forgotPasswordHandler(req: NextApiRequest, res: Ne
       )
       console.log('res', apiResponse)
 
-      return res.status(200).json(resetToken)
+      // The token travels only in the e-mail; returning it here would let anyone reset any account.
+      return res.status(200).json('OK')
     } catch (error) {
       console.log(error)
       return res.status(400).end()

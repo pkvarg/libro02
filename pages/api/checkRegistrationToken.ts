@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/libs/prismadb'
+import { prismaAuth as prisma } from '@/libs/prismadb'
 import crypto from 'crypto'
 
 export default async function checkRegistrationToken(

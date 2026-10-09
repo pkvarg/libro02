@@ -20,7 +20,6 @@ const ForgotPasswordModal = () => {
     setUrl(currentURL)
   }, [url])
 
-  const bearerToken = process.env.NEXT_PUBLIC_VERCEL_TOKEN
 
   const onSubmit = useCallback(async () => {
     setIsLoading(true)
@@ -29,7 +28,6 @@ const ForgotPasswordModal = () => {
         const config = {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${bearerToken}`,
           },
         }
 

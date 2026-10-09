@@ -1,29 +1,37 @@
 import Ably from 'ably/promises'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { requireUser } from '@/libs/requireUser'
 
-export const ably = new Ably.Realtime.Promise({
-  key: process.env.NEXT_PUBLIC_ABLY_API_KEY,
-})
+/**
+ * Issues a short-lived Ably token for the logged-in member. The secret API key
+ * stays on the server; the token only allows the shared presence channel and
+ * the member's own conversations.
+ */
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  console.log('we are in api/ably GET')
-  const channel = ably.channels.get('your-channel')
-  channel.subscribe('your-event', (message) => {
-    console.log('Received message on api:', message.data)
-  })
+  const key = process.env.ABLY_API_KEY || process.env.NEXT_PUBLIC_ABLY_API_KEY
+  if (!key) {
+    return res.status(503).json('Chat nie je nakonfigurovaný')
+  }
 
-  // const channel = ably.channels.get('your-channel')
-  // channel.subscribe('your-event', (message) => {
-  //   console.log('Received message:', message.data)
-  // })
+  const capability: Record<string, string[]> = {
+    chatroom: ['presence', 'subscribe'],
+  }
+  for (const conversationId of currentUser.conversationIds) {
+    capability[conversationId] = ['publish', 'subscribe']
+  }
 
-  res.status(200).end()
-
-  // const tokenRequestData = await client.auth.createTokenRequest({
-  //   clientId: 'ably-nextjs-demo',
-  // })
-  // return res.json(tokenRequestData)
+  try {
+    const client = new Ably.Rest({ key })
+    const tokenRequest = await client.auth.createTokenRequest({
+      clientId: currentUser.email,
+      capability: JSON.stringify(capability),
+    })
+    return res.status(200).json(tokenRequest)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).end()
+  }
 }

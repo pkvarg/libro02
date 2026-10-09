@@ -17,6 +17,12 @@ export default async function handler(
         return res.status(401).json('Unauthorised')
       }
 
+      // Only members of the conversation may post into it.
+      const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
+      if (!conversation || !conversation.userIds.includes(currentUser.id)) {
+        return res.status(403).json('Forbidden')
+      }
+
       const newMessage = await prisma.message.create({
         include: {
           sender: {

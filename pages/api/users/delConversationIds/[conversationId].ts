@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '@/libs/prismadb'
+import { requireAdmin } from '@/libs/requireUser'
 import { forEach } from 'lodash'
 
 export default async function handler(
@@ -8,6 +9,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
+    const admin = await requireAdmin(req, res)
+    if (!admin) return
     try {
       const { conversationId } = req.query
       const { userId } = req.body

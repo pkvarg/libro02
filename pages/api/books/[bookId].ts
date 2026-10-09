@@ -1,11 +1,21 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import prisma from '@/libs/prismadb'
+import { requireUser } from '@/libs/requireUser'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const currentUser = await requireUser(req, res)
+  if (!currentUser) return
+
+  // Only the owner or an admin may change or delete a book.
+  const mayEdit = async (bookId: string) => {
+    const book = await prisma.book.findUnique({ where: { id: bookId } })
+    return !!book && (book.userId === currentUser.id || !!currentUser.isAdmin)
+  }
+
   if (req.method === 'GET') {
     try {
       const { bookId } = req.query
@@ -66,7 +76,9 @@ export default async function handler(
       if (!bookId || typeof bookId !== 'string') {
         throw new Error('Neplatné ID')
       }
-
+      if (!(await mayEdit(bookId))) {
+        return res.status(403).end()
+      }
       const book = await prisma.book.delete({
         where: {
           id: bookId,
@@ -96,7 +108,9 @@ export default async function handler(
       if (!bookId || typeof bookId !== 'string') {
         throw new Error('Neplatné ID')
       }
-
+      if (!(await mayEdit(bookId))) {
+        return res.status(403).end()
+      }
       const book = await prisma.book.update({
         where: {
           id: bookId,
@@ -108,7 +122,8 @@ export default async function handler(
           bookLendingDuration,
           bookAvailable,
           bookReview,
-          active: status,
+          // Hiding or restoring a book is a moderation action for admins.
+          ...(currentUser.isAdmin ? { active: status } : {}),
         },
       })
 
