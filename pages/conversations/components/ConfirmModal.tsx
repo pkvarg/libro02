@@ -48,14 +48,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
             items-center 
             justify-center 
             rounded-full 
-            bg-red-100 
+            bg-danger-soft 
             sm:mx-0 
             sm:h-10 
             sm:w-10
           '
         >
           <FiAlertTriangle
-            className='h-6 w-6 text-red-600'
+            className='h-6 w-6 text-danger'
             aria-hidden='true'
           />
         </div>
@@ -70,18 +70,18 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
         >
           <Dialog.Title
             as='h3'
-            className='text-base font-semibold leading-6 text-white'
+            className='font-display text-lg font-semibold leading-6 text-ink'
           >
             Vymazať konverzáciu?
           </Dialog.Title>
           <div className='mt-2'>
-            <p className='text-sm text-gray-500'>
+            <p className='text-sm text-ink-muted'>
               Ste si istí, že chcete vymazať túto konverzáciu?
             </p>
           </div>
         </div>
       </div>
-      <div className='mt-5 sm:mt-4 sm:flex sm:flex-row-reverse'>
+      <div className='mt-6 flex flex-col gap-2 sm:flex-row-reverse'>
         <Button disabled={false} danger onClick={onDelete}>
           Vymazať
         </Button>

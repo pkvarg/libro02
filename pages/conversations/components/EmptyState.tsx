@@ -1,22 +1,12 @@
+import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2'
+
 const EmptyState = () => {
   return (
-    <div
-      className='
-        px-4 
-        py-10 
-        sm:px-6 
-        lg:px-8 
-        lg:py-6 
-        h-full 
-        flex 
-        justify-center 
-      '
-    >
-      <div className='text-center flex flex-col'>
-        <h3 className='-mt-5 lg:-mt-2 lg:text-2xl font-semibold text-gray-100'>
-          Zvoľte si správu
-        </h3>
-      </div>
+    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-8 text-center">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-sunken text-ink-muted">
+        <HiOutlineChatBubbleLeftRight size={26} />
+      </span>
+      <h3 className="font-display text-xl font-semibold text-ink">Zvoľte si správu</h3>
     </div>
   )
 }

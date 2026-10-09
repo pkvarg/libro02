@@ -4,11 +4,13 @@ import { Fragment, useMemo, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { IoClose, IoTrash } from 'react-icons/io5'
 import { Conversation, User } from '@prisma/client'
+import Link from 'next/link'
 import { format } from 'date-fns'
+import { sk } from 'date-fns/locale'
 
 import useOtherUser from '@/hooks/useOtherUser'
 
-import AvatarChat from '@/components/AvatarChat'
+import Avatar from '@/components/Avatar'
 import AvatarGroup from '@/components/AvatarGroup'
 import ConfirmModal from './ConfirmModal'
 
@@ -33,7 +35,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
   if (otherUser) {
     joinedDate = useMemo(() => {
-      return format(new Date(otherUser.createdAt), 'PP')
+      return format(new Date(otherUser.createdAt), 'PP', { locale: sk })
     }, [otherUser.createdAt])
 
     title = useMemo(() => {
@@ -58,7 +60,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <div className='fixed inset-0 bg-black bg-opacity-40' />
+            <div className='fixed inset-0 bg-ink/40' />
           </Transition.Child>
 
           <div className='fixed inset-0 overflow-hidden'>
@@ -73,135 +75,60 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                   leaveFrom='translate-x-0'
                   leaveTo='translate-x-full'
                 >
-                  <Dialog.Panel className='pointer-events-auto w-screen max-w-md'>
-                    <div className='flex h-full flex-col overflow-y-scroll bg-black py-6 shadow-xl border-l'>
-                      <div className='px-4 sm:px-6'>
-                        <div className='flex items-start justify-end'>
-                          <div className='ml-3 flex h-7 items-center'>
-                            <button
-                              type='button'
-                              className='rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-                              onClick={onClose}
-                            >
-                              <span className='sr-only'>Close panel</span>
-                              <IoClose size={24} aria-hidden='true' />
-                            </button>
-                          </div>
-                        </div>
+                  <Dialog.Panel className='pointer-events-auto w-screen max-w-sm'>
+                    <div className='flex h-full flex-col overflow-y-auto border-l border-line bg-surface py-4 shadow-pop'>
+                      <div className='flex justify-end px-4'>
+                        <button type='button' className='icon-btn' onClick={onClose}>
+                          <span className='sr-only'>Zavrieť</span>
+                          <IoClose size={22} aria-hidden='true' />
+                        </button>
                       </div>
-                      <div className='relative mt-6 flex-1 px-4 sm:px-6'>
-                        <div className='flex flex-col items-center'>
-                          <div className='mb-2'>
-                            {data?.isGroup ? (
-                              <AvatarGroup users={data?.users} />
-                            ) : (
-                              <AvatarChat user={otherUser} />
-                            )}
+                      <div className='flex flex-col items-center px-6 pt-2 text-center'>
+                        {data?.isGroup ? (
+                          <AvatarGroup users={data?.users} />
+                        ) : (
+                          <Avatar
+                            userId={otherUser?.id as string}
+                            src={otherUser?.profileImage ?? null}
+                            name={otherUser?.name}
+                            isLarge
+                          />
+                        )}
+                        <h2 className='mt-3 font-display text-xl font-semibold text-ink'>{title}</h2>
+                        {!data?.isGroup && otherUser?.username && (
+                          <p className='text-sm text-ink-muted'>@{otherUser.username}</p>
+                        )}
+                        {!data?.isGroup && otherUser && (
+                          <Link href={`/users/${otherUser.id}`} className='btn btn-secondary mt-4'>
+                            Zobraziť profil
+                          </Link>
+                        )}
+                      </div>
+                      <dl className='mx-6 mt-6 space-y-4 border-t border-line pt-5 text-sm'>
+                        {data?.isGroup && (
+                          <div>
+                            <dt className='font-medium text-ink-muted'>Členovia</dt>
+                            <dd className='mt-1 text-ink'>{data?.users.map((user) => user.name).join(', ')}</dd>
                           </div>
-                          <div>{title}</div>
-
-                          <div className='flex gap-10 my-8'>
-                            <div
-                              onClick={() => setConfirmOpen(true)}
-                              className='flex flex-col gap-3 items-center cursor-pointer hover:opacity-75'
-                            >
-                              <div className='w-10 h-10 bg-black-100 rounded-full flex items-center justify-center'>
-                                <IoTrash size={20} />
-                              </div>
-                              <div className='text-sm font-light text-neutral-600'>
-                                Vymazať
-                              </div>
-                            </div>
+                        )}
+                        {!data?.isGroup && joinedDate && (
+                          <div>
+                            <dt className='font-medium text-ink-muted'>Členom od</dt>
+                            <dd className='mt-1 text-ink'>
+                              <time dateTime={joinedDate}>{joinedDate}</time>
+                            </dd>
                           </div>
-                          <div className='w-full pb-5 pt-5 sm:px-0 sm:pt-0'>
-                            <dl className='space-y-8 px-4 sm:space-y-6 sm:px-6'>
-                              {data?.isGroup && (
-                                <div>
-                                  <dt
-                                    className='
-                                  
-                                  text-sm 
-                                  font-medium 
-                                  text-gray-500 
-                                  sm:w-40 
-                                  sm:flex-shrink-0
-                                '
-                                  >
-                                    Členovia
-                                  </dt>
-                                  <dd
-                                    className='
-                                  text-white
-                                  mt-1 
-                                  text-sm 
-                                  
-                                  sm:col-span-2
-                                '
-                                  >
-                                    {data?.users
-                                      .map((user) => user.name)
-                                      .join(', ')}
-                                  </dd>
-                                </div>
-                              )}
-                              {!data?.isGroup && (
-                                <div>
-                                  <dt
-                                    className='
-                                  text-sm 
-                                  font-medium 
-                                  text-white 
-                                  sm:w-40 
-                                  sm:flex-shrink-0
-                                '
-                                  >
-                                    Užívateľ
-                                  </dt>
-                                  <dd
-                                    className='
-                                  mt-1 
-                                  text-sm 
-                                  text-white 
-                                  sm:col-span-2
-                                '
-                                  >
-                                    {otherUser?.username ? `@${otherUser.username}` : otherUser?.name}
-                                  </dd>
-                                </div>
-                              )}
-                              {!data?.isGroup && (
-                                <>
-                                  <hr />
-                                  <div>
-                                    <dt
-                                      className='
-                                    text-sm 
-                                    font-medium 
-                                    text-white 
-                                    sm:w-40 
-                                    sm:flex-shrink-0
-                                  '
-                                    >
-                                      Joined
-                                    </dt>
-                                    <dd
-                                      className='
-                                    mt-1 
-                                    text-sm 
-                                    text-white 
-                                    sm:col-span-2
-                                  '
-                                    >
-                                      <time dateTime={joinedDate}>
-                                        {joinedDate}
-                                      </time>
-                                    </dd>
-                                  </div>
-                                </>
-                              )}
-                            </dl>
-                          </div>
-                        </div>
+                        )}
+                      </dl>
+                      <div className='mx-6 mt-auto pt-6'>
+                        <button
+                          type='button'
+                          onClick={() => setConfirmOpen(true)}
+                          className='btn w-full text-danger hover:bg-danger-soft'
+                        >
+                          <IoTrash size={18} />
+                          Vymazať konverzáciu
+                        </button>
                       </div>
                     </div>
                   </Dialog.Panel>

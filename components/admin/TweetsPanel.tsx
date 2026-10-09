@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
+import Link from 'next/link'
 import axios from 'axios'
-import { BsSearch } from 'react-icons/bs'
 
-import { useRouter } from 'next/router'
+import { AdminSearch, StatusToggle } from './AdminUi'
 
 const TweetsPanel = () => {
   const [tweets, setTweets] = useState([])
   const [showAllTweets, setShowAllTweets] = useState(true)
-  const [showSearchResults, setShowSearchResults] = useState(false)
   const [searchResults, setSearchResults] = useState([])
   const [query, setQuery] = useState('')
-  const router = useRouter()
 
   const getTweets = async () => {
     const { data } = await axios.get('/api/posts')
@@ -23,6 +21,7 @@ const TweetsPanel = () => {
     })
     if (data === 'OK') {
       getTweets()
+      if (!showAllTweets) handleSearch(query)
     }
   }
 
@@ -30,98 +29,46 @@ const TweetsPanel = () => {
     getTweets()
   }, [])
 
-  const handleSearch = async (query) => {
+  const handleSearch = async (query: string) => {
+    setQuery(query)
     if (query === '') {
       setSearchResults([])
       setShowAllTweets(true)
-      setShowSearchResults(false)
     } else {
       try {
-        const response = await axios.get(`/api/search/tweets/${query}`)
+        const response = await axios.get(`/api/search/tweets/${encodeURIComponent(query)}`)
         setSearchResults(response.data)
-        setShowSearchResults(true)
         setShowAllTweets(false)
-        console.log(response.data)
       } catch (error) {
         console.error('Error searching:', error)
       }
     }
   }
 
+  const list = showAllTweets ? tweets : searchResults
+
   return (
-    <>
-      <h1 className='text-center text-[30px] my-8 '>Tweety</h1>
-      <div className='flex flex-row gap-2 justify-center items-center '>
-        <input
-          type='text'
-          placeholder='Hľadať...'
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={() => handleSearch(query)}
-          className='rounded-xl text-[#000000] pl-2'
-        />
-        <BsSearch
-          className='cursor-pointer'
-          onClick={() => handleSearch(query)}
-        />
+    <section className="flex flex-col gap-4">
+      <AdminSearch value={query} onChange={handleSearch} />
+      <div className="card divide-y divide-line">
+        {list.map((tweet) => (
+          <div key={tweet.id} className="flex flex-col gap-2 p-4 sm:flex-row sm:items-start">
+            <div className="min-w-0 flex-1">
+              <Link href={`/posts/${tweet.id}`} className="focus-ring block rounded text-ink hover:underline">
+                {tweet.body}
+              </Link>
+              {tweet?.user && (
+                <Link href={`/users/${tweet.user.id}`} className="link text-sm">
+                  {tweet.user.name}
+                </Link>
+              )}
+            </div>
+            <StatusToggle label="Aktívny" on={!!tweet.active} onClick={() => toggleTweetStatus(tweet.id, tweet.active)} />
+          </div>
+        ))}
+        {list.length === 0 && <p className="p-6 text-center text-ink-muted">Nič sa nenašlo.</p>}
       </div>
-      {showAllTweets && (
-        <div className='mt-8'>
-          {tweets.map((tweet) => (
-            <div
-              key={tweet.id}
-              className='flex flex-col lg:flex-row gap-2 text-[25px] mx-2 mt-4 lg:mt-0 border-b-2 lg:border-0'
-            >
-              <p className='text-[#FFAC1C]'>{tweet.body}</p>
-              <p
-                className='cursor-pointer'
-                onClick={() => router.push(`/users/${tweet.user.id}`)}
-              >
-                {tweet.user.name}
-              </p>
-              <p
-                className={
-                  tweet.active
-                    ? `ml-0 lg:ml-auto mr-2 text-[#00FF00] cursor-pointer`
-                    : `ml-0 lg:ml-auto mr-2 text-[#D2042D] cursor-pointer `
-                }
-                onClick={() => toggleTweetStatus(tweet.id, tweet.active)}
-              >
-                Aktívny
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-      {showSearchResults && (
-        <div className='mt-8'>
-          {searchResults.map((tweet) => (
-            <div
-              key={tweet.id}
-              className='flex flex-col lg:flex-row gap-2 text-[25px] mx-2 mt-8 lg:mt-0 border-b-2 lg:border-0'
-            >
-              <p className='text-[#FFAC1C]'>{tweet.body}</p>
-              <p
-                className='cursor-pointer'
-                onClick={() => router.push(`/users/${tweet.user.id}`)}
-              >
-                {tweet?.user?.name}
-              </p>
-              <p
-                className={
-                  tweet.active
-                    ? `ml-0 lg:ml-auto mr-2 text-[#00FF00] cursor-pointer`
-                    : `ml-0 lg:ml-auto mr-2 text-[#D2042D] cursor-pointer `
-                }
-                onClick={() => toggleTweetStatus(tweet.id, tweet.active)}
-              >
-                Aktívny
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
+    </section>
   )
 }
 

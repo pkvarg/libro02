@@ -66,14 +66,19 @@ const LoginModal = () => {
   const bodyContent = (
     <div className='flex flex-col gap-4'>
       <Input
-        placeholder='Email'
+        label='Email'
+        placeholder='vas@email.sk'
+        type='email'
+        autoComplete='email'
         onChange={(e) => setEmail(e.target.value)}
         value={email}
         disabled={isLoading}
       />
       <Input
+        label='Heslo'
         placeholder='Heslo'
         type='password'
+        autoComplete='current-password'
         onChange={(e) => setPassword(e.target.value)}
         value={password}
         disabled={isLoading}
@@ -82,34 +87,18 @@ const LoginModal = () => {
   )
 
   const footerContent = (
-    <div className='text-neutral-400 text-center mt-4'>
+    <div className='flex flex-col gap-1 text-center text-sm text-ink-muted'>
       <p>
-        Ste tu prvý krát?
-        <span
-          onClick={onToggle}
-          className='
-            text-white 
-            cursor-pointer 
-            hover:underline
-          '
-        >
-          {' '}
+        Ste tu prvý krát?{' '}
+        <button type='button' onClick={onToggle} className='link'>
           Vytvoriť účet
-        </span>
+        </button>
       </p>
       <p>
-        Zabudli ste heslo?
-        <span
-          onClick={forgotPassword}
-          className='
-            text-white 
-            cursor-pointer 
-            hover:underline
-          '
-        >
-          {' '}
+        Zabudli ste heslo?{' '}
+        <button type='button' onClick={forgotPassword} className='link'>
           Poslať link
-        </span>
+        </button>
       </p>
     </div>
   )

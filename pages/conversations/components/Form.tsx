@@ -37,49 +37,21 @@ const Form = ({ message, setMessage }) => {
   }
 
   return (
-    <div
-      className='
-        py-4 
-        px-4 
-         
-        border-t 
-        flex 
-        items-center 
-        gap-2 
-        lg:gap-4 
-        w-full
-      '
-    >
-      <form
-        onSubmit={handleSubmit}
-        className='flex items-center gap-2 lg:gap-4 w-full'
-      >
+    <div className="border-t border-line bg-surface px-3 py-3 pb-[calc(env(safe-area-inset-bottom)+12px)] md:px-5">
+      <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <input
-          className='text-black px-2 rounded-xl w-full h-8'
-          id='message'
+          className="input rounded-full py-2.5"
+          id="message"
           value={formData}
           onChange={handleChange}
           required
-          onFocus={null}
-          placeholder='Napíšte správu'
+          autoComplete="off"
+          aria-label="Správa"
+          placeholder="Napíšte správu"
         />
-        <button
-          type='submit'
-          className='
-            rounded-full
-             p-2
-            bg-sky-500
-            cursor-pointer
-             hover:bg-sky-600
-            transition'
-        >
-          <HiPaperAirplane size={18} className='text-white' />
+        <button type="submit" className="btn btn-primary h-11 w-11 shrink-0 px-0" aria-label="Odoslať">
+          <HiPaperAirplane size={18} />
         </button>
-        {/* <div className=''>
-        <EmojiPicker
-          onChange={(emoji: string) => setMessage((prev) => prev + emoji)}
-        />
-      </div> */}
       </form>
     </div>
   )

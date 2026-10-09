@@ -1,7 +1,6 @@
 'use client'
 
 import ConversationList from '@/pages/conversations/components/ConversationList'
-import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
 import EmptyState from '@/pages/conversations/components/EmptyState'
 import { useEffect, useState } from 'react'
@@ -18,7 +17,6 @@ const Home = () => {
   const [users, setUsers] = useState([])
   const [conversations, setConversations] = useState([])
 
-  const currentUserEmail = session.data?.user?.email
 
   const routeIsConversations = router.route.includes('conversations')
 
@@ -47,13 +45,15 @@ const Home = () => {
   }, [])
 
   return (
-    <div className={clsx('h-full  lg:block')}>
+    <div className='flex h-[calc(100dvh-72px)] gap-4 pt-4 md:h-screen md:pb-4'>
       <ConversationList
         initialItems={conversations}
         users={users}
         title='Messages'
       />
-      <EmptyState />
+      <div className='card hidden flex-1 md:flex'>
+        <EmptyState />
+      </div>
     </div>
   )
 }

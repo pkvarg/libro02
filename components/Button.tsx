@@ -1,39 +1,47 @@
 import React from 'react'
+import clsx from 'clsx'
 
 interface ButtonProps {
   label: string
   secondary?: boolean
   fullWidth?: boolean
   large?: boolean
+  small?: boolean
   onClick: () => void
   disabled?: boolean
   outline?: boolean
+  danger?: boolean
+  type?: 'button' | 'submit'
+  icon?: React.ReactNode
 }
+
 const Button: React.FC<ButtonProps> = ({
   label,
   secondary,
   fullWidth,
   large,
+  small,
   onClick,
   disabled,
   outline,
+  danger,
+  type = 'button',
+  icon,
 }) => {
   return (
     <button
+      type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`disabled:opacity-70 disabled:cursor-not-allowed rounded-full font-semibold hover:opacity-80 transiiton border-2 ${
-        fullWidth ? 'w-full' : 'w-fit'
-      } ${secondary ? 'bg-white' : 'bg-sky-500'}
-      ${secondary ? 'text-black' : 'text-white'}
-      ${secondary ? 'border-black' : 'border-sky-500'}
-      ${large ? 'text-xl' : 'text-md'}
-      ${large ? 'px-5' : 'px-4'}
-      ${large ? 'py-3' : 'py-2'}
-      ${outline ? 'bg-transparent' : ''}
-      ${outline ? 'border-white' : ''}
-      ${outline ? 'text-white' : ''}`}
+      className={clsx(
+        'btn',
+        danger ? 'btn-danger' : secondary || outline ? 'btn-secondary' : 'btn-primary',
+        large && 'btn-lg',
+        small && 'btn-sm',
+        fullWidth && 'w-full'
+      )}
     >
+      {icon}
       {label}
     </button>
   )

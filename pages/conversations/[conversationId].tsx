@@ -3,7 +3,6 @@ import Header from '@/pages/conversations/components/Header'
 import Body from '@/pages/conversations/components/Body'
 import Form from '@/pages/conversations/components/Form'
 import ConversationList from '@/pages/conversations/components/ConversationList'
-import clsx from 'clsx'
 import useConversation from '@/hooks/useConversation'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -60,8 +59,11 @@ const ChatId = () => {
       setConversations(data.conversations)
       setIsloading(false)
     }
-    const channel = ably.channels.get(conversationId?.toString())
-    refreshAblyToken().then(() => channel.subscribe('your-event', getActions))
+    // On a hard reload the id is not known yet on the first render.
+    if (conversationId) {
+      const channel = ably.channels.get(conversationId.toString())
+      refreshAblyToken().then(() => channel.subscribe('your-event', getActions))
+    }
 
     getActions()
   }, [conversationId, message, key])
@@ -83,8 +85,8 @@ const ChatId = () => {
 
   if (!conversation) {
     return (
-      <div className='lg:pl-80 h-full'>
-        <div className='h-full flex flex-col'>
+      <div className='flex h-[100dvh] gap-4 md:h-screen md:py-4'>
+        <div className='card flex flex-1'>
           <EmptyState />
         </div>
       </div>
@@ -94,20 +96,17 @@ const ChatId = () => {
   return (
     <>
       {isLoading && <LoadingModal />}
-      <div className={clsx('h-full lg:block')}>
+      <div className='-mx-4 flex h-[100dvh] gap-4 md:mx-0 md:h-screen md:py-4'>
         <ConversationList
           initialItems={conversations}
           users={users}
           title='Messages'
         />
-        <div className='h-full mt-2'>
-          <div className='h-full flex flex-col'>
-            <Header conversation={conversation} />
-
-            <Body initialMessages={messages} rerender={rerender} />
-            <Form message={message} setMessage={setMessage} />
-          </div>
-        </div>
+        <section className='fixed inset-0 z-40 flex min-w-0 flex-1 flex-col overflow-hidden bg-surface md:static md:z-auto md:rounded-card md:border md:border-line md:shadow-card'>
+          <Header conversation={conversation} />
+          <Body initialMessages={messages} rerender={rerender} />
+          <Form message={message} setMessage={setMessage} />
+        </section>
       </div>
     </>
   )

@@ -27,8 +27,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             className='
               fixed
               inset-0
-              bg-gray-500
-              bg-opacity-75
+              bg-ink/40
               transition-opacity
             '
           />
@@ -60,13 +59,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                   relative
                   transform
                   overflow-hidden
-                  rounded-lg
-                  bg-black
-                  px-4
-                  pb-4
-                  pt-5
+                  rounded-2xl
+                  bg-surface
+                  px-5
+                  pb-5
+                  pt-6
                   text-left
-                  shadow-xl
+                  shadow-pop
                   transition-all
                   w-full
                   sm:my-8
@@ -87,21 +86,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
                     z-10
                   '
                 >
-                  <button
-                    type='button'
-                    className='
-                      rounded-md
-                      bg-white
-                      text-gray-400
-                      hover:text-gray-500
-                      focus:outline-none
-                      focus:ring-2
-                      focus:ring-indigo-500
-                      focus:ring-offset-2
-                    '
-                    onClick={onClose}
-                  >
-                    <span className='sr-only'>Close</span>
+                  <button type='button' className='icon-btn' onClick={onClose}>
+                    <span className='sr-only'>Zavrieť</span>
                     <IoClose className='h-6 w-6' aria-hidden='true' />
                   </button>
                 </div>

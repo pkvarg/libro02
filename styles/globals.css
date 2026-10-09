@@ -2,27 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  body {
+    @apply bg-paper font-sans text-base text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-soft text-brand;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background-color: black;
-  /* background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb)); */
+@layer components {
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-brand-ring focus-visible:ring-offset-2 focus-visible:ring-offset-paper;
+  }
+
+  .btn {
+    @apply focus-ring inline-flex min-h-[40px] items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-lg {
+    @apply min-h-[48px] px-6 text-base;
+  }
+  .btn-sm {
+    @apply min-h-[32px] px-3 py-1 text-[13px];
+  }
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-hover;
+  }
+  .btn-secondary {
+    @apply border border-line-strong bg-surface text-ink hover:bg-sunken;
+  }
+  .btn-ghost {
+    @apply text-ink-soft hover:bg-sunken hover:text-ink;
+  }
+  .btn-danger {
+    @apply bg-danger text-white hover:bg-danger-hover;
+  }
+
+  .icon-btn {
+    @apply focus-ring inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-sunken hover:text-ink;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-line-strong bg-surface px-4 py-3 text-base text-ink placeholder:text-ink-faint transition focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand-soft disabled:cursor-not-allowed disabled:bg-sunken disabled:opacity-70;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-ink-soft;
+  }
+
+  .card {
+    @apply rounded-card border border-line bg-surface shadow-card;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .link {
+    @apply focus-ring rounded font-medium text-brand underline-offset-2 hover:underline;
+  }
+
+  .page-title {
+    @apply font-display text-xl font-semibold text-ink;
+  }
 }

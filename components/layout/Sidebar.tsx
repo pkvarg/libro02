@@ -1,102 +1,100 @@
 import React from 'react'
-import { BsBellFill, BsHouseFill } from 'react-icons/bs'
-import { FaUser, FaUserPlus } from 'react-icons/fa'
-import { ImUserPlus } from 'react-icons/im'
-import { BiLogOut } from 'react-icons/bi'
-import { BsChatDots } from 'react-icons/bs'
-import { MdAdminPanelSettings } from 'react-icons/md'
-import SidebarItem from './SidebarItem'
-import SidebarTweetButton from './SidebarTweetButton'
-import useCurrentUser from '@/hooks/useCurrentUser'
-import { signOut } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { MdOutlineFeed } from 'react-icons/md'
+import { signOut } from 'next-auth/react'
+import { HiArrowRightOnRectangle, HiOutlineShieldCheck, HiPlus } from 'react-icons/hi2'
+
+import useCurrentUser from '@/hooks/useCurrentUser'
+import useBookModal from '@/hooks/useBookModal'
+import useLoginModal from '@/hooks/useLoginModal'
+
+import Avatar from '../Avatar'
+import SidebarItem from './SidebarItem'
+import SidebarLogo from './SidebarLogo'
+import { getNavItems, isActivePath } from './navItems'
 
 const Sidebar = () => {
   const { data: currentUser } = useCurrentUser()
   const router = useRouter()
-  const route = router.route
+  const bookModal = useBookModal()
+  const loginModal = useLoginModal()
 
-  const wrongPathname = route.includes('conversations')
-
-  const items = [
-    {
-      label: 'Domov',
-      href: '/',
-      icon: BsHouseFill,
-    },
-    {
-      label: 'Notifikácie',
-      href: '/notifications',
-      icon: BsBellFill,
-      auth: true,
-      alert: currentUser?.hasNotification,
-    },
-    {
-      label: 'Profil',
-      href: `/users/${currentUser?.id}`,
-      icon: FaUser,
-      auth: true,
-    },
-    {
-      label: 'Tweety',
-      href: `/posts`,
-      icon: MdOutlineFeed,
-      auth: true,
-    },
-  ]
+  const items = getNavItems(currentUser).filter((item) => !item.auth || currentUser)
 
   return (
-    <div className='col-span-1 h-full pr-4 md:pr-6'>
-      <div className='flex flex-col items-end'>
-        {!wrongPathname && (
-          <div className='space-y-2 lg:w-[230px]'>
-            {/* <SidebarLogo /> */}
-            {items.map((item) => (
-              <SidebarItem
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                icon={item.icon}
-                auth={item.auth}
-                alert={item.alert}
-              />
-            ))}
-            {currentUser && (
-              <>
-                <SidebarItem
-                  onClick={() => router.push('/conversations')}
-                  icon={BsChatDots}
-                  label='Chat'
-                />
+    <aside className="sticky top-0 hidden h-screen w-[72px] shrink-0 flex-col py-4 md:flex lg:w-60">
+      <SidebarLogo />
+      <nav className="mt-4 flex flex-col gap-1" aria-label="Hlavná navigácia">
+        {items.map((item) => (
+          <SidebarItem
+            key={item.label}
+            href={item.href}
+            label={item.label}
+            icon={item.icon}
+            auth={item.auth}
+            alert={item.alert}
+            active={isActivePath(router.asPath, item.href)}
+          />
+        ))}
+        {currentUser?.isAdmin && (
+          <SidebarItem
+            href="/admin"
+            icon={HiOutlineShieldCheck}
+            label="Admin"
+            active={isActivePath(router.asPath, '/admin')}
+          />
+        )}
+      </nav>
 
-                <SidebarItem
-                  onClick={() => signOut()}
-                  icon={BiLogOut}
-                  label='Odhlásiť'
-                />
-                {currentUser.isAdmin && (
-                  <SidebarItem
-                    href='/admin'
-                    icon={MdAdminPanelSettings}
-                    label='Admin'
-                  />
-                )}
-                <div className='block lg:hidden text-[30px]'>
-                  <SidebarItem
-                    key='users'
-                    href='/users'
-                    label='Sledovať'
-                    icon={ImUserPlus}
-                  />
-                </div>
-              </>
-            )}
-            {!currentUser && <SidebarTweetButton />}
-          </div>
+      <div className="mt-6">
+        {currentUser ? (
+          <button
+            type="button"
+            onClick={bookModal.onOpen}
+            className="btn btn-primary btn-lg w-12 px-0 lg:w-full"
+            title="Pridať knihu"
+          >
+            <HiPlus size={20} />
+            <span className="hidden lg:inline">Pridať knihu</span>
+          </button>
+        ) : (
+          <button type="button" onClick={loginModal.onOpen} className="btn btn-primary btn-lg w-full px-0 lg:px-6">
+            <span className="hidden lg:inline">Prihlásiť sa</span>
+            <HiArrowRightOnRectangle size={20} className="lg:hidden" />
+          </button>
         )}
       </div>
-    </div>
+
+      {currentUser && (
+        <div className="mt-auto flex items-center gap-3 rounded-full p-1.5 lg:pr-2">
+          <Avatar userId={currentUser.id} src={currentUser.profileImage ?? null} name={currentUser.name} size="sm" />
+          <Link href={`/users/${currentUser.id}`} className="focus-ring hidden min-w-0 flex-1 rounded lg:block">
+            <p className="truncate text-sm font-semibold text-ink hover:underline">{currentUser.name}</p>
+            <p className="truncate text-xs text-ink-muted">@{currentUser.username}</p>
+          </Link>
+          <button
+            type="button"
+            onClick={() => signOut()}
+            className="icon-btn hidden lg:inline-flex"
+            title="Odhlásiť sa"
+            aria-label="Odhlásiť sa"
+          >
+            <HiArrowRightOnRectangle size={20} />
+          </button>
+        </div>
+      )}
+      {currentUser && (
+        <button
+          type="button"
+          onClick={() => signOut()}
+          className="icon-btn mt-2 self-center lg:hidden"
+          title="Odhlásiť sa"
+          aria-label="Odhlásiť sa"
+        >
+          <HiArrowRightOnRectangle size={20} />
+        </button>
+      )}
+    </aside>
   )
 }
 

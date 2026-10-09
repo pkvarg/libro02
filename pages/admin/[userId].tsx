@@ -7,7 +7,7 @@ import { BiArrowBack } from 'react-icons/bi'
 import { BsTrash } from 'react-icons/bs'
 
 const Page = () => {
-  const { data } = getCurrentUser()
+  const { data, isLoading: isUserLoading } = getCurrentUser()
   const router = useRouter()
   const [user, setUser] = useState<Record<string, any>>()
 
@@ -20,11 +20,12 @@ const Page = () => {
   const isAdmin = data?.isAdmin
   const name = data?.name
 
+  // Wait until the current user has loaded, otherwise a hard reload always redirects.
   useEffect(() => {
-    if (!isAdmin) {
+    if (!isUserLoading && !isAdmin) {
       router.push('/')
     }
-  }, [isAdmin])
+  }, [isAdmin, isUserLoading])
 
   useEffect(() => {
     const getUserById = async () => {
@@ -54,54 +55,68 @@ const Page = () => {
   return (
     isAdmin &&
     user && (
-      <div className='h-[100vh] ml-2'>
-        <BiArrowBack
-          onClick={handleBack}
-          color='white'
-          size={20}
-          className='mt-4 cursor-pointer hover:opacity-70 transition'
-        />
-        <div className='flex flex-col justify-center gap-2 mt-2 mx-4 lg:mx-0'>
-          <div className='flex flex-row gap-2 items-center'>
-            <Avatar userId={user.id} hasBorder={true} />
-            <p>{user?.name}</p>
-          </div>
-          <div className='flex flex-col'>
-            <div className='flex flex-row gap-4 items-center'>
-              <p
-                onClick={() => setShowConvIds((prev) => !prev)}
-                className='text-gray-500 text-[20px] cursor-pointer'
-              >
-                ConversationIds
-              </p>
+      <div className='mx-auto min-h-screen max-w-3xl pt-4'>
+        <button type='button' onClick={handleBack} className='btn btn-ghost -ml-3' aria-label='Späť na administráciu'>
+          <BiArrowBack size={18} />
+          Administrácia
+        </button>
+        <div className='card mt-3 flex flex-col gap-5 p-5'>
+          <div className='flex items-center gap-3'>
+            <Avatar userId={user.id} src={user.profileImage ?? null} name={user.name} />
+            <div>
+              <p className='font-semibold text-ink'>{user?.name}</p>
+              <p className='text-sm text-ink-muted'>@{user?.username}</p>
             </div>
+          </div>
+          <div>
+            <button
+              type='button'
+              onClick={() => setShowConvIds((prev) => !prev)}
+              aria-expanded={showConvIds}
+              className='focus-ring rounded text-sm font-semibold text-ink-soft hover:text-ink'
+            >
+              ConversationIds ({user.conversationIds?.length || 0})
+            </button>
             {showConvIds &&
               user.conversationIds.map((convId) => (
-                <div className='flex flex-row gap-4 items-center'>
-                  <p>{convId}</p>
-                  <BsTrash
+                <div key={convId} className='mt-1 flex items-center gap-2 font-mono text-xs text-ink-soft'>
+                  <span className='break-all'>{convId}</span>
+                  <button
+                    type='button'
                     onClick={() => deleteConvId(convId)}
-                    className='text-red-500 cursor-pointer'
-                  />
+                    className='icon-btn h-8 w-8 hover:bg-danger-soft hover:text-danger'
+                    aria-label={`Odstrániť ${convId}`}
+                  >
+                    <BsTrash size={14} />
+                  </button>
                 </div>
               ))}
           </div>
-          <div className='flex flex-col'>
-            <div className='flex flex-row items-center gap-2'>
-              <p
+          <div>
+            <div className='flex items-center gap-2'>
+              <button
+                type='button'
                 onClick={() => setShowSeenIds((prev) => !prev)}
-                className='text-gray-500 text-[20px] cursor-pointer'
+                aria-expanded={showSeenIds}
+                className='focus-ring rounded text-sm font-semibold text-ink-soft hover:text-ink'
               >
-                SeenMessagesIds
-              </p>
-              <BsTrash
+                SeenMessagesIds ({user.seenMessageIds?.length || 0})
+              </button>
+              <button
+                type='button'
                 onClick={deleteAllSeenIds}
-                className='text-red-500 cursor-pointer'
-              />
+                className='icon-btn h-8 w-8 hover:bg-danger-soft hover:text-danger'
+                aria-label='Odstrániť všetky SeenMessagesIds'
+              >
+                <BsTrash size={14} />
+              </button>
             </div>
-
             {showSeenIds &&
-              user.seenMessageIds.map((seenId) => <p>{seenId}</p>)}
+              user.seenMessageIds.map((seenId) => (
+                <p key={seenId} className='break-all font-mono text-xs text-ink-soft'>
+                  {seenId}
+                </p>
+              ))}
           </div>
         </div>
       </div>

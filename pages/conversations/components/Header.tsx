@@ -6,7 +6,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Conversation, User } from '@prisma/client'
 import useOtherUser from '@/hooks/useOtherUser'
-import { useSession } from 'next-auth/react'
 import AvatarChat from '@/components/AvatarChat'
 import AvatarGroup from '@/components/AvatarGroup'
 import ProfileDrawer from './ProfileDrawer'
@@ -22,9 +21,6 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const router = useRouter()
   const { conversationId } = router.query
   const otherUser = useOtherUser(conversation)
-  const otherUserEmail = otherUser?.email
-  const session = useSession()
-  const currentUserEmail = session.data?.user?.email
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [status, setStatus] = useState('Offline')
 
@@ -35,53 +31,37 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
-      <div
-        className='
-        w-full
-        flex
-        border-b-[1px]
-        sm:px-4
-        py-3
-        px-4
-        lg:px-6
-        justify-between
-        items-center
-        shadow-sm
-      '
-      >
-        <div className='flex gap-3 items-center'>
+      <div className="flex items-center gap-3 border-b border-line px-3 py-2.5 md:px-5">
+        <Link href="/conversations" className="icon-btn md:hidden" aria-label="Späť na správy">
+          <HiChevronLeft size={26} />
+        </Link>
+        {conversation?.isGroup ? (
+          <AvatarGroup users={conversation?.users} />
+        ) : (
           <Link
-            href='/conversations'
-            className='
-            lg:hidden
-            block
-            text-sky-500
-            hover:text-sky-600
-            transition
-            cursor-pointer
-          '
+            href={otherUser ? `/users/${otherUser.id}` : '#'}
+            className="focus-ring flex min-w-0 items-center gap-3 rounded-full pr-2 hover:opacity-90"
           >
-            <HiChevronLeft size={32} />
-          </Link>
-          {conversation?.isGroup ? (
-            <AvatarGroup users={conversation?.users} />
-          ) : (
             <AvatarChat user={otherUser} />
-          )}
-          <div className='flex flex-col'>
-            <div>{conversation?.name || otherUser?.name}</div>
-          </div>
-        </div>
-        <HiEllipsisHorizontal
-          size={32}
+            <span className="min-w-0">
+              <span className="block truncate font-semibold text-ink hover:underline">
+                {conversation?.name || otherUser?.name}
+              </span>
+              {otherUser?.username && (
+                <span className="block truncate text-xs text-ink-muted">@{otherUser.username}</span>
+              )}
+            </span>
+          </Link>
+        )}
+        {conversation?.isGroup && <div className="font-semibold text-ink">{conversation?.name}</div>}
+        <button
+          type="button"
           onClick={() => setDrawerOpen(true)}
-          className='
-          text-sky-500
-          cursor-pointer
-          hover:text-sky-600
-          transition
-        '
-        />
+          className="icon-btn ml-auto"
+          aria-label="Možnosti konverzácie"
+        >
+          <HiEllipsisHorizontal size={24} />
+        </button>
       </div>
     </>
   )

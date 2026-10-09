@@ -1,89 +1,63 @@
 import React, { useState, useEffect } from 'react'
 import getCurrentUser from '@/hooks/useCurrentUser'
 import { useRouter } from 'next/router'
+import clsx from 'clsx'
 import UsersPanel from '@/components/admin/UsersPanel'
 import BooksPanel from '@/components/admin/BooksPanel'
 import TweetsPanel from '@/components/admin/TweetsPanel'
-import ChatsPanel from '@/components/admin/ChatsPanel'
 import Counter from '@/components/admin/Counter'
 
 const AdminPage = () => {
-  const { data } = getCurrentUser()
+  const { data, isLoading: isUserLoading } = getCurrentUser()
   const router = useRouter()
 
   const isAdmin = data?.isAdmin
   const name = data?.name
 
-  const [showUsers, setShowUsers] = useState(false)
-  const [showBooks, setShowBooks] = useState(false)
-  const [showTweets, setShowTweets] = useState(false)
-  const [showChats, setShowChats] = useState(false)
-  const [showUsersItems, setShowUsersItems] = useState(false)
+  // One active panel at a time; the chat panel is disabled.
+  const [tab, setTab] = useState<'users' | 'books' | 'tweets'>('users')
 
+  // Wait until the current user has loaded, otherwise a hard reload always redirects.
   useEffect(() => {
-    if (!isAdmin) {
+    if (!isUserLoading && !isAdmin) {
       router.push('/')
     }
-  }, [isAdmin])
+  }, [isAdmin, isUserLoading])
 
-  useEffect(() => {
-    if (showUsers) {
-      setShowBooks(false)
-      setShowTweets(false)
-      setShowChats(false)
-    }
-    if (showBooks) {
-      setShowUsers(false)
-      setShowTweets(false)
-      setShowChats(false)
-    }
-    if (showTweets) {
-      setShowBooks(false)
-      setShowUsers(false)
-      setShowChats(false)
-    }
-    if (showChats) {
-      setShowBooks(false)
-      setShowTweets(false)
-      setShowUsers(false)
-    }
-  }, [showBooks, showUsers, showTweets, showChats])
+  const tabs = [
+    { label: 'Užívatelia', active: tab === 'users', open: () => setTab('users') },
+    { label: 'Knihy', active: tab === 'books', open: () => setTab('books') },
+    { label: 'Príspevky', active: tab === 'tweets', open: () => setTab('tweets') },
+  ]
 
   return (
     isAdmin && (
-      <div className="h-[100vh]">
-        <h1 className="text-center text-[30px] mt-2">Hello {name}</h1>
-        <div className="flex flex-col lg:flex-row justify-center gap-2 mt-2 mx-4 lg:mx-0">
-          <h2
-            className="bg-[#09a7e9] rounded-xl px-2 cursor-pointer"
-            onClick={() => setShowUsers(true)}
-          >
-            Užívatelia
-          </h2>
-          <h2
-            className="bg-[#09a7e9] rounded-xl px-2 cursor-pointer"
-            onClick={() => setShowBooks(true)}
-          >
-            Knihy
-          </h2>
-          <h2
-            className="bg-[#09a7e9] rounded-xl px-2 cursor-pointer"
-            onClick={() => setShowTweets(true)}
-          >
-            Tweety
-          </h2>
-          {/* <h2
-            className='bg-[#09a7e9] rounded-xl px-2 cursor-pointer'
-            onClick={() => setShowChats(true)}
-          >
-            Chaty
-          </h2> */}
+      <div className="mx-auto min-h-screen max-w-3xl pt-4">
+        <h1 className="font-display text-2xl font-semibold text-ink">Administrácia</h1>
+        <p className="text-sm text-ink-muted">Prihlásený: {name}</p>
+        <div className="mt-4 flex gap-1 overflow-x-auto rounded-full bg-sunken p-1" role="tablist">
+          {tabs.map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              role="tab"
+              aria-selected={item.active}
+              onClick={item.open}
+              className={clsx(
+                'focus-ring flex-1 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors',
+                item.active ? 'bg-surface text-ink shadow-card' : 'text-ink-muted hover:text-ink'
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
         <Counter />
-        {showUsers && <UsersPanel />}
-        {showBooks && <BooksPanel />}
-        {showTweets && <TweetsPanel />}
-        {/* {showChats && <ChatsPanel />} */}
+        <div className="mt-4">
+          {tab === 'users' && <UsersPanel />}
+          {tab === 'books' && <BooksPanel />}
+          {tab === 'tweets' && <TweetsPanel />}
+        </div>
       </div>
     )
   )

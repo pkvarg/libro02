@@ -1,8 +1,10 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { BsTrash } from 'react-icons/bs'
+import { sk } from 'date-fns/locale'
+import clsx from 'clsx'
+import { HiHeart, HiOutlineChatBubbleOvalLeft, HiOutlineHeart, HiOutlineTrash } from 'react-icons/hi2'
 import useLoginModal from '@/hooks/useLoginModal'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import useLike from '@/hooks/useLike'
@@ -14,27 +16,17 @@ import DeleteAlert from '@/components/alerts/DeleteAlert'
 interface PostItemProps {
   data: Record<string, any>
   userId?: string
+  // On the post's own page the card is not a link to itself.
+  isDetail?: boolean
 }
 
-const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
+const PostItem: React.FC<PostItemProps> = ({ data = {}, userId, isDetail }) => {
   const router = useRouter()
   const loginModal = useLoginModal()
   const [showAlert, setShowAlert] = useState<boolean>(false)
 
   const { data: currentUser } = useCurrentUser()
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId })
-
-  const goToUser = useCallback(
-    (ev: any) => {
-      ev.stopPropagation()
-      router.push(`/users/${data.user.id}`)
-    },
-    [router, data.user.id]
-  )
-
-  const goToPost = useCallback(() => {
-    router.push(`/posts/${data.id}`)
-  }, [router, data.id])
 
   const onLike = useCallback(
     async (ev: any) => {
@@ -49,18 +41,18 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     [loginModal, currentUser, toggleLike]
   )
 
-  const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
-
   const createdAt = useMemo(() => {
     if (!data?.createdAt) {
       return null
     }
 
-    return formatDistanceToNowStrict(new Date(data.createdAt))
+    return formatDistanceToNowStrict(new Date(data.createdAt), { locale: sk, addSuffix: true })
   }, [data.createdAt])
 
   const whoIsCurrentUser = currentUser?.id
   const whosPost = data?.userId
+  const postHref = `/posts/${data.id}`
+  const profileHref = `/users/${data.user.id}`
 
   const handleDelete = async (postId: String, userId: String) => {
     if (postId !== undefined && whosPost === userId) {
@@ -72,12 +64,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
         console.log(error)
       }
     }
-    //router.reload()
-    // setTimeout(() => {
-    // }, 2000)
     router.push(`/users/${whoIsCurrentUser}`)
     toast.success('Príspevok vymazaný!')
-    //router.reload()
     setShowAlert(false)
   }
 
@@ -87,93 +75,68 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
   return (
     <>
-      <div
-        onClick={goToPost}
-        className='
-        border-b-[1px] 
-        border-neutral-800 
-        p-5 
-        cursor-pointer 
-        hover:bg-neutral-900 
-        transition
-      '
-      >
-        <div className='flex flex-row items-start gap-3'>
-          <Avatar userId={data.user.id} />
-          <div>
-            <div className='flex flex-row items-center gap-2'>
-              <p
-                onClick={goToUser}
-                className='
-                text-white 
-                font-semibold 
-                cursor-pointer 
-                hover:underline
-            '
-              >
-                {data.user.name}
-              </p>
-              <span
-                onClick={goToUser}
-                className='
-                text-neutral-500
-                cursor-pointer
-                hover:underline
-                hidden
-                md:block
-            '
-              >
-                @{data.user.username}
-              </span>
-              <span className='text-neutral-500 text-sm'>{createdAt}</span>
+      <article className={clsx('card relative p-4 sm:p-5', !isDetail && 'transition-colors hover:border-line-strong')}>
+        {!isDetail && (
+          <Link
+            href={postHref}
+            className="focus-ring absolute inset-0 rounded-card"
+            aria-label={`Otvoriť príspevok od ${data.user.name}`}
+          />
+        )}
+        <div className="flex items-start gap-3">
+          <div className="relative z-10">
+            <Avatar userId={data.user.id} src={data.user.profileImage ?? null} name={data.user.name} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start gap-2">
+              <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2">
+                <Link href={profileHref} className="focus-ring relative z-10 rounded font-semibold text-ink hover:underline">
+                  {data.user.name}
+                </Link>
+                <Link href={profileHref} className="relative z-10 hidden truncate text-sm text-ink-muted hover:underline sm:inline">
+                  @{data.user.username}
+                </Link>
+                <span className="text-sm text-ink-muted">{createdAt}</span>
+              </div>
+              {whoIsCurrentUser === whosPost && (
+                <button
+                  type="button"
+                  onClick={() => setShowAlert(true)}
+                  className="icon-btn relative z-10 -mr-2 -mt-2 h-9 w-9 hover:bg-danger-soft hover:text-danger"
+                  aria-label="Vymazať príspevok"
+                  title="Vymazať"
+                >
+                  <HiOutlineTrash size={18} />
+                </button>
+              )}
             </div>
-            <div className='text-white mt-1'>{data.body}</div>
-            <div className='flex flex-row items-center mt-3 gap-10'>
-              <div
-                className='
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-sky-500
-            '
+            <p className={clsx('mt-1 whitespace-pre-line break-words text-ink', isDetail && 'text-lg')}>{data.body}</p>
+            <div className="-ml-2 mt-2 flex items-center gap-2">
+              <Link
+                href={postHref}
+                className="focus-ring relative z-10 flex h-9 items-center gap-1.5 rounded-full px-2 text-sm text-ink-muted transition-colors hover:bg-sunken hover:text-ink"
+                aria-label={`Komentáre: ${data.comments?.length || 0}`}
               >
-                <AiOutlineMessage size={20} />
-                <p>{data.comments?.length || 0}</p>
-              </div>
-              <div
+                <HiOutlineChatBubbleOvalLeft size={20} />
+                {data.comments?.length || 0}
+              </Link>
+              <button
+                type="button"
                 onClick={onLike}
-                className='
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-red-500
-            '
+                aria-pressed={hasLiked}
+                aria-label={hasLiked ? 'Zrušiť páči sa mi' : 'Páči sa mi'}
+                className={clsx(
+                  'focus-ring relative z-10 flex h-9 items-center gap-1.5 rounded-full px-2 text-sm transition-colors hover:bg-brand-soft',
+                  hasLiked ? 'text-brand' : 'text-ink-muted hover:text-brand'
+                )}
               >
-                <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
-                <p>{data.likedIds.length}</p>
-              </div>
+                {hasLiked ? <HiHeart size={20} /> : <HiOutlineHeart size={20} />}
+                {data.likedIds.length}
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      {whoIsCurrentUser === whosPost && (
-        <div className='relative'>
-          <button
-            onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-24 right-1 lg:right-4'
-          >
-            <BsTrash />
-          </button>
-        </div>
-      )}
+      </article>
 
       {showAlert && (
         <DeleteAlert

@@ -9,10 +9,8 @@ import useUser from '@/hooks/useUser'
 
 import Input from '../Input'
 import Modal from '../Modal'
-import ImageUpload from '../ImageUpload'
-import { HiPhoto } from 'react-icons/hi2'
 
-import { CldUploadButton } from 'next-cloudinary'
+import ImagePicker from '../ImagePicker'
 
 const EditModal = () => {
   const { data: currentUser } = useCurrentUser()
@@ -99,51 +97,34 @@ const EditModal = () => {
   ])
 
   const bodyContent = (
-    <div className='flex flex-col gap-2'>
-      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
-        <h1>Nahjrate profilový obrázok</h1>
-        <CldUploadButton
-          options={{ maxFiles: 1 }}
-          onUpload={handleUploadProfileImage}
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-        ></CldUploadButton>
-        <img src={profileImage} height='100' width='100' alt='Uploaded image' />
-      </div>
-      {/* <ImageUpload
+    <div className='flex flex-col gap-4'>
+      <ImagePicker
+        label='Profilová fotka'
+        shape='round'
         value={profileImage}
-        disabled={isLoading}
-        onChange={(image) => setProfileImage(image)}
-        label='Najhrajte profilový obrázok'
-      /> */}
-
-      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
-        <h1>Nahjrate pozadie</h1>
-        <CldUploadButton
-          options={{ maxFiles: 1 }}
-          onUpload={handleUploadCoverImage}
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-        ></CldUploadButton>
-        <img src={coverImage} height='100' width='100' alt='Uploaded image' />
-      </div>
-      {/* <ImageUpload
+        onUpload={handleUploadProfileImage}
+      />
+      <ImagePicker
+        label='Titulný obrázok'
         value={coverImage}
-        disabled={isLoading}
-        onChange={(image) => setCoverImage(image)}
-        label='Nahrajte pozadie'
-      /> */}
+        onUpload={handleUploadCoverImage}
+      />
       <Input
+        label='Meno'
         placeholder='Meno'
         onChange={(e) => setName(e.target.value)}
         value={name}
         disabled={isLoading}
       />
       <Input
+        label='Užívateľské meno'
         placeholder='Užívateľské meno'
         onChange={(e) => setUsername(e.target.value)}
         value={username}
         disabled={isLoading}
       />
       <Input
+        label='O Vás'
         placeholder='O Vás'
         onChange={(e) => setBio(e.target.value)}
         value={bio}
@@ -153,7 +134,7 @@ const EditModal = () => {
         type='button'
         onClick={deleteAccount}
         disabled={isLoading}
-        className='self-start text-sm text-red-400 underline hover:text-red-300 disabled:opacity-50'
+        className='focus-ring mt-2 self-start rounded text-sm font-medium text-danger underline-offset-2 hover:underline disabled:opacity-50'
       >
         Zrušiť konto
       </button>

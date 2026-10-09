@@ -61,53 +61,52 @@ const Footer = () => {
     setBannerVisible('hidden')
   }
   return (
-    <div className="text-[#6f6f6f] flex flex-col gap-2 items-center justify-center py-6">
+    <footer className="mt-10 flex flex-col items-center justify-center gap-2 border-t border-line py-8 text-ink-muted">
       <CookieConsent
         visible={bannerVisible}
         location="bottom"
         style={{
-          //background: 'rgba(2, 3, 16, 0.9)',
-          background: '#08a6e9',
-          backdropFilter: 'blur(10px)',
-          color: '#ffffff',
-          fontSize: '16px',
+          background: '#292524',
+          color: '#FAF7F2',
+          fontSize: '14px',
+          lineHeight: '1.5',
           textAlign: 'start',
-          borderTop: '1px solid rgba(247, 194, 36, 0.3)',
-          boxShadow: '0 -5px 20px rgba(0, 0, 0, 0.3)',
-          padding: '16px 24px',
+          alignItems: 'center',
+          boxShadow: '0 -8px 30px rgba(41, 37, 36, 0.2)',
+          padding: '12px 16px',
+          zIndex: 45,
         }}
         buttonStyle={{
-          background: '#10e92d',
-          color: '#ffffff',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          padding: '10px 24px',
-          borderRadius: '8px',
-          border: 'none',
+          background: '#FAF7F2',
+          color: '#292524',
+          fontSize: '14px',
+          fontWeight: 600,
+          padding: '10px 20px',
+          borderRadius: '999px',
+          border: '1px solid #FAF7F2',
           cursor: 'pointer',
-          transition: 'all 0.3s ease',
+          margin: '6px',
         }}
         buttonText={'Súhlasím'}
         expires={365}
         enableDeclineButton
         onDecline={() => decide(false)}
         declineButtonStyle={{
-          background: '#ff0000',
-          color: '#ffffff',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          padding: '8px 24px',
-          borderRadius: '8px',
-          border: '2px solid rgba(255, 255, 255, 0.2)',
+          background: 'transparent',
+          color: '#FAF7F2',
+          fontSize: '14px',
+          fontWeight: 600,
+          padding: '10px 20px',
+          borderRadius: '999px',
+          border: '1px solid rgba(250, 247, 242, 0.4)',
           cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          marginRight: '10px',
+          margin: '6px',
         }}
         declineButtonText={'Nesúhlasím'}
         onAccept={() => decide(true)}
         contentStyle={{
-          flex: '1',
-          margin: '0',
+          flex: '1 1 300px',
+          margin: '6px',
         }}
       >
         So súhlasom meriame návštevnosť nástrojom Umami – bez cookies a bez ukladania IP adresy. Web
@@ -116,27 +115,31 @@ const Footer = () => {
           Viac informácií
         </Link>
       </CookieConsent>
-      <nav className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[14px]">
-        <Link href="/rules" className="hover:text-white">
+      <nav className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
+        <Link href="/rules" className="focus-ring rounded hover:text-ink hover:underline">
           Pravidlá a podmienky
         </Link>
-        <Link href="/privacy" className="hover:text-white">
+        <Link href="/privacy" className="focus-ring rounded hover:text-ink hover:underline">
           Ochrana osobných údajov
         </Link>
-        <button type="button" onClick={() => setBannerVisible('show')} className="hover:text-white">
+        <button
+          type="button"
+          onClick={() => setBannerVisible('show')}
+          className="focus-ring rounded hover:text-ink hover:underline"
+        >
           Nastavenia cookies
         </button>
-        <a href="mailto:info@librosophia.sk" className="hover:text-white">
+        <a href="mailto:info@librosophia.sk" className="focus-ring rounded hover:text-ink hover:underline">
           info@librosophia.sk
         </a>
       </nav>
-      <Link className="text-[15px]" href={'https://cestazivota.sk'} target="_blank">
+      <Link className="text-sm hover:text-ink" href={'https://cestazivota.sk'} target="_blank">
         &copy; {Date().substring(11, 15)} cestazivota.sk
       </Link>
-      <Link className="text-[12.5px]" href="https://pictusweb.sk" target="_blank">
+      <Link className="text-xs hover:text-ink" href="https://pictusweb.sk" target="_blank">
         &#60;&#47;&#62; PICTUSWEB development
       </Link>
-    </div>
+    </footer>
   )
 }
 

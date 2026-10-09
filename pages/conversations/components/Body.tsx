@@ -11,7 +11,7 @@ interface BodyProps {
 }
 
 const Body: React.FC<BodyProps> = ({ initialMessages, rerender }) => {
-  const bottomRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const [messages, setMessages] = useState(initialMessages)
 
   const router = useRouter()
@@ -21,21 +21,22 @@ const Body: React.FC<BodyProps> = ({ initialMessages, rerender }) => {
     axios.post(`/api/conversations/${conversationId}/seen`)
   }, [conversationId])
 
+  // Scroll only the message list, never the page around it.
   useEffect(() => {
-    bottomRef?.current?.scrollIntoView()
+    const list = scrollRef.current
+    if (list) list.scrollTop = list.scrollHeight
   }, [initialMessages])
 
   return (
-    <div className='flex-1 overflow-y-auto'>
+    <div ref={scrollRef} className='flex-1 overflow-y-auto bg-paper/40 py-3'>
       {initialMessages?.map((message, i) => (
         <MessageBox
-          isLast={i === messages.length - 1}
+          isLast={i === initialMessages.length - 1}
           key={message.id}
           data={message}
           rerender={rerender}
         />
       ))}
-      <div className='pt-24' ref={bottomRef} />
     </div>
   )
 }

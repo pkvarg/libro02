@@ -4,8 +4,8 @@ import { toast } from 'react-hot-toast'
 import useBookModal from '@/hooks/useBookModal'
 import Input from '../Input'
 import Modal from '../Modal'
-import ImageUpload from '../ImageUpload'
-import { CldUploadButton } from 'next-cloudinary'
+import ImagePicker from '../ImagePicker'
+import ChoiceGroup from '../ChoiceGroup'
 
 import { useRouter } from 'next/router'
 
@@ -71,17 +71,14 @@ const BookModal = () => {
         onChange={(image) => setBookImage(image)}
         label='Nahrajte obrázok knihy'
       /> */}
-      <div className='w-full p-4 text-white text-center border-2 border-dotted rounded-md border-neutral-700'>
-        <h1>Nahrajte obrázok knihy</h1>
-
-        <CldUploadButton
-          options={{ maxFiles: 1 }}
-          onUpload={handleUploadBookImage}
-          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-        ></CldUploadButton>
-        <img src={bookImage} height='100' width='100' alt='Uploaded image' />
-      </div>
+      <ImagePicker
+        label='Obrázok knihy'
+        shape='book'
+        value={bookImage}
+        onUpload={handleUploadBookImage}
+      />
       <Input
+        label='Názov'
         placeholder='Názov'
         onChange={(e) => setBookTitle(e.target.value)}
         value={bookTitle}
@@ -94,109 +91,24 @@ const BookModal = () => {
         disabled={isLoading}
       /> */}
       <Input
+        label='Autor knihy'
         placeholder='Autor knihy'
         onChange={(e) => setBookAuthor(e.target.value)}
         value={bookAuthor}
         disabled={isLoading}
       />
-      <div
-        className='w-full
-          flex
-          flex-col
-          lg:flex-row
-          gap-4
-          p-4 
-          text-lg 
-          bg-black 
-          border-2
-          border-neutral-800 
-          rounded-md
-          outline-none
-          text-[#9ca3af]
-          focus:border-sky-500
-          focus:border-2
-          transition
-          disabled:bg-neutral-900
-          disabled:opacity-70
-          disabled:cursor-not-allowed'
-      >
-        <h1>Požičiam na</h1>
-        <button
-          onClick={() => setBookLendingDuration('1')}
-          className={
-            bookLendingDuration === '1'
-              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
-              : 'border border-[#9ca3af] rounded-xl px-2 '
-          }
-        >
-          1 mesiac
-        </button>
-        <button
-          onClick={() => setBookLendingDuration('2')}
-          className={
-            bookLendingDuration === '2'
-              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
-              : 'border border-[#9ca3af] rounded-xl px-2 '
-          }
-        >
-          2 mesiace
-        </button>
-
-        <button
-          onClick={() => setBookLendingDuration('3')}
-          className={
-            bookLendingDuration === '3'
-              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
-              : 'border border-[#9ca3af] rounded-xl px-2 '
-          }
-        >
-          3 mesiace
-        </button>
-      </div>
-
-      {/* <div
-        className='w-full
-          flex
-          flex-row
-          gap-4
-          p-4 
-          text-lg 
-          bg-black 
-          border-2
-          border-neutral-800 
-          rounded-md
-          outline-none
-          text-[#9ca3af]
-          focus:border-sky-500
-          focus:border-2
-          transition
-          disabled:bg-neutral-900
-          disabled:opacity-70
-          disabled:cursor-not-allowed'
-      >
-        <h1>Status</h1>
-        <button
-          onClick={() => setBookAvailable('voľná')}
-          className={
-            bookLendingDuration === 'voľná'
-              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
-              : 'border border-[#9ca3af] rounded-xl px-2 '
-          }
-        >
-          voľná
-        </button>
-        <button
-          onClick={() => setBookAvailable('požičaná')}
-          className={
-            bookLendingDuration === 'požičaná'
-              ? 'bg-[#ff781f] border border-[#9ca3af] rounded-xl px-2 text-white'
-              : 'border border-[#9ca3af] rounded-xl px-2 '
-          }
-        >
-          požičaná
-        </button>
-      </div> */}
+      <ChoiceGroup<string>
+        label='Požičiam na'
+        value={bookLendingDuration}
+        onChange={setBookLendingDuration}
+        options={[
+          { value: '1', label: '1 mesiac' },
+          { value: '2', label: '2 mesiace' },
+          { value: '3', label: '3 mesiace' },
+        ]}
+      />
       <Input
+        label='Krátky popis'
         placeholder='Krátky popis'
         onChange={(e) => setBookReview(e.target.value)}
         value={bookReview}
@@ -209,7 +121,7 @@ const BookModal = () => {
     <Modal
       //disabled={isLoading}
       isOpen={BookModal.isOpen}
-      title='Nahrajte info o Vašej knihe na požičanie'
+      title='Pridať knihu na požičanie'
       actionLabel='Uložiť'
       onClose={BookModal.onClose}
       onSubmit={onSubmit}

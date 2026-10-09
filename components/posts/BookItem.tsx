@@ -1,66 +1,34 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
-import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai'
-import { formatDistanceToNowStrict } from 'date-fns'
-import { BsChatDots, BsTrash } from 'react-icons/bs'
-import useLoginModal from '@/hooks/useLoginModal'
+import { useState } from 'react'
+import { HiOutlineChatBubbleLeftRight, HiOutlinePencilSquare, HiOutlineTrash } from 'react-icons/hi2'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import useLike from '@/hooks/useLike'
+import useLoginModal from '@/hooks/useLoginModal'
+import useStartConversation from '@/hooks/useStartConversation'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 
 import DeleteAlert from '@/components/alerts/DeleteAlert'
+import Avatar from '@/components/Avatar'
+import BookCover from '@/components/books/BookCover'
+import BookMeta from '@/components/books/BookMeta'
 interface BookItemProps {
   data: Record<string, any>
   userId?: string
 }
 
-const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
+const BookItem: React.FC<BookItemProps> = ({ data = {} }) => {
   const router = useRouter()
-  const loginModal = useLoginModal()
   const [showAlert, setShowAlert] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState(false)
 
   const { data: currentUser } = useCurrentUser()
-  const { hasLiked, toggleLike } = useLike({ postId: data.id, userId })
-
-  const goToUser = useCallback(
-    (ev: any) => {
-      ev.stopPropagation()
-      router.push(`/users/${data.userId}`)
-    },
-    [router, data.userId],
-  )
-
-  const goToBook = useCallback(() => {
-    router.push(`/books/${data.id}`)
-  }, [router, data.id])
-
-  const onLike = useCallback(
-    async (ev: any) => {
-      ev.stopPropagation()
-
-      if (!currentUser) {
-        return loginModal.onOpen()
-      }
-
-      toggleLike()
-    },
-    [loginModal, currentUser, toggleLike],
-  )
-
-  const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
-
-  const createdAt = useMemo(() => {
-    if (!data?.createdAt) {
-      return null
-    }
-
-    return formatDistanceToNowStrict(new Date(data.createdAt))
-  }, [data.createdAt])
+  const loginModal = useLoginModal()
+  const { startConversation, isLoading } = useStartConversation()
 
   const whoIsCurrentUser = currentUser?.id
   const whosBook = data?.userId
+  const isOwner = !!whoIsCurrentUser && whoIsCurrentUser === whosBook
+  const bookHref = `/books/${data.id}`
 
   const handleDelete = async (bookId: String) => {
     if (bookId !== undefined) {
@@ -73,12 +41,8 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
         console.log(error)
       }
     }
-    //router.reload()
-    // setTimeout(() => {
-    // }, 2000)
     router.push(`/users/${whoIsCurrentUser}`)
     toast.success('Kniha vymazaná!')
-    //router.reload()
     setShowAlert(false)
   }
 
@@ -86,146 +50,74 @@ const BookItem: React.FC<BookItemProps> = ({ data = {}, userId }) => {
     setShowAlert(false)
   }
 
-  const goToChat = useCallback(
-    (ownerId: string) => {
-      console.log('currentUser', currentUser)
-      if (!currentUser) {
-        loginModal.onOpen()
-        return
-      }
-
-      setIsLoading(true)
-      axios
-        .post('/api/conversations', {
-          userId: ownerId,
-        })
-        .then((data) => {
-          router.push(`/conversations/${data.data.id}`)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    },
-    [currentUser, router],
-  )
-
   return (
     <>
-      <div
-        //onClick={goToBook}
-        className="
-        border-b-[1px] 
-        border-neutral-800 
-        p-5 
-        
-        hover:bg-neutral-900 
-        transition
-        
-      "
-      >
-        <div className="flex flex-col lg:flex-row gap-3 relative">
-          <img className="lg:w-[50%] lg:h-[50%]" src={data.bookImage} alt={data.bookTitle} />
+      <article className="card relative flex gap-4 p-4 transition-colors hover:border-line-strong sm:gap-5 sm:p-5">
+        {currentUser ? (
+          <Link href={bookHref} className="focus-ring absolute inset-0 z-[1] rounded-card" aria-label={`Detail knihy ${data.bookTitle}`} />
+        ) : (
+          // Logged-out visitors see the catalogue; any click leads to login (and from there to registration).
+          <button
+            type="button"
+            onClick={loginModal.onOpen}
+            className="focus-ring absolute inset-0 z-[1] rounded-card"
+            aria-label={`Prihláste sa a zobrazte detail knihy ${data.bookTitle}`}
+          />
+        )}
+        <BookCover src={data.bookImage} title={data.bookTitle} className="w-24 sm:w-28" />
 
-          <div
-            className="flex flex-col text-white
-                "
-          >
-            <p
-              className="
-                text-[25px]
-            "
-            >
-              {data.bookTitle}
-            </p>
-            <p
-              className="
-                text-[22.5px]
-            "
-            >
-              {data.bookAuthor}
-            </p>
-            <p className="text-[22.5px]">
-              <span className={data.bookAvailable ? 'text-[#4bb543]' : 'text-[#ff781f]'}>
-                {data.bookAvailable ? 'Dostupná' : 'Požičaná'}
-              </span>{' '}
-            </p>
-            <p className="text-[20px]">
-              Výpožičná doba: {data.bookLendingDuration}{' '}
-              {data.bookLendingDuration !== '1' ? 'mesiace' : 'mesiac'}
-            </p>
-            {/* Logged-out visitors get no description (members only). */}
-            {data.bookReview && <p className="text-[20px] mb-8 lg:mb-0">Popis : {data.bookReview}</p>}
-            {/* do not start chat with myself */}
-            {whoIsCurrentUser !== whosBook && (
-              <div
-                onClick={() => goToChat(data.userId)}
-                className="text-white mt-auto cursor-pointer"
+        <div className="flex min-w-0 flex-1 flex-col">
+          <h3 className="font-display text-lg font-semibold leading-snug text-ink sm:text-xl">{data.bookTitle}</h3>
+          <p className="text-sm text-ink-muted">{data.bookAuthor}</p>
+          <div className="mt-2">
+            <BookMeta available={data.bookAvailable} lendingDuration={data.bookLendingDuration} />
+          </div>
+          {data.bookReview && <p className="mt-2 line-clamp-3 text-sm text-ink-soft">{data.bookReview}</p>}
+
+          <div className="mt-auto flex flex-wrap items-center gap-2 pt-3">
+            {data.user && (
+              <div className="relative z-10 mr-auto flex min-w-0 items-center gap-2">
+                <Avatar userId={data.user.id} src={data.user.profileImage ?? null} name={data.user.name} size="xs" />
+                <Link href={`/users/${data.user.id}`} className="focus-ring truncate rounded text-sm text-ink-soft hover:text-ink hover:underline">
+                  {data.user.name}
+                </Link>
+              </div>
+            )}
+            {!isOwner && (
+              <button
+                type="button"
+                onClick={() => startConversation(data.userId)}
+                disabled={isLoading}
+                className="btn btn-primary btn-sm relative z-10 ml-auto"
               >
-                <div className="flex items-center gap-2 mb-2 text-[20px] w-fit p-2 rounded-[25px] bg-[#0da6e9]">
-                  <p>Kontakt</p>
-                  <BsChatDots />
-                </div>
+                <HiOutlineChatBubbleLeftRight size={16} />
+                Kontakt
+              </button>
+            )}
+            {isOwner && (
+              <div className="relative z-10 ml-auto flex items-center gap-1">
+                <Link href={`${bookHref}?edit=1`} className="btn btn-secondary btn-sm">
+                  <HiOutlinePencilSquare size={16} />
+                  Upraviť
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowAlert(true)}
+                  className="icon-btn h-9 w-9 hover:bg-danger-soft hover:text-danger"
+                  aria-label="Vymazať knihu"
+                  title="Vymazať"
+                >
+                  <HiOutlineTrash size={18} />
+                </button>
               </div>
             )}
           </div>
-
-          {/* <div className='text-white mt-1'>{data.body}</div> */}
-          {/* <div className='flex flex-row items-center mt-3 gap-10'>
-            <div
-              className='
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-sky-500
-            '
-            >
-              <AiOutlineMessage size={20} />
-                <p>{data.comments?.length || 0}</p>
-            </div>
-            <div
-              onClick={onLike}
-              className='
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-red-500
-            '
-            >
-              <LikeIcon color={hasLiked ? 'red' : ''} size={20} /> 
-               <p>{data.likedIds.length}</p>
-               </div>
-              </div> */}
-
-          {whoIsCurrentUser === whosBook && (
-            <div>
-              <button
-                onClick={() => setShowAlert(true)}
-                className="cursor-pointer text-[#ff0000] absolute bottom-3 -right-1 lg:-right-1"
-              >
-                <BsTrash />
-              </button>
-              <button
-                onClick={goToBook}
-                className="border rounded-xl px-2 cursor-pointer absolute bottom-2 right-8 bg-black"
-              >
-                Upraviť
-              </button>
-            </div>
-          )}
-
-          {showAlert && (
-            <DeleteAlert onDelete={() => handleDelete(data.id)} onCancel={handleCancel} />
-          )}
         </div>
-      </div>
+      </article>
+
+      {showAlert && (
+        <DeleteAlert title="Naozaj chcete vymazať knihu?" onDelete={() => handleDelete(data.id)} onCancel={handleCancel} />
+      )}
     </>
   )
 }

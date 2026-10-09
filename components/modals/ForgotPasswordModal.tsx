@@ -57,9 +57,13 @@ const ForgotPasswordModal = () => {
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
+      <p className="text-sm text-ink-soft">Pošleme vám e-mail s odkazom na nastavenie nového hesla.</p>
       <Input
         disabled={isLoading}
-        placeholder="Email"
+        label="Email"
+        type="email"
+        autoComplete="email"
+        placeholder="vas@email.sk"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />

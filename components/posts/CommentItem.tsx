@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import { formatDistanceToNowStrict } from 'date-fns'
+import { sk } from 'date-fns/locale'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import Avatar from '../Avatar'
 import DeleteAlert from '@/components/alerts/DeleteAlert'
@@ -17,27 +19,16 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
   const { data: currentUser } = useCurrentUser()
   const [showAlert, setShowAlert] = useState<boolean>(false)
 
-  const goToUser = useCallback(
-    (ev: any) => {
-      ev.stopPropagation()
-
-      router.push(`/users/${data.user.id}`)
-    },
-    [router, data.user.id]
-  )
-
   const createdAt = useMemo(() => {
     if (!data?.createdAt) {
       return null
     }
 
-    return formatDistanceToNowStrict(new Date(data.createdAt))
+    return formatDistanceToNowStrict(new Date(data.createdAt), { locale: sk, addSuffix: true })
   }, [data.createdAt])
 
   const whoIsCurrentUser = currentUser?.id
   const whosComment = data?.userId
-  // Same rule as the server: the comment's author or an admin.
-  const mayDelete = !!whoIsCurrentUser && (whoIsCurrentUser === whosComment || !!currentUser?.isAdmin)
 
   const handleDelete = async (commentId: String) => {
     try {
@@ -55,61 +46,43 @@ const CommentItem: React.FC<CommentItemProps> = ({ data = {} }) => {
     setShowAlert(false)
   }
 
+  // Same rule as the server: the comment's author or an admin.
+  const mayDelete = !!whoIsCurrentUser && (whoIsCurrentUser === whosComment || !!currentUser?.isAdmin)
+
   return (
-    <div
-      className='
-        border-b-[1px] 
-        border-neutral-800 
-        p-5 
-        cursor-pointer 
-        hover:bg-neutral-900 
-        transition
-      '
-    >
-      <div className='flex flex-row items-start gap-3'>
-        <Avatar userId={data.user.id} />
-        <div>
-          <div className='flex flex-row items-center gap-2'>
-            <p
-              onClick={goToUser}
-              className='
-                text-white 
-                font-semibold 
-                cursor-pointer 
-                hover:underline
-            '
-            >
+    <div className="flex items-start gap-3 px-4 py-3 sm:px-5">
+      <Avatar userId={data.user.id} src={data.user.profileImage ?? null} name={data.user.name} size="sm" />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start gap-2">
+          <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-2">
+            <Link href={`/users/${data.user.id}`} className="focus-ring rounded font-semibold text-ink hover:underline">
               {data.user.name}
-            </p>
-            <span
-              onClick={goToUser}
-              className='
-                text-neutral-500
-                cursor-pointer
-                hover:underline
-                hidden
-                md:block
-            '
+            </Link>
+            <Link
+              href={`/users/${data.user.id}`}
+              className="hidden truncate text-sm text-ink-muted hover:underline sm:inline"
             >
               @{data.user.username}
-            </span>
-            <span className='text-neutral-500 text-sm'>{createdAt}</span>
+            </Link>
+            <span className="text-sm text-ink-muted">{createdAt}</span>
           </div>
-          <div className='text-white mt-1'>{data.body}</div>
+          {mayDelete && (
+            <button
+              type="button"
+              onClick={() => setShowAlert(true)}
+              className="icon-btn -mr-2 -mt-1.5 h-9 w-9 hover:bg-danger-soft hover:text-danger"
+              aria-label="Vymazať komentár"
+              title="Vymazať"
+            >
+              <BsTrash size={15} />
+            </button>
+          )}
         </div>
+        <p className="mt-0.5 whitespace-pre-line break-words text-ink">{data.body}</p>
       </div>
-      {mayDelete && (
-        <div className='relative'>
-          <button
-            onClick={() => setShowAlert(true)}
-            className='ml-auto cursor-pointer text-[#ff0000] absolute -top-12 -right-4 lg:right-0'
-          >
-            <BsTrash />
-          </button>
-        </div>
-      )}
       {showAlert && (
         <DeleteAlert
+          title="Naozaj chcete vymazať komentár?"
           onDelete={() => handleDelete(data.id)}
           onCancel={handleCancel}
         />

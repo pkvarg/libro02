@@ -19,8 +19,8 @@ const page = () => {
   }, [email, token])
 
   return (
-    <div className='m-2 text-[#9ca3af]'>
-      <h1 className='text-[35px] text-center'>Registrácia</h1>
+    <div className='card mt-6 p-8 text-center'>
+      <h1 className='page-title text-2xl'>Registrácia</h1>
     </div>
   )
 }

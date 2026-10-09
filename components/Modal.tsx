@@ -1,16 +1,16 @@
 'use client'
-import { useCallback } from 'react'
-import { AiOutlineClose } from 'react-icons/ai'
+import { useCallback, useEffect } from 'react'
+import { HiXMark } from 'react-icons/hi2'
 import Button from './Button'
 
 interface ModalProps {
   isOpen?: boolean
   onClose: () => void
-  onSubmit: () => void
+  onSubmit?: () => void
   title?: string
   body?: React.ReactElement
   footer?: React.ReactElement
-  actionLabel: string
+  actionLabel?: string
   disabled?: boolean | undefined
 }
 
@@ -33,99 +33,81 @@ const Modal: React.FC<ModalProps> = ({
   }, [onClose, disabled])
 
   const handleSubmit = useCallback(() => {
-    if (disabled) {
+    if (disabled || !onSubmit) {
       return
     }
 
     onSubmit()
   }, [onSubmit, disabled])
 
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') handleClose()
+    }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [isOpen, handleClose])
+
   if (!isOpen) {
     return null
   }
 
   return (
-    <>
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
+      <div className="absolute inset-0 bg-ink/40 backdrop-blur-[2px] animate-in fade-in" onClick={handleClose} aria-hidden="true" />
       <div
-        className='
-          justify-center 
-          items-center 
-          flex 
-          overflow-x-hidden 
-          overflow-y-auto 
-          fixed 
-          inset-0 
-          z-50 
-          outline-none 
-          focus:outline-none
-          bg-neutral-800
-          bg-opacity-70
-
-        '
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="
+          relative
+          flex
+          max-h-[92vh]
+          w-full
+          flex-col
+          rounded-t-2xl
+          bg-surface
+          shadow-pop
+          animate-in
+          slide-in-from-bottom-4
+          sm:max-w-lg
+          sm:rounded-2xl
+        "
       >
-        <div className='relative w-full lg:w-3/6 my-6 mx-auto lg:max-w-3xl h-full lg:h-auto'>
-          {/*content*/}
-          <div
-            className='
-            h-auto
-            lg:h-auto
-            border-0 
-            rounded-lg 
-            shadow-lg 
-            relative 
-            flex 
-            flex-col 
-            w-full 
-            bg-black 
-            outline-none 
-            focus:outline-none
-            '
-          >
-            {/*header*/}
-            <div
-              className='
-              flex 
-              items-center 
-              justify-between 
-              pt-4 
-              px-10
-              rounded-t
-
-              '
-            >
-              <h3 className='text-3xl font-semibold text-white'>{title}</h3>
-              <button
-                onClick={handleClose}
-                className='
-                  p-1 
-                  ml-auto
-                  border-0 
-                  text-white 
-                  hover:opacity-70
-                  transition
-                '
-              >
-                <AiOutlineClose size={20} />
-              </button>
-            </div>
-            {/*body*/}
-            <div className='relative px-10 pt-10 flex-auto'>{body}</div>
-            {/*footer*/}
-            <div className='flex flex-col gap-2 p-10'>
-              <Button
-                disabled={disabled}
-                label={actionLabel}
-                secondary
-                fullWidth
-                large
-                onClick={handleSubmit}
-              />
-              {footer}
-            </div>
-          </div>
+        <div className="flex items-center justify-between gap-4 border-b border-line px-6 py-4">
+          <h2 className="font-display text-xl font-semibold text-ink">{title}</h2>
+          <button type="button" onClick={handleClose} className="icon-btn -mr-2" aria-label="Zavrieť">
+            <HiXMark size={22} />
+          </button>
         </div>
+        <div
+          className="flex-auto overflow-y-auto px-6 py-5"
+          onKeyDown={(event) => {
+            // Enter in a text field submits, like a regular form.
+            if (event.key === 'Enter' && (event.target as HTMLElement).tagName === 'INPUT') {
+              event.preventDefault()
+              handleSubmit()
+            }
+          }}
+        >
+          {body}
+        </div>
+        {(actionLabel || footer) && (
+          <div className="flex flex-col gap-3 border-t border-line px-6 py-4">
+            {actionLabel && (
+              <Button disabled={disabled} label={actionLabel} fullWidth large onClick={handleSubmit} />
+            )}
+            {footer}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   )
 }
 

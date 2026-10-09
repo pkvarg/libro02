@@ -4,7 +4,7 @@ import PostFeed from '@/components/posts/PostFeed'
 export default function Home() {
   return (
     <>
-      <Header label='Domov' />
+      <Header label='Príspevky' />
       <Form placeholder='Zdieľaj niečo' />
       <PostFeed />
     </>

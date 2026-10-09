@@ -17,15 +17,15 @@ interface LegalTextProps {
 const LegalText = ({ label, effective, intro, sections }: LegalTextProps) => (
   <>
     <Header showBackArrow label={label} />
-    <div className="m-4 text-[17px] leading-relaxed text-[#9ca3af] flex flex-col gap-3">
-      <p className="text-sm text-neutral-500">{effective}</p>
+    <article className="card flex flex-col gap-3 p-5 leading-relaxed text-ink-soft sm:p-8">
+      <p className="text-sm text-ink-muted">{effective}</p>
       {intro && <p>{intro}</p>}
       {sections.map((section) => (
         <section key={section.id} id={section.id} className="scroll-mt-4 mt-2">
-          <h2 className="text-white text-xl font-semibold mb-2">{section.title}</h2>
+          <h2 className="mb-2 font-display text-xl font-semibold text-ink">{section.title}</h2>
           {section.body.map((block, i) =>
             Array.isArray(block) ? (
-              <ul key={i} className="list-disc ml-6 mb-2 space-y-1">
+              <ul key={i} className="mb-2 ml-6 list-disc space-y-1 marker:text-ink-faint">
                 {block.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
@@ -38,7 +38,7 @@ const LegalText = ({ label, effective, intro, sections }: LegalTextProps) => (
           )}
         </section>
       ))}
-    </div>
+    </article>
   </>
 )
 

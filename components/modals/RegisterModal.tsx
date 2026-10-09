@@ -86,60 +86,67 @@ const RegisterModal = () => {
     <div className="flex flex-col gap-4">
       <Input
         disabled={isLoading}
-        placeholder="Email"
+        label="Email"
+        type="email"
+        autoComplete="email"
+        placeholder="vas@email.sk"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder="Meno"
+        label="Meno"
+        autoComplete="name"
+        placeholder="Meno a priezvisko"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
       <Input
         disabled={isLoading}
-        placeholder="Užívateľské meno"
+        label="Užívateľské meno"
+        autoComplete="username"
+        placeholder="napr. jan.novak"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
       <Input
         disabled={isLoading}
+        label="Heslo"
         placeholder="Heslo"
+        autoComplete="new-password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <div className="flex ml-2 mt-2 items-center">
+      <div className="mt-1 flex items-start gap-3">
         <input
-          className="w-[20px] h-[20px]"
+          id="rulesBox"
+          className="mt-0.5 h-5 w-5 flex-shrink-0 accent-brand"
           checked={checkedBox}
           type="checkbox"
           onChange={() => setCheckedBox((prev) => !prev)}
         />
-        <label
-          className="form-check-label text-[#9ca3af] lg:text-[30px] text-[20px] ml-[15px]"
-          htmlFor="flexCheckDefault"
-        >
+        <label className="text-sm leading-snug text-ink-soft" htmlFor="rulesBox">
           Súhlasím s{' '}
-          <a href="/rules" target="_blank" className="underline !text-sky-500">
+          <a href="/rules" target="_blank" className="link underline">
             pravidlami siete
           </a>
         </label>
       </div>
       {/* Explicit consent (čl. 9 ods. 2 písm. a) GDPR): membership and posts may reveal religious belief. */}
-      <div className="flex ml-2 items-start">
+      <div className="flex items-start gap-3">
         <input
           id="consentBox"
-          className="w-[20px] h-[20px] mt-1 flex-shrink-0"
+          className="mt-0.5 h-5 w-5 flex-shrink-0 accent-brand"
           checked={consentBox}
           type="checkbox"
           onChange={() => setConsentBox((prev) => !prev)}
         />
-        <label className="text-[#9ca3af] text-[15px] leading-snug ml-[15px]" htmlFor="consentBox">
+        <label className="text-sm leading-snug text-ink-soft" htmlFor="consentBox">
           Mám aspoň 16 rokov a výslovne súhlasím, aby prevádzkovateľ spracúval moje údaje vrátane
           tých, z ktorých môže vyplývať moje náboženské presvedčenie, na účely členstva v sieti.
           Súhlas môžem kedykoľvek odvolať zrušením konta. Viac v{' '}
-          <a href="/privacy" target="_blank" className="underline !text-sky-500">
+          <a href="/privacy" target="_blank" className="link underline">
             zásadách ochrany osobných údajov
           </a>
           .
@@ -149,20 +156,12 @@ const RegisterModal = () => {
   )
 
   const footerContent = (
-    <div className="text-neutral-400 text-center mt-4">
+    <div className="text-center text-sm text-ink-muted">
       <p>
-        Už máte svoj účet?
-        <span
-          onClick={onToggle}
-          className="
-            text-white 
-            cursor-pointer 
-            hover:underline
-            "
-        >
-          {' '}
+        Už máte svoj účet?{' '}
+        <button type="button" onClick={onToggle} className="link">
           Prihlásiť sa
-        </span>
+        </button>
       </p>
     </div>
   )

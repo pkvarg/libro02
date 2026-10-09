@@ -1,14 +1,15 @@
 import axios from 'axios'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { useSWRConfig } from 'swr'
 
 import useCurrentUser from './useCurrentUser'
 import useLoginModal from './useLoginModal'
-import useUser from './useUser'
 
 const useFollow = (userId: string) => {
   const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser()
-  const { mutate: mutateFetchedUser } = useUser(userId)
+  const { mutate } = useSWRConfig()
+  const [isLoading, setIsLoading] = useState(false)
 
   const loginModal = useLoginModal()
 
@@ -24,6 +25,7 @@ const useFollow = (userId: string) => {
     }
 
     try {
+      setIsLoading(true)
       let request
 
       if (isFollowing) {
@@ -33,25 +35,22 @@ const useFollow = (userId: string) => {
       }
 
       await request()
-      mutateCurrentUser()
-      mutateFetchedUser()
+      await mutateCurrentUser()
+      // Profile counts and follower lists that include this user.
+      mutate((key) => typeof key === 'string' && (key.startsWith('/api/users/') || key.startsWith('/api/follows/')))
 
-      toast.success('OK')
+      toast.success(isFollowing ? 'Už nesledujete' : 'Sledujete')
     } catch (error) {
       toast.error('Nastala chyba')
+    } finally {
+      setIsLoading(false)
     }
-  }, [
-    currentUser,
-    isFollowing,
-    userId,
-    mutateCurrentUser,
-    mutateFetchedUser,
-    loginModal,
-  ])
+  }, [currentUser, isFollowing, userId, mutateCurrentUser, mutate, loginModal])
 
   return {
     isFollowing,
     toggleFollow,
+    isLoading,
   }
 }
 

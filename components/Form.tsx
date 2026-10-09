@@ -48,52 +48,58 @@ const Form: React.FC<FormProps> = ({ placeholder, isComment, postId }) => {
   }, [body, mutatePosts, isComment, postId, mutatePost])
 
   return (
-    <div className="border-b-[1px] border-neutral-800 px-5 py-2">
+    <div className={isComment ? 'card mt-3 p-4 sm:p-5' : 'card mb-4 p-4 sm:p-5'}>
       {currentUser ? (
-        <div className="flex flex-row gap-4">
-          <div>
-            <Avatar userId={currentUser?.id} />
-          </div>
-          <div className="w-full">
+        <div className="flex flex-row gap-3">
+          <Avatar userId={currentUser?.id} src={currentUser?.profileImage ?? null} name={currentUser?.name} />
+          <div className="min-w-0 flex-1">
             <textarea
               disabled={isLoading}
               onChange={(event) => setBody(event.target.value)}
               value={body}
+              rows={isComment ? 2 : 3}
+              aria-label={placeholder}
               className="
-                disabled:opacity-80
-                peer
-                resize-none 
-                mt-3 
-                w-full 
-                bg-black 
-                ring-0 
-                outline-none 
-                text-[20px] 
-                placeholder-neutral-500 
-                text-white
+                block
+                w-full
+                resize-none
+                rounded-xl
+                border
+                border-transparent
+                bg-sunken
+                px-3
+                py-2.5
+                text-base
+                text-ink
+                placeholder:text-ink-faint
+                transition
+                focus:border-brand
+                focus:bg-surface
+                focus:outline-none
+                focus:ring-2
+                focus:ring-brand-soft
+                disabled:opacity-70
               "
               placeholder={placeholder}
             ></textarea>
-            <hr
-              className="
-                opacity-0 
-                peer-focus:opacity-100 
-                h-[1px] 
-                w-full 
-                border-neutral-800 
-                transition"
-            />
-            <div className="mt-4 flex flex-row justify-end">
-              <Button disabled={isLoading || !body} onClick={onSubmit} label="Zdieľať" />
+            <div className="mt-3 flex flex-row justify-end">
+              <Button
+                disabled={isLoading || !body.trim()}
+                onClick={onSubmit}
+                label={isComment ? 'Odpovedať' : 'Zdieľať'}
+              />
             </div>
           </div>
         </div>
       ) : (
-        <div className="py-8">
-          <h1 className="text-white text-2xl text-center mb-4 font-bold">Vitaj na Librosophii</h1>
-          <div className="flex flex-row items-center justify-center gap-4">
-            <Button label="Prihlásenie" onClick={loginModal.onOpen} />
-            <Button label="Registrácia" onClick={registerModal.onOpen} secondary />
+        <div className="px-2 py-6 text-center">
+          <h1 className="font-display text-3xl font-semibold text-ink">Vitaj na Librosophii</h1>
+          <p className="mx-auto mt-2 max-w-md text-ink-soft">
+            Súkromný portál na vzájomné požičiavanie kresťanských kníh. Prihláste sa alebo si vytvorte účet.
+          </p>
+          <div className="mt-6 flex flex-row items-center justify-center gap-3">
+            <Button label="Prihlásenie" onClick={loginModal.onOpen} large />
+            <Button label="Registrácia" onClick={registerModal.onOpen} secondary large />
           </div>
         </div>
       )}

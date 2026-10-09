@@ -50,10 +50,11 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
         inline-block 
         rounded-full 
         overflow-hidden
-        h-9 
-        w-9 
-        md:h-11 
-        md:w-11
+        h-9
+        w-9
+        bg-sunken
+        md:h-10
+        md:w-10
       '
       >
         <Image
@@ -63,7 +64,7 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
           }}
           fill
           src={user?.profileImage || '/images/placeholder.png'}
-          alt='Avatar'
+          alt={user?.name ? `Profilová fotka – ${user.name}` : 'Profilová fotka'}
           sizes='150'
         />
       </div>
@@ -73,15 +74,13 @@ const AvatarChat: React.FC<AvatarProps> = ({ user }) => {
             absolute 
             block 
             rounded-full 
-            bg-green-500 
-            ring-1
-            ring-white 
-            top-0 
+            bg-success
+            ring-2
+            ring-surface
+            bottom-0
             right-0
-            h-2 
-            w-2 
-            md:h-3 
-            md:w-3
+            h-2.5
+            w-2.5
           '
         />
       ) : null}

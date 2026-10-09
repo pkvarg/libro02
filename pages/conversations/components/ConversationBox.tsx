@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
+import { sk } from 'date-fns/locale'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import clsx from 'clsx'
 import AvatarChat from '@/components/AvatarChat'
@@ -62,72 +63,29 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   }, [lastMessage])
 
   return (
-    <>
-      <div
-        onClick={handleClick}
-        className={clsx(
-          `
-        w-min
-        lg:w-max 
-        relative 
-        flex 
-        items-center 
-        space-x-3 
-        p-3 
-        hover:bg-neutral-900
-        rounded-lg
-        transition
-        cursor-pointer
-        `,
-          selected ? 'border border-neutral-100' : ''
-        )}
-      >
-        {data?.isGroup ? (
-          <AvatarGroup users={data?.users} />
-        ) : (
-          <div className='flex flex-col'>
-            <AvatarChat user={otherUser} />
-          </div>
-        )}
-        <div className='min-w-0 hidden lg:flex'>
-          <div className='focus:outline-none'>
-            <span className='absolute inset-0' aria-hidden='true' />
-            <div className='flex flex-row justify-betweem items-center gap-2 mb-1'>
-              <p className='text-md font-medium text-white'>
-                {data?.name || otherUser?.name}
-              </p>
-              <div>
-                {lastMessage?.createdAt && (
-                  <p
-                    className='
-                  text-xs 
-                  text-gray-400 
-                  font-light
-                  
-                '
-                  >
-                    {format(new Date(lastMessage.createdAt), 'p')}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className='flex flex-row gap-2 items-center'>
-              <p
-                className={clsx(
-                  `
-              truncate 
-              text-sm
-              `,
-                  hasSeen ? 'text-gray-500' : 'text-white font-medium'
-                )}
-              >
-                {lastMessageText}
-              </p>
-            </div>
-          </div>
+    <button
+      type="button"
+      onClick={handleClick}
+      aria-current={selected ? 'page' : undefined}
+      className={clsx(
+        'focus-ring flex w-full items-center gap-3 rounded-xl p-2.5 text-left transition-colors',
+        selected ? 'bg-brand-soft' : 'hover:bg-sunken'
+      )}
+    >
+      {data?.isGroup ? <AvatarGroup users={data?.users} /> : <AvatarChat user={otherUser} />}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-baseline justify-between gap-2">
+          <p className="truncate font-semibold text-ink">{data?.name || otherUser?.name}</p>
+          {lastMessage?.createdAt && (
+            <p className="shrink-0 text-xs text-ink-muted">{format(new Date(lastMessage.createdAt), 'p', { locale: sk })}</p>
+          )}
         </div>
+        <p className={clsx('truncate text-sm', hasSeen ? 'text-ink-muted' : 'font-semibold text-ink')}>
+          {lastMessageText}
+        </p>
       </div>
-    </>
+      {!hasSeen && lastMessage && <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-brand" aria-label="Neprečítané" />}
+    </button>
   )
 }
 

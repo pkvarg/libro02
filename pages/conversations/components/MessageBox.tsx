@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import { useState } from 'react'
 import { format } from 'date-fns'
+import { sk } from 'date-fns/locale'
 import useCurrentUser from '@/hooks/useCurrentUser'
 import { FullMessageType } from '@/types'
 
@@ -26,21 +27,11 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast, rerender }) => {
   const [showDeleteOption, setShowDeleteOption] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
 
-  // Chat data carries ids, not e-mails.
   const isOwn = !!currentUser?.id && currentUser.id === data?.sender?.id
   const seenList = (data?.seen || [])
     .filter((user) => user.id !== data?.sender?.id)
     .map((user) => user.name)
     .join(', ')
-
-  const container = clsx('flex gap-3 p-4', isOwn && 'justify-end')
-  const avatar = clsx(isOwn && 'order-2')
-  const body = clsx('flex flex-col gap-2', isOwn && 'items-end')
-  const message = clsx(
-    'text-sm w-fit overflow-hidden',
-    isOwn ? 'bg-sky-500 text-white' : 'bg-gray-100 text-black',
-    data?.image ? 'rounded-md p-0' : 'rounded-full py-2 px-3'
-  )
 
   const handleDeleteMessage = async (messageId: string) => {
     try {
@@ -64,68 +55,54 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast, rerender }) => {
   }
 
   return (
-    <div className={container}>
-      <div className={avatar}>
-        <AvatarChat user={data?.sender} />
-      </div>
-      <div className={body}>
-        <div className='flex items-center gap-1'>
-          <div className='text-sm text-gray-500'>{data?.sender.name}</div>
-          <div className='text-xs text-gray-400'>
-            {data && format(new Date(data.createdAt), 'p')}
-          </div>
-        </div>
-        <div className={message}>
-          <ImageModal
-            src={data?.image}
-            isOpen={imageModalOpen}
-            onClose={() => setImageModalOpen(false)}
-          />
+    <div className={clsx('flex items-end gap-2 px-3 py-1 md:px-5', isOwn && 'justify-end')}>
+      {!isOwn && <AvatarChat user={data?.sender} />}
+      <div className={clsx('flex max-w-[78%] flex-col gap-1', isOwn && 'items-end')}>
+        <div className={clsx('flex items-center gap-1', isOwn && 'flex-row-reverse')}>
           {data?.image ? (
-            <Image
-              alt='Image'
-              height='288'
-              width='288'
-              onClick={() => setImageModalOpen(true)}
-              src={data?.image}
-              className='
-                object-cover 
-                cursor-pointer 
-                hover:scale-110 
-                transition 
-                translate
-              '
-            />
+            <div className="overflow-hidden rounded-2xl">
+              <Image
+                alt="Obrázok v správe"
+                height="288"
+                width="288"
+                onClick={() => setImageModalOpen(true)}
+                src={data?.image}
+                className="cursor-pointer object-cover transition hover:opacity-90"
+              />
+            </div>
           ) : (
             <div
-              onClick={() => setShowDeleteOption((prev) => !prev)}
-              className={isOwn.toString() === 'true' && 'cursor-pointer'}
+              onClick={() => isOwn && setShowDeleteOption((prev) => !prev)}
+              className={clsx(
+                'whitespace-pre-line break-words rounded-2xl px-3.5 py-2 text-[15px] leading-snug',
+                isOwn ? 'cursor-pointer rounded-br-md bg-brand text-white' : 'rounded-bl-md bg-sunken text-ink'
+              )}
             >
               {data?.body}
             </div>
           )}
           {isOwn && showDeleteOption && (
-            <p onClick={() => setShowAlert(true)} className='cursor-pointer'>
-              <BsTrash className='text-red-600' />
-            </p>
-          )}
-          {showAlert && (
-            <DeleteAlert
-              onDelete={() => handleDeleteMessage(data.id)}
-              onCancel={handleCancel}
-            />
+            <button
+              type="button"
+              onClick={() => setShowAlert(true)}
+              className="icon-btn h-9 w-9 hover:bg-danger-soft hover:text-danger"
+              aria-label="Vymazať správu"
+            >
+              <BsTrash size={15} />
+            </button>
           )}
         </div>
-        {isLast && isOwn && seenList.length > 0 && (
-          <div
-            className='
-            text-xs 
-            font-light 
-            text-[#6b7280]
-            '
-          >
-            {`Videné užívateľom ${seenList}`}
-          </div>
+        <div className="px-1 text-[11px] text-ink-muted">
+          {data && format(new Date(data.createdAt), 'p', { locale: sk })}
+          {isLast && isOwn && seenList.length > 0 && ` · Videné užívateľom ${seenList}`}
+        </div>
+        <ImageModal src={data?.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
+        {showAlert && (
+          <DeleteAlert
+            title="Naozaj chcete vymazať správu?"
+            onDelete={() => handleDeleteMessage(data.id)}
+            onCancel={handleCancel}
+          />
         )}
       </div>
     </div>

@@ -1,72 +1,39 @@
-import React, { useCallback, useState } from 'react'
+import React from 'react'
+import Link from 'next/link'
+
 import useUsers from '@/hooks/useUsers'
 import useCurrentUser from '@/hooks/useCurrentUser'
 
-import Avatar from '../Avatar'
-import axios from 'axios'
-import { useRouter } from 'next/router'
-import { BsChatDots } from 'react-icons/bs'
+import UserCard from '../users/UserCard'
+
+const VISIBLE = 8
 
 const FollowBar = () => {
   const { data: users = [] } = useUsers()
   const { data: currentUser } = useCurrentUser()
-  const isCurrentUser = currentUser !== undefined
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
 
-  const startConversation = useCallback(
-    (recipientId: string) => {
-      setIsLoading(true)
-      axios
-        .post('/api/conversations', {
-          //userId: currentUser?.id,
-          userId: recipientId,
-        })
-        .then((data) => {
-          router.push(`/conversations/${data.data.id}`)
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    },
-    [currentUser, router]
-  )
-  if (users.length === 0) {
-    return null
-  } else if (!isCurrentUser) {
+  if (!currentUser || users.length === 0) {
     return null
   }
 
+  const others = users.filter((user: Record<string, any>) => user.id !== currentUser.id)
+
   return (
-    <div className='px-2 py-4 hidden lg:block'>
-      <div className='bg-neutral-800 rounded-xl p-4'>
-        <h2 className='text-white text-xl font-semibold'>Sledovať</h2>
-        <div className='flex flex-col gap-6 mt-4'>
-          {users.map(
-            (user: Record<string, any>) =>
-              user.id !== currentUser?.id && (
-                <div key={user.id} className='flex flex-row gap-4'>
-                  <Avatar userId={user.id} />
-                  <div className='flex flex-col'>
-                    <p className='text-white font-semibold text-sm'>
-                      {user.name}
-                    </p>
-                    <p className='text-neutral-400 text-sm'>@{user.username}</p>
-                  </div>
-                  <div className='ml-auto mt-2'>
-                    <button
-                      onClick={() => startConversation(user.id)}
-                      className='cursor-pointer hover:opacity-[0.7] mr-1 bg-black'
-                    >
-                      <BsChatDots />
-                    </button>
-                  </div>
-                </div>
-              )
-          )}
+    <aside className="sticky top-0 hidden h-screen w-72 shrink-0 overflow-y-auto py-4 xl:block">
+      <div className="card p-3">
+        <h2 className="px-2.5 pb-1 pt-1 font-display text-lg font-semibold text-ink">Členovia</h2>
+        <div className="flex flex-col">
+          {others.slice(0, VISIBLE).map((user: Record<string, any>) => (
+            <UserCard key={user.id} user={user as any} showChat />
+          ))}
         </div>
+        {others.length > VISIBLE && (
+          <Link href="/users" className="link mt-1 block px-2.5 py-2 text-sm">
+            Zobraziť všetkých ({others.length})
+          </Link>
+        )}
       </div>
-    </div>
+    </aside>
   )
 }
 

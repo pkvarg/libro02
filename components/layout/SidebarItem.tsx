@@ -1,11 +1,11 @@
 'use client'
 import React, { useCallback } from 'react'
 import { IconType } from 'react-icons'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
+import clsx from 'clsx'
 
 import useLoginModal from '@/hooks/useLoginModal'
 import useCurrentUser from '@/hooks/useCurrentUser'
-import { BsDot } from 'react-icons/bs'
 
 interface SidebarItemProps {
   label: string
@@ -14,79 +14,58 @@ interface SidebarItemProps {
   onClick?: () => void
   auth?: boolean
   alert?: boolean
+  active?: boolean
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({
-  label,
-  icon: Icon,
-  href,
-  auth,
-  onClick,
-  alert,
-}) => {
-  const router = useRouter()
+const SidebarItem: React.FC<SidebarItemProps> = ({ label, icon: Icon, href, auth, onClick, alert, active }) => {
   const loginModal = useLoginModal()
-
   const { data: currentUser } = useCurrentUser()
 
-  const handleClick = useCallback(() => {
-    if (onClick) {
-      return onClick()
-    }
+  const needsLogin = auth && !currentUser
 
-    if (auth && !currentUser) {
-      loginModal.onOpen()
-    } else if (href) {
-      router.push(href)
-    }
-  }, [router, href, auth, loginModal, onClick, currentUser])
+  const handleClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (onClick) {
+        event.preventDefault()
+        return onClick()
+      }
+      if (needsLogin) {
+        event.preventDefault()
+        loginModal.onOpen()
+      }
+    },
+    [onClick, needsLogin, loginModal]
+  )
+
+  const className = clsx(
+    'focus-ring group relative flex h-12 items-center gap-4 rounded-full px-3 text-[17px] transition-colors lg:pr-5',
+    active ? 'bg-sunken font-semibold text-ink' : 'text-ink-soft hover:bg-sunken hover:text-ink'
+  )
+
+  const content = (
+    <>
+      <span className="relative flex h-6 w-6 items-center justify-center">
+        <Icon size={24} />
+        {alert && (
+          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-brand ring-2 ring-paper" aria-label="Nové" />
+        )}
+      </span>
+      <span className="hidden lg:inline">{label}</span>
+    </>
+  )
+
+  if (href && !onClick) {
+    return (
+      <Link href={href} onClick={handleClick} className={className} title={label} aria-current={active ? 'page' : undefined}>
+        {content}
+      </Link>
+    )
+  }
 
   return (
-    <div onClick={handleClick} className='flex flex-row items-center'>
-      <div
-        className='
-        relative
-        rounded-full 
-        h-14
-        w-14
-        flex
-        items-center
-        justify-center 
-        p-4
-        hover:bg-slate-300 
-        hover:bg-opacity-10 
-        cursor-pointer 
-        lg:hidden
-      '
-      >
-        <Icon size={28} color='white' />
-        {alert ? (
-          <BsDot className='text-sky-500 absolute -top-4 left-0' size={70} />
-        ) : null}
-      </div>
-      <div
-        className='
-        relative
-        hidden 
-        lg:flex 
-        items-row 
-        gap-4 
-        p-4 
-        rounded-full 
-        hover:bg-slate-300 
-        hover:bg-opacity-10 
-        cursor-pointer
-        items-center
-      '
-      >
-        <Icon size={24} color='white' />
-
-        <p className='hidden lg:block text-white text-xl'>{label}</p>
-        {alert ? (
-          <BsDot className='text-sky-500 absolute -top-4 left-0' size={70} />
-        ) : null}
-      </div>
-    </div>
+    <button type="button" onClick={handleClick} className={clsx(className, 'w-full text-left')} title={label}>
+      {content}
+    </button>
   )
 }
 

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { BsSearch } from 'react-icons/bs'
+import Link from 'next/link'
 import axios from 'axios'
+
+import BookCover from '@/components/books/BookCover'
+import { AdminSearch, StatusToggle } from './AdminUi'
 
 const BooksPanel = () => {
   const [books, setBooks] = useState([])
-  const router = useRouter()
   const [showAllBooks, setShowAllBooks] = useState(true)
-  const [showSearchResults, setShowSearchResults] = useState(false)
   const [searchResults, setSearchResults] = useState([])
   const [query, setQuery] = useState('')
 
@@ -26,19 +26,19 @@ const BooksPanel = () => {
     })
     if (data === 'OK') {
       getBooks()
+      if (!showAllBooks) handleSearch(query)
     }
   }
 
-  const handleSearch = async (query) => {
+  const handleSearch = async (query: string) => {
+    setQuery(query)
     if (query === '') {
       setSearchResults([])
       setShowAllBooks(true)
-      setShowSearchResults(false)
     } else {
       try {
-        const response = await axios.get(`/api/search/books/${query}`)
+        const response = await axios.get(`/api/search/books/${encodeURIComponent(query)}`)
         setSearchResults(response.data)
-        setShowSearchResults(true)
         setShowAllBooks(false)
       } catch (error) {
         console.error('Error searching:', error)
@@ -46,91 +46,32 @@ const BooksPanel = () => {
     }
   }
 
-  return (
-    <>
-      <h1 className='text-center text-[30px] my-8 '>Knihy</h1>
-      <div className='flex flex-row gap-2 justify-center items-center '>
-        <input
-          type='text'
-          placeholder='Hľadať...'
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={() => handleSearch(query)}
-          className='rounded-xl text-[#000000] pl-2'
-        />
-        <BsSearch
-          className='cursor-pointer'
-          onClick={() => handleSearch(query)}
-        />
-      </div>
+  const list = showAllBooks ? books : searchResults
 
-      {showAllBooks && (
-        <div className='mx-4 mt-8'>
-          {books?.map((book) => (
-            <div key={book.id} className='flex flex-row gap-2'>
-              <img
-                className='w-[30%] lg:w-[15%]'
-                src={book.bookImage}
-                alt={book.bookTitle}
-              />
-              <div className='flex flex-col text-[18.5px]'>
-                <p>{book.bookTitle}</p>
-                <p>{book.bookAuthor}</p>
-                <p
-                  onClick={() => router.push(`/users/${book.userId}`)}
-                  className='cursor-pointer text-[#FFAC1C]'
-                >
+  return (
+    <section className="flex flex-col gap-4">
+      <AdminSearch value={query} onChange={handleSearch} />
+      <div className="card divide-y divide-line">
+        {list?.map((book) => (
+          <div key={book.id} className="flex gap-4 p-4">
+            <BookCover src={book.bookImage} title={book.bookTitle} className="w-14" />
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <Link href={`/books/${book.id}`} className="focus-ring rounded font-display font-semibold text-ink hover:underline">
+                {book.bookTitle}
+              </Link>
+              <p className="text-sm text-ink-muted">{book.bookAuthor}</p>
+              <div className="mt-1 flex flex-wrap items-center gap-2">
+                <StatusToggle label="Aktívny" on={!!book.active} onClick={() => toggleBookStatus(book.id, book.active)} />
+                <Link href={`/users/${book.userId}`} className="link text-sm">
                   Na profil majiteľa
-                </p>
-                <p
-                  className={
-                    book.active
-                      ? `text-[#00FF00] cursor-pointer`
-                      : `text-[#D2042D] cursor-pointer `
-                  }
-                  onClick={() => toggleBookStatus(book.id, book.active)}
-                >
-                  Aktívny
-                </p>
+                </Link>
               </div>
             </div>
-          ))}
-        </div>
-      )}
-      {showSearchResults && (
-        <div className='mx-4 mt-8'>
-          {searchResults?.map((book) => (
-            <div key={book.id} className='flex flex-row gap-2'>
-              <img
-                className='w-[15%]'
-                src={book.bookImage}
-                alt={book.bookTitle}
-              />
-              <div className='flex flex-col text-[18.5px]'>
-                <p>{book.bookTitle}</p>
-                <p>{book.bookAuthor}</p>
-                <p
-                  onClick={() => router.push(`/users/${book.userId}`)}
-                  className='cursor-pointer text-[#FFAC1C]'
-                >
-                  Na profil majiteľa
-                </p>
-                <p
-                  className={
-                    book.active
-                      ? `text-[#00FF00] cursor-pointer`
-                      : `text-[#D2042D] cursor-pointer `
-                  }
-                  onClick={() => toggleBookStatus(book.id, book.active)}
-                >
-                  Aktívny
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </>
+          </div>
+        ))}
+        {list?.length === 0 && <p className="p-6 text-center text-ink-muted">Nič sa nenašlo.</p>}
+      </div>
+    </section>
   )
 }
 

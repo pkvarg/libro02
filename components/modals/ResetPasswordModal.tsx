@@ -122,43 +122,21 @@ const ResetPasswordModal = () => {
     <div className='flex flex-col gap-4 '>
       {isDisabled === undefined && ''}
       {isDisabled === true && (
-        <div className='flex gap-4 items-center'>
-          <h1 className='text-[#b33a3a] text-center'>Link expiroval!</h1>
-
-          <button
-            className='cursor-pointer text-[25px]'
-            onClick={sendLinkAgain}
-          >
+        <div className='flex flex-wrap items-center gap-3 rounded-xl bg-danger-soft p-3'>
+          <p className='font-semibold text-danger'>Link expiroval!</p>
+          <button type='button' className='link ml-auto' onClick={sendLinkAgain}>
             Odoslať link znova
           </button>
         </div>
       )}
 
-      <input
-        disabled
-        defaultValue={email}
-        className='
-          w-full
-          p-4 
-          text-lg 
-          bg-black 
-          border-2
-          border-neutral-800 
-          rounded-md
-          outline-none
-          text-white
-          focus:border-sky-500
-          focus:border-2
-          transition
-          disabled:bg-neutral-900
-          disabled:opacity-70
-          disabled:cursor-not-allowed
-        '
-      />
+      <input disabled defaultValue={email} aria-label='Email' className='input' />
 
       <Input
         disabled={isDisabled}
+        label='Nové heslo'
         placeholder='Heslo'
+        autoComplete='new-password'
         type='password'
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -166,7 +144,9 @@ const ResetPasswordModal = () => {
 
       <Input
         disabled={isDisabled}
+        label='Zopakujte heslo'
         placeholder='Opakovať heslo'
+        autoComplete='new-password'
         type='password'
         value={passwordConfirm}
         onChange={(e) => setPasswordConfirm(e.target.value)}
@@ -178,7 +158,7 @@ const ResetPasswordModal = () => {
     <Modal
       disabled={isDisabled}
       isOpen={resetPasswordModal.isOpen}
-      title='Zmeniť Heslo'
+      title='Zmeniť heslo'
       actionLabel='Zmeniť heslo'
       onClose={resetPasswordModal.onClose}
       onSubmit={onSubmit}

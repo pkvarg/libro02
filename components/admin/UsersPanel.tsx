@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Avatar from '../Avatar'
-import { BsSearch } from 'react-icons/bs'
+import Link from 'next/link'
+import { AdminSearch, StatusToggle } from './AdminUi'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
@@ -83,15 +84,15 @@ const UsersPanel = () => {
     const requested = new Date(user.deletionRequestedAt)
     const deadline = new Date(requested.getTime() + 30 * 24 * 60 * 60 * 1000)
     return (
-      <div className='flex flex-col gap-1 text-sm'>
-        <p className='text-[#FFAC1C] font-semibold'>
+      <div className='mt-2 flex flex-col gap-1 rounded-lg bg-warning-soft p-2.5 text-sm'>
+        <p className='font-semibold text-warning'>
           Žiadosť o zrušenie konta {requested.toLocaleDateString('sk-SK')} – vymazať do{' '}
           {deadline.toLocaleDateString('sk-SK')}
         </p>
         <button
           type='button'
           onClick={() => permanentlyDelete(user)}
-          className='self-start text-[#D2042D] font-semibold underline'
+          className='focus-ring self-start rounded font-semibold text-danger underline'
         >
           Natrvalo vymazať
         </button>
@@ -99,14 +100,15 @@ const UsersPanel = () => {
     )
   }
 
-  const handleSearch = async (query) => {
+  const handleSearch = async (query: string) => {
+    setQuery(query)
     if (query === '') {
       setSearchResults([])
       setShowSearchResults(false)
       setShowAllUsers(true)
     } else {
       try {
-        const response = await axios.get(`/api/search/users/${query}`)
+        const response = await axios.get(`/api/search/users/${encodeURIComponent(query)}`)
         setSearchResults(response.data)
         setShowSearchResults(true)
         setShowAllUsers(false)
@@ -116,160 +118,52 @@ const UsersPanel = () => {
     }
   }
 
-  const handleUserItems = (userId: string) => {
-    console.log(userId)
-    router.push(`/admin/${userId}`)
-  }
+  const list = showAllUsers ? users : showSearchResults ? searchResults : []
 
   return (
-    <>
-      <h1 className='text-center text-[30px] my-8 '>Užívatelia</h1>
-      <div className='flex flex-row gap-2 justify-center items-center '>
-        <input
-          type='text'
-          placeholder='Hľadať...'
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={() => handleSearch(query)}
-          className='rounded-xl text-[#000000] pl-2'
-        />
-        <BsSearch
-          className='cursor-pointer'
-          onClick={() => handleSearch(query)}
-        />
-      </div>
-      {showAllUsers && (
-        <div className='flex flex-col gap-6 mt-8 ml-2'>
-          {users.map((user: Record<string, any>) => (
-            <div key={user.id} className='flex flex-col lg:flex-row gap-4'>
-              <Avatar userId={user.id} />
-              <div className='flex flex-col'>
-                <p
-                  onClick={() => handleUserItems(user.id)}
-                  className='text-white font-semibold text-sm cursor-pointer'
+    <section className='flex flex-col gap-4'>
+      <AdminSearch value={query} onChange={handleSearch} />
+      <div className='card divide-y divide-line'>
+        {list.map((user: Record<string, any>) => (
+          <div key={user.id} className='flex flex-col gap-3 p-4 lg:flex-row lg:items-start'>
+            <div className='flex min-w-0 flex-1 gap-3'>
+              <Avatar userId={user.id} src={user.profileImage ?? null} name={user.name} />
+              <div className='min-w-0'>
+                <Link
+                  href={`/admin/${user.id}`}
+                  className='focus-ring block truncate rounded font-semibold text-ink hover:underline'
+                  title='Technické údaje užívateľa'
                 >
                   {user.name}
+                </Link>
+                <Link href={`/users/${user.id}`} className='block truncate text-sm text-ink-muted hover:underline'>
+                  @{user.username}
+                </Link>
+                <p className='truncate text-sm text-ink-muted'>{user.email}</p>
+                <p className='mt-1 text-xs text-ink-soft'>
+                  {books?.filter((book) => user.id === book.userId).length} kníh ·{' '}
+                  {messages?.filter((message) => user.id === message.senderId).length} odoslaných správ
                 </p>
-                <p className='text-neutral-400 text-sm'>@{user.username}</p>
-                <p className='text-neutral-400 text-sm'>{user.email}</p>
                 {deletionNotice(user)}
               </div>
-              <div className='ml-0 lg:ml-auto mr-4 flex flex-col lg:flex-row justify-center gap-2 lg:gap-4 '>
-                <p
-                  className={
-                    user.isAdmin
-                      ? `text-[#00FF00] font-semibold cursor-pointer `
-                      : `text-[#D2042D] font-semibold  cursor-pointer`
-                  }
-                  onClick={() =>
-                    toggleUserPrivileges(user.id, 'isAdmin', user.isAdmin)
-                  }
-                >
-                  Admin
-                </p>
-                <p
-                  className={
-                    user.active
-                      ? `text-[#00FF00] font-semibold  cursor-pointer`
-                      : `text-[#D2042D] font-semibold  cursor-pointer`
-                  }
-                  onClick={() =>
-                    toggleUserPrivileges(user.id, 'active', user.active)
-                  }
-                >
-                  Aktívny
-                </p>
-              </div>
-              <div className='mr-2 text-[#FFAC1C]'>
-                <p>
-                  {books?.filter((book) => user.id === book.userId).length} kníh
-                </p>
-                {/* <p>
-                {
-                  conversations?.filter((conversation) =>
-                    conversation.userIds.map(
-                      (id) => id === '64a3e98b5343db0e444ee0fa'
-                    )
-                  ).length
-                }
-                konverzácií
-              </p> */}
-                <p>
-                  {
-                    messages?.filter((message) => user.id === message.senderId)
-                      .length
-                  }{' '}
-                  Odoslaných správ
-                </p>
-              </div>
             </div>
-          ))}
-        </div>
-      )}
-      {searchResults && (
-        <div className='flex flex-col gap-6 mt-8 ml-2'>
-          {searchResults.map((user: Record<string, any>) => (
-            <div key={user.id} className='flex flex-col lg:flex-row gap-4'>
-              <Avatar userId={user.id} />
-              <div className='flex flex-col'>
-                <p className='text-white font-semibold text-sm'>{user.name}</p>
-                <p className='text-neutral-400 text-sm'>@{user.username}</p>
-                <p className='text-neutral-400 text-sm'>{user.email}</p>
-                {deletionNotice(user)}
-              </div>
-              <div className='ml-0 lg:ml-auto mr-4 flex flex-col lg:flex-row justify-center gap-2 lg:gap-4 '>
-                <p
-                  className={
-                    user.isAdmin
-                      ? `text-[#00FF00] font-semibold cursor-pointer `
-                      : `text-[#D2042D] font-semibold  cursor-pointer`
-                  }
-                  onClick={() =>
-                    toggleUserPrivileges(user.id, 'isAdmin', user.isAdmin)
-                  }
-                >
-                  Admin
-                </p>
-                <p
-                  className={
-                    user.active
-                      ? `text-[#00FF00] font-semibold  cursor-pointer`
-                      : `text-[#D2042D] font-semibold  cursor-pointer`
-                  }
-                  onClick={() =>
-                    toggleUserPrivileges(user.id, 'active', user.active)
-                  }
-                >
-                  Aktívny
-                </p>
-              </div>
-              <div className='mr-2 text-[#FFAC1C]'>
-                <p>
-                  {books?.filter((book) => user.id === book.userId).length} kníh
-                </p>
-                {/* <p>
-                {
-                  conversations?.filter((conversation) =>
-                    conversation.userIds.map(
-                      (id) => id === '64a3e98b5343db0e444ee0fa'
-                    )
-                  ).length
-                }
-                konverzácií
-              </p> */}
-                <p>
-                  {
-                    messages.filter((message) => message.senderId === user.id)
-                      .length
-                  }{' '}
-                  Odoslaných správ
-                </p>
-              </div>
+            <div className='flex shrink-0 flex-wrap gap-2'>
+              <StatusToggle
+                label='Admin'
+                on={!!user.isAdmin}
+                onClick={() => toggleUserPrivileges(user.id, 'isAdmin', user.isAdmin)}
+              />
+              <StatusToggle
+                label='Aktívny'
+                on={!!user.active}
+                onClick={() => toggleUserPrivileges(user.id, 'active', user.active)}
+              />
             </div>
-          ))}
-        </div>
-      )}
-    </>
+          </div>
+        ))}
+        {list.length === 0 && <p className='p-6 text-center text-ink-muted'>Nič sa nenašlo.</p>}
+      </div>
+    </section>
   )
 }
 

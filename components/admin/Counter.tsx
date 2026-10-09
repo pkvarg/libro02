@@ -19,12 +19,8 @@ export default function Counter() {
   useEffect(() => {
     const getStats = async () => {
       try {
-        const response = await fetch(apiUrl, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+        // A plain GET (no custom headers) avoids a CORS preflight.
+        const response = await fetch(apiUrl)
 
         const data = await response.json()
 
@@ -36,7 +32,9 @@ export default function Counter() {
         //setCountEmails(data.emails)
         setLastVisit(date)
       } catch (err) {
-        console.error('Error fetching bots:', err)
+        // The stats API only allows librosophia.sk, so this fails on localhost.
+        console.warn('Štatistiky návštev nie sú dostupné:', err)
+        setError('Štatistiky návštev nie sú dostupné.')
       }
     }
 
@@ -44,16 +42,20 @@ export default function Counter() {
   }, [])
 
   return (
-    <div className="mt-8 p-6 rounded-lg shadow-md max-w-md mx-auto">
-      <div className="mb-4">
-        <p className="text-xl font-bold mt-2">Počet návštev: : {countVisitors}</p>
+    <div className="card mt-4 grid grid-cols-2 gap-4 p-4">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Počet návštev</p>
+        <p className="font-display text-2xl font-semibold text-ink">{countVisitors}</p>
+      </div>
+      <div>
         {/* <p className="text-2xl font-bold mt-2">Roboti: {countBots}</p>
         <p className="text-2xl font-bold mt-2">Emaily : {countEmails}</p> */}
-        <p className="text-md font-bold mt-2">Posledná návšteva: {lastVisit}</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">Posledná návšteva</p>
+        <p className="mt-1 text-sm text-ink">{lastVisit}</p>
       </div>
 
       {error && (
-        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div className="col-span-2 rounded-lg bg-danger-soft p-3 text-danger">
           {error}
         </div>
       )}
