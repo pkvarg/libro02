@@ -137,7 +137,7 @@ const Footer = () => {
         &copy; {Date().substring(11, 15)} cestazivota.sk
       </Link>
       <Link className="text-xs hover:text-ink" href="https://pictusweb.sk" target="_blank">
-        &#60;&#47;&#62; PICTUSWEB development
+        &#60;&#47;&#62; PICTUSWEB
       </Link>
     </footer>
   )
