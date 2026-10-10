@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { Inter, Lora } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from 'next-auth/react'
@@ -21,6 +22,9 @@ const lora = Lora({ subsets: ['latin', 'latin-ext'], weight: ['500', '600'] })
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
+      <Head>
+        <title>Librosophia</title>
+      </Head>
       {/* Fonts are set on :root so modals and dialogs rendered in portals use them too. */}
       <style jsx global>{`
         :root {
