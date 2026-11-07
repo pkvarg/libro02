@@ -12,4 +12,4 @@ export const honoHeaders = () => ({
 })
 
 export const callHono = (path: string, body: Record<string, unknown>) =>
-  axios.put(`${HONO_LIBROSOPHIA}/${path}`, body, { headers: honoHeaders() })
+  axios.put(`${HONO_LIBROSOPHIA}/${path}`, body, { headers: honoHeaders(), timeout: 8000 })

@@ -16,7 +16,7 @@ const sections: LegalSection[] = [
     body: [
       'Údaje: e-mail, meno, používateľské meno, heslo (uložené len v zašifrovanej podobe), popis „O vás“, profilová a titulná fotografia, koho sledujete a kto sleduje vás.',
       'Librosophia je sieť na požičiavanie kresťanských kníh, preto už samotné členstvo a obsah, ktorý zdieľate, môžu prezrádzať vaše náboženské presvedčenie (osobitná kategória údajov podľa čl. 9 GDPR). Údaje preto spracúvame na základe vášho výslovného súhlasu, ktorý udeľujete pri registrácii (čl. 6 ods. 1 písm. a) a čl. 9 ods. 2 písm. a) GDPR). Registrovať sa môžu osoby od 16 rokov.',
-      'Názov, autor, obálka a dostupnosť ponúkaných kníh sú viditeľné aj bez prihlásenia, bez údajov o tom, kto knihu ponúka; profil, príspevky, popisy kníh a komentáre vidia len prihlásení členovia. Vašu e-mailovú adresu ostatným členom nezobrazujeme; používa sa na prihlásenie.',
+      'Názov, autor, obálka a dostupnosť ponúkaných kníh sú viditeľné aj bez prihlásenia, bez údajov o tom, kto knihu ponúka; profil, príspevky, popisy kníh a komentáre vidia len prihlásení členovia. Vašu e-mailovú adresu ostatným členom nezobrazujeme; používa sa na prihlásenie a na e-maily opísané v časti 5.',
       'Súhlas môžete kedykoľvek odvolať zrušením konta (Upraviť profil → Zrušiť konto) alebo e-mailom na info@librosophia.sk. Konto sa hneď zablokuje a váš obsah sa skryje; natrvalo ho vymažeme najneskôr do 30 dní. Odvolanie nemá vplyv na zákonnosť spracúvania pred ním.',
       'Doba uchovávania: do zrušenia konta, po žiadosti o zrušenie najviac 30 dní.',
     ],
@@ -39,9 +39,10 @@ const sections: LegalSection[] = [
   },
   {
     id: 'emaily',
-    title: '5. E-maily pri registrácii a obnove hesla',
+    title: '5. E-maily',
     body: [
       'Na potvrdenie registrácie a obnovenie hesla vám pošleme e-mail s jednorazovým odkazom, ktorý platí 15 minút. Na odoslanie použijeme vaše meno a e-mail.',
+      'Keď vám niekto napíše v chate, pošleme vám e-mail s upozornením: kto vám napísal a odkaz na konverzáciu, bez textu správy. Pre každú konverzáciu najviac jeden e-mail za hodinu. Upozornenia si môžete kedykoľvek vypnúť v časti Upraviť profil. Slúžia na fungovanie siete, na základe vášho súhlasu z časti 2.',
     ],
   },
   {
@@ -109,7 +110,7 @@ const sections: LegalSection[] = [
     id: 'zmeny',
     title: '12. Zmeny',
     body: [
-      'Tieto zásady aktualizujeme, keď sa zmenia používané služby alebo spôsob spracúvania. O podstatných zmenách vás budeme informovať e-mailom. Toto znenie je účinné od 9. 10. 2026.',
+      'Tieto zásady aktualizujeme, keď sa zmenia používané služby alebo spôsob spracúvania. O podstatných zmenách vás budeme informovať e-mailom. Toto znenie je účinné od 7. 11. 2026.',
     ],
   },
 ]
@@ -117,7 +118,7 @@ const sections: LegalSection[] = [
 const PrivacyPage = () => (
   <LegalText
     label="Ochrana osobných údajov"
-    effective="Účinné od 9. 10. 2026"
+    effective="Účinné od 7. 11. 2026"
     intro="Tu nájdete, aké osobné údaje sieť Librosophia spracúva, prečo, ako dlho, kto k nim má prístup a aké máte práva podľa nariadenia (EÚ) 2016/679 (GDPR) a zákona č. 18/2018 Z. z. o ochrane osobných údajov."
     sections={sections}
   />

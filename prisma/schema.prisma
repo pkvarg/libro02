@@ -34,6 +34,8 @@ model User {
   passwordResetExpires DateTime? @default(now())
   consentAt       DateTime?
   deletionRequestedAt DateTime?
+  // E-mail when someone writes in chat; missing means on (members can turn it off).
+  chatEmailNotifications Boolean? @default(true)
 
 
   posts         Post[]
@@ -149,6 +151,9 @@ model Conversation {
 
   userIds String[] @db.ObjectId
   users User[] @relation(fields: [userIds], references: [id])
+
+  // userId -> time of the last chat e-mail about this conversation (at most one per hour).
+  emailNotifiedAt Json?
 }
 
 model Message {

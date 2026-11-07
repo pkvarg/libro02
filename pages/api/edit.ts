@@ -14,7 +14,7 @@ export default async function handler(
   try {
     const { currentUser } = await serverAuth(req, res)
 
-    const { name, username, bio, profileImage, coverImage } = req.body
+    const { name, username, bio, profileImage, coverImage, chatEmailNotifications } = req.body
 
     if (!name || !username) {
       throw new Error('Chýbajúce polia')
@@ -30,6 +30,7 @@ export default async function handler(
         bio,
         profileImage,
         coverImage,
+        ...(typeof chatEmailNotifications === 'boolean' ? { chatEmailNotifications } : {}),
       },
     })
 

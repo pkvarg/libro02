@@ -13,7 +13,7 @@ import Modal from '../Modal'
 import ImagePicker from '../ImagePicker'
 
 const EditModal = () => {
-  const { data: currentUser } = useCurrentUser()
+  const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser()
   const { mutate: mutateFetchedUser } = useUser(currentUser?.id)
   const editModal = useEditModal()
 
@@ -22,6 +22,7 @@ const EditModal = () => {
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [bio, setBio] = useState('')
+  const [chatEmails, setChatEmails] = useState(true)
 
   useEffect(() => {
     setProfileImage(currentUser?.profileImage)
@@ -29,7 +30,9 @@ const EditModal = () => {
     setName(currentUser?.name)
     setUsername(currentUser?.username)
     setBio(currentUser?.bio)
+    setChatEmails(currentUser?.chatEmailNotifications !== false)
   }, [
+    currentUser?.chatEmailNotifications,
     currentUser?.name,
     currentUser?.username,
     currentUser?.bio,
@@ -75,8 +78,10 @@ const EditModal = () => {
         bio,
         profileImage,
         coverImage,
+        chatEmailNotifications: chatEmails,
       })
       mutateFetchedUser()
+      mutateCurrentUser()
 
       toast.success('Aktualizované')
 
@@ -94,6 +99,8 @@ const EditModal = () => {
     mutateFetchedUser,
     profileImage,
     coverImage,
+    chatEmails,
+    mutateCurrentUser,
   ])
 
   const bodyContent = (
@@ -130,6 +137,20 @@ const EditModal = () => {
         value={bio}
         disabled={isLoading}
       />
+      <div className='flex items-start gap-3'>
+        <input
+          id='chatEmails'
+          type='checkbox'
+          className='mt-0.5 h-5 w-5 flex-shrink-0 accent-brand'
+          checked={chatEmails}
+          onChange={() => setChatEmails((prev) => !prev)}
+          disabled={isLoading}
+        />
+        <label htmlFor='chatEmails' className='text-sm leading-snug text-ink-soft'>
+          Pošlite mi e-mail, keď mi niekto napíše v chate (najviac raz za hodinu pre každú konverzáciu, bez
+          textu správy)
+        </label>
+      </div>
       <button
         type='button'
         onClick={deleteAccount}

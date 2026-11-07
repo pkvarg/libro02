@@ -15,7 +15,15 @@ export default async function purgeUser(userId: string) {
     if (conversation.isGroup && others.length > 1) {
       await prisma.conversation.update({
         where: { id: conversation.id },
-        data: { userIds: others },
+        data: {
+          userIds: others,
+          // Drop the member's chat e-mail record too.
+          emailNotifiedAt: Object.fromEntries(
+            Object.entries((conversation.emailNotifiedAt as Record<string, string> | null) || {}).filter(
+              ([id]) => id !== userId
+            )
+          ),
+        },
       })
     } else {
       await prisma.message.deleteMany({ where: { conversationId: conversation.id } })
