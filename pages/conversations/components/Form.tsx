@@ -3,7 +3,9 @@
 import { HiPaperAirplane } from 'react-icons/hi2'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { ClipLoader } from 'react-spinners'
 import { ably } from '@/libs/ably'
 
 const Form = ({ message, setMessage }) => {
@@ -18,6 +20,9 @@ const Form = ({ message, setMessage }) => {
   }
 
   const [formData, setFormData] = useState('')
+  // A ref guards against double clicks and Enter presses before the state re-renders.
+  const sendingRef = useRef(false)
+  const [isSending, setIsSending] = useState(false)
 
   const handleChange = (e: any) => {
     setFormData(e.target.value)
@@ -25,15 +30,25 @@ const Form = ({ message, setMessage }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
-    await axios.post('/api/messages', {
-      formData,
-      conversationId: conversationId,
-    })
-    setMessage(formData)
-    const channel = ably.channels.get(conversationId.toString())
-    await channel.publish('your-event', message)
-
-    setFormData('')
+    if (sendingRef.current || !formData.trim()) return
+    sendingRef.current = true
+    setIsSending(true)
+    try {
+      await axios.post('/api/messages', {
+        formData,
+        conversationId: conversationId,
+      })
+      setMessage(formData)
+      setFormData('')
+      const channel = ably.channels.get(conversationId.toString())
+      await channel.publish('your-event', message)
+    } catch (error) {
+      // The text stays in the field so it can be sent again.
+      toast.error('Správu sa nepodarilo odoslať')
+    } finally {
+      sendingRef.current = false
+      setIsSending(false)
+    }
   }
 
   return (
@@ -44,13 +59,20 @@ const Form = ({ message, setMessage }) => {
           id="message"
           value={formData}
           onChange={handleChange}
+          readOnly={isSending}
           required
           autoComplete="off"
           aria-label="Správa"
           placeholder="Napíšte správu"
         />
-        <button type="submit" className="btn btn-primary h-11 w-11 shrink-0 px-0" aria-label="Odoslať">
-          <HiPaperAirplane size={18} />
+        <button
+          type="submit"
+          disabled={isSending || !formData.trim()}
+          aria-busy={isSending}
+          className="btn btn-primary h-11 w-11 shrink-0 px-0"
+          aria-label={isSending ? 'Odosiela sa' : 'Odoslať'}
+        >
+          {isSending ? <ClipLoader size={16} color="#ffffff" /> : <HiPaperAirplane size={18} />}
         </button>
       </form>
     </div>

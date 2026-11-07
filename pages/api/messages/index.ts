@@ -3,6 +3,7 @@ import serverAuth from '@/libs/serverAuth'
 import { requireAdmin } from '@/libs/requireUser'
 import { chatUserSelect } from '@/libs/userFields'
 import prisma from '@/libs/prismadb'
+import { waitUntil } from '@vercel/functions'
 import notifyChatRecipients from '@/libs/chatEmailNotice'
 
 export default async function handler(
@@ -67,12 +68,13 @@ export default async function handler(
       const lastMessage =
         updatedConversation.messages[updatedConversation.messages.length - 1]
 
-      // The message is saved; a failed e-mail must not fail sending it.
-      try {
-        await notifyChatRecipients(conversationId, currentUser, req.headers.origin)
-      } catch (error) {
-        console.log('chat e-mail notice failed', error)
-      }
+      // The e-mail goes out after the response, so sending a message never waits for it
+      // (and a failed e-mail cannot fail the message). waitUntil keeps the function alive.
+      waitUntil(
+        notifyChatRecipients(conversationId, currentUser, req.headers.origin).catch((error) =>
+          console.log('chat e-mail notice failed', error)
+        )
+      )
 
       return res.json(newMessage)
     } catch (error) {
